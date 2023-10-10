@@ -1,0 +1,77 @@
+<?php
+$_product = $this->getProduct();
+?>
+<?php if($_product->getData('whats_included_txt_1')): ?>
+<div class="container">
+
+    <h2 class="heading text-center text-white" id="whats_included"><?php echo $_product->getData('whats_included_heading'); ?></h2>
+
+    <div class="worldSlider w-100 pull-left">
+        <div class="w-100 pull-left">
+            <div class="owl-carousel mt-5 owl-drag">
+<?php if($_product->getData('whats_included_txt_1')): ?>
+                <div class="row">
+                
+                    <div class="col-md-6 include-slider-img d-none text-center d-md-block">
+                        <img class="lozad" data-src="<?php echo $_product->getData('whats_included_img_1_link'); ?>"
+                            alt="" src="<?php echo $_product->getData('whats_included_img_1_link'); ?>"
+                            data-loaded="true">
+                    </div>
+                    <div class="col-md-6 include-slider-detail text-center">
+                        <?php echo $_product->getData('whats_included_txt_1'); ?>
+                    </div>
+
+                </div>
+				<?php endif; ?>
+				<?php if($_product->getData('whats_included_txt_2')): ?>
+                <div class="row">
+
+                    <div class="col-md-6 include-slider-img text-center d-none d-md-block">
+                        <img class="lozad" data-src="<?php echo $_product->getData('whats_included_img_2_link'); ?>"
+                            alt="" src="<?php echo $_product->getData('whats_included_img_2_link'); ?>"
+                            data-loaded="true">
+                    </div>
+                    <div class="col-md-6 include-slider-detail text-center">
+                        <?php echo $_product->getData('whats_included_txt_2'); ?>
+                    </div>
+
+                </div>
+				<?php endif; ?>
+				<?php if($_product->getData('whats_included_txt_3')): ?>
+                <div class="row">
+
+                    <div class="col-md-6 include-slider-img d-none text-center d-md-block">
+                        <img class="lozad" data-src="<?php echo $_product->getData('whats_included_img_3_link'); ?>"
+                            alt="" src="<?php echo $_product->getData('whats_included_img_3_link'); ?>"
+                            data-loaded="true">
+                    </div>
+                    <div class="col-md-6 include-slider-detail text-center">
+                        <?php echo $_product->getData('whats_included_txt_3'); ?>
+                    </div>
+
+                </div>
+				<?php endif; ?>
+				<?php if($_product->getData('whats_included_txt_4')): ?>
+                <div class="row">
+
+                    <div class="col-md-6 include-slider-img d-none text-center d-md-block">
+                        <img class="lozad" data-src="<?php echo $_product->getData('whats_included_img_4_link'); ?>"
+                            alt="" src="<?php echo $_product->getData('whats_included_img_4_link'); ?>"
+                            data-loaded="true">
+                    </div>
+                    <div class="col-md-6 include-slider-detail text-center">
+                        <?php echo $_product->getData('whats_included_txt_4'); ?>
+                    </div>
+
+                </div>
+				<?php endif; ?>
+            </div>
+        </div>
+    </div>
+	<style>
+	.include-slider-img img {
+    width: auto !important;
+}
+	</style>
+	</div>
+	<?php endif; ?>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/bootstrap.css"/>
+        
+        <css src="css/worldsim.fonts.css"/>
+
+        <css src="css/custom.css"/>
+
+        
+        
+        <script src="js/custom.js"/>
+        <script src="js/bootstrap-dropdown-accordian-only.js" defer="defer"/>
+       
+            
+    </head>
+</page>

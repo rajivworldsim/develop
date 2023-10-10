@@ -1,0 +1,611 @@
+<?php
+$url = 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$product = $agtechobjBlock->getRegistryCurrentId()->registry('current_product');
+$product_model = $agtechobjBlock->getproductModel()->load($product->getId());
+$cartHelper = $agtechobjBlock->getCarthelperObj();
+$customOptions = $agtechobjBlock->getproductOptionModel()->getProductOptionCollection($product_model);
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$currency = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$currencySymbol = $currency->getCurrencySymbol();
+
+$dataBundle_link_with_store = $this->getUrl('')."data-bundles";
+
+?>
+<div class="container">
+    <?php if ($product->getId() != 333) { ?>
+        <ul class="nav nav-tabs" id="credit_bundle_tabs">
+            <li class="nav-item">
+                <a class="nav-link creditbundle_tab  active" id="credit_tab" data-toggle="tab" href="#add-credit">Add Credit</a>
+            </li>
+            <?php if (strpos($url, '/data-sim-card') !== false) : ?>
+                <li class="nav-item">
+                    <!--<a class="nav-link creditbundle_tab " id="bundle_tab" data-toggle="tab" href="#add-bundle">Add Bundle</a>-->
+                    <a class="nav-link" href="<?php echo $dataBundle_link_with_store; ?>">Add Bundle</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    <?php } ?>
+    <div class="tab-content text-center"> <!--add class: desktop-view-esim-->
+        <div class="tab-pane fade in active" id="add-credit">
+            <div class="w-75 mx-auto ">
+                <h3 class="esim_optins"><?php if ($product->getId() == 333) : ?> eSim Pro Options <?php endif; ?></h3>
+                <h2>Add Pay As You Go Credit to <?php echo $product_model->getName(); ?></h2>
+                <?php
+                foreach ($customOptions as $option) {
+                    $values = $option->getValues();
+                    if (empty($values)) {
+                        continue;
+                    } ?>
+                    <?php if ($option->getTitle() == "Credit") : ?>
+                        <ul id="select" class="tabs-round-list d-flex ">
+                            <?php $i = 1;
+                            foreach ($values as $value) {
+                                $credit_value  =  $value->getTitle();
+                            ?>
+                                <li><label><input type="radio" name="credit_value" data-optionid="<?php echo $value->getId(); ?>" data-price="<?php echo $value->getPrice(); ?>"><span class="circle">
+                                            <?php echo $currencySymbol . round($credit_value * $rates_currency, 2); ?>
+                                            <i>Credit</i>
+                                            <?php //if ($product->getId() != 333) { ?>
+                                                <?php
+                                                if ($i == 1) {
+                                                    $sim_price = "+ SIM Price: " . $currencySymbol . round(10 * $rates_currency, 2); ?>
+                                                    <i style="color: #444;font-size: 12px;">
+                                                        <?php echo $sim_price; ?>
+                                                    </i>
+                                                <?php } elseif ($i == 2) {
+                                                    $sim_price = "+ SIM Price: " . $currencySymbol . round(5 * $rates_currency, 2); ?>
+                                                    <i style="color: #444;font-size: 12px;">
+                                                        <?php echo $sim_price; ?>
+                                                    </i>
+                                                <?php } elseif ($i == 3 && $product->getId() != 333) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SIM &
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SHIPPING</i>
+                                                <?php } elseif ($i == 3 && $product->getId() == 333) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SIM</i>
+                                                <?php } elseif ($i == 4 && $product->getId() != 333) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">
+                                                        <span class="bonus-price" style="display:none;"><?php echo round(10 * $rates_currency, 2); ?></span>
+                                                        <?php echo $currencySymbol . round(10 * $rates_currency, 2) . " Bonus Credit"; ?>
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">
+                                                        FREE SIM &
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SHIPPING</i>
+                                                <?php } elseif ($i == 4 && $product->getId() == 333) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">
+                                                        <span class="bonus-price" style="display:none;"><?php echo round(10 * $rates_currency, 2); ?></span>
+                                                        <?php echo $currencySymbol . round(10 * $rates_currency, 2) . " Bonus Credit"; ?>
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SIM</i>
+                                                <?php } ?>
+                                            <?php// } ?>
+                                        </span>
+                                    <?php
+                                    $i++;
+                                }
+                                    ?>
+                        </ul>
+                        <p>
+                            <strong> Select the amount of credit you would like.<?php if ($product->getId() != 333) : ?>  Up to 15% discount available now. The more you add the cheaper the price! <?php endif; ?></strong>
+                        </p>
+                        <p class="">Top Up Validity is 1 Year.</p>
+                        <div class="totlePrice mt-4">
+                            Total Cost:
+                            <span id="selectedCreditPrice">£0</span>
+                            <input type="hidden" id="hiddenCreditPrice" value="" data-currency=<?php echo $currencySymbol; ?>>
+                        </div>
+                        <?php if ($product->getId() == 333) { ?>
+                            <div class="spinner quantity-of-product">
+                                <div class="input-group">
+                                    <input type="number" class="input" name="number" id="creditQty" min="1" value="1">
+                                    <div class="input-group-btn-vertical input-group-btn-vertical-tb">
+                                        <button class="btnnew number-up" type="button">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                        <button class="btnnew number-down" type="button">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="add_to_basket_button_click" id="sim_credit_add_esim">
+                                <span>Add to basket</span>
+                            </button>
+                            <div class="esim-outer-checkout">
+                                <input type="checkbox" name="include_esim" id="include_esim" checked>My mobile handset supports eSIM<br>
+                            </div>
+                            <div id="additional_esim" class="modal">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Want to add an additional USA Number to your eSIM?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Our International eSIM Pro comes with a FREE UK Number.
+                                            <br>Do you want to add an additional USA Number to your eSIM?
+                                            <br>(charges apply <?php
+                                                                    $additional_usa_price = 10;
+                                                                    echo $currencySymbol . round($additional_usa_price * $rates_currency, 2);
+                                                                ?>/Year)?
+                                        </p>
+                                        <p id="yes-and-no-buttons_esim">
+                                            <a id="sim_credit_add_btn_esim" data-optionid="10896" class="add_to_basket_button_click" href="javascript:void(0)">Yes Please!</a> &nbsp; &nbsp;
+                                            <a id="sim_credit_add_btn_orig_esim" href="javascript:void(0)">No Thanks!</a>
+                                        </p>
+    
+    
+    
+                                        <p id="redirected-msg">
+                                            <span style="color:#67b903; font-weight:bold;">Please wait, you are being directed to the shopping cart.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                require(['jquery', 'Magento_Ui/js/modal/modal'], function($) {
+                                    $(document).ready(function() {
+                                        var modal = document.getElementById("additional_esim");
+                                        var yes_no_btn = document.getElementById("yes-and-no-buttons_esim");
+                                        var btn = document.getElementById("sim_credit_add_esim");
+                                        var closebtn = document.getElementById("sim_credit_add_btn_orig_esim");
+                                        var usa_btn = document.getElementById("sim_credit_add_btn_esim");
+                                        var redirect_msg = document.getElementById("redirected-msg");
+                                        //btn.onclick = function() {
+                                        $('#sim_credit_add_esim').on('click', function(event){    
+                                            modal.style.display = "block";
+                                        })
+                                        closebtn.onclick = function() {
+                                            yes_no_btn.style.display = "none";
+                                            redirect_msg.style.display = "block";
+                                            $("button#product-addtocart-button").trigger("click");
+                                        }
+                                        usa_btn.onclick = function() {
+                                            yes_no_btn.style.display = "none";
+                                            redirect_msg.style.display = "block";
+                                            $("select#select_494").val($(this).attr("data-optionid"));
+                                            $("select#select_494").change();
+                                            $("button#product-addtocart-button").trigger("click");
+                                        }
+                                        
+                                        
+                                    });
+                                });
+                                //]]>
+                            </script>
+                        <?php } else { ?>
+                            <div class="spinner quantity-of-product">
+                                <div class="input-group">
+                                    <input type="number" class="input" name="number" id="creditQty" min="1" value="1">
+                                    <div class="input-group-btn-vertical input-group-btn-vertical-tb">
+                                        <button class="btnnew number-up" type="button">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                        <button class="btnnew number-down" type="button">
+                                            <i class="fa fa-angle-down"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="add_to_basket_button_click" id="sim_credit_add_btn_orig" style="display:none;">
+                                <span>Add to basket</span>
+                            </button>
+                        <?php } ?>
+                    <?php endif;
+                    if ($option->getData('option_id') == 444) { ?>
+                        <button class="add_to_basket_button_click" id="sim_credit_add_btn" style="display:none;">
+                            <span>Add to basket</span>
+                        </button>
+                        <div id="additional_usa" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Want to add an additional USA Number to your SIM?</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Our International SIM Card comes with a FREE UK Number.
+                                        <br>Do you want to add an additional USA Number to your SIM?
+                                        <br>(charges apply <?php
+                                                            foreach ($values as $value) {
+                                                                if ($value->getId() == 1157) {
+                                                                    $additional_usa_price = $value->getPrice();
+                                                                    echo $currencySymbol . round($additional_usa_price * $rates_currency, 2);
+                                                                }
+                                                            }
+                                                            ?>/Year)?
+                                    </p>
+                                    <p id="yes-and-no-buttons">
+                                        <a id="sim_credit_add_btn_usa" data-optionid="1157" class="add_to_basket_button_click" href="javascript:void(0)">Yes Please!</a> &nbsp; &nbsp;
+                                        <a id="sim_credit_add_btn_orig_n" href="javascript:void(0)">No Thanks!</a>
+                                    </p>
+
+
+
+                                    <p id="redirected-msg">
+                                        <span style="color:#67b903; font-weight:bold;">Please wait, you are being directed to the shopping cart.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            var modal = document.getElementById("additional_usa");
+                            var yes_no_btn = document.getElementById("yes-and-no-buttons");
+                            var btn = document.getElementById("sim_credit_add_btn");
+                            var closebtn = document.getElementById("sim_credit_add_btn_orig_n");
+                            var usa_btn = document.getElementById("sim_credit_add_btn_usa");
+                            var redirect_msg = document.getElementById("redirected-msg");
+                            btn.onclick = function() {
+                                modal.style.display = "block";
+                            }
+                            closebtn.onclick = function() {
+                                yes_no_btn.style.display = "none";
+                                redirect_msg.style.display = "block";
+                            }
+                            usa_btn.onclick = function() {
+                                yes_no_btn.style.display = "none";
+                                redirect_msg.style.display = "block";
+                            }
+                        </script>
+                <?php }
+                }
+                ?>
+                <script>
+                    require(['jquery', 'Magento_Ui/js/modal/modal'], function($) {
+                        $(document).ready(function() {
+
+                            $(".number-up, .number-down, .qty").click(function() {
+
+                                var totalCost = $("#hiddenCreditPrice").val();
+                                var currencySymbol = $("#hiddenCreditPrice").data('currency');
+                                var totalCost = Number(totalCost.replace(/[^0-9\.-]+/g, ""));
+                                var creditQty = $('#creditQty').val();
+                                var updatedCost = parseFloat(totalCost * creditQty).toFixed(2);
+                                var updatedCost = currencySymbol + updatedCost;
+                                $("#selectedCreditPrice").text(updatedCost);
+                                $(".price").text(updatedCost);
+                            });
+
+                            $("#sim_credit_add_btn_usa").click(function() {
+                                $("select#select_444").val($(this).attr("data-optionid"));
+                                $("select#select_444").change();
+                                $("button#product-addtocart-button").trigger("click");
+                            });
+                            
+                            $("#esim_credit_add_btn_usa").click(function() {
+                                $("select#select_494").val($(this).attr("data-optionid"));
+                                $("select#select_494").change();
+                                $("button#product-addtocart-button").trigger("click");
+                            });
+                            $("#select li input").on("click", function(e) {
+                                $(".product-custom-option").val($(this).attr("data-optionid"));
+                                $(".product-custom-option").change();
+
+                                $("#bonusValue").val(0);
+                                var findBonus = $(this).next('.circle').find('.bonus-price');
+                                if (findBonus && findBonus.length) {
+                                    $("#bonusValue").val(findBonus.text());
+                                }
+
+
+                            });
+                            setTimeout(function() {
+                                $("#select li:last-child label input").click();
+                                $("select#select_444").val("1158");
+                            }, 500);
+                            $(".product-custom-option").change(function() {
+                                setTimeout(function() {
+                                    var originalprice = $(".product-info-price span.price").html();
+                                    $("span#selectedCreditPrice").html(originalprice);
+                                    $("#hiddenCreditPrice").val(originalprice);
+                                }, 100);
+                            });
+
+                            // $("body").addClass("hide-price-section");
+
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+        <?php if (strpos($url, '/data-sim-card') !== false) :
+            //echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Magento_Catalog::product/view/data_bundle_tab.phtml")->toHtml();
+        endif; ?>
+    </div>
+    <!--<div class="tab-content text-center mobile-view-esim">
+        <div class="tab-pane fade in active" id="add-credit">
+            <div class="w-75 mx-auto ">
+                <h3 class="esim_optins"><?php if ($product->getId() == 333) : ?> eSim Pro Options <?php endif; ?></h3>
+                <h2>Add Pay As You Go Credit to <?php echo $product_model->getName(); ?></h2>
+                <p>
+                    <strong> Select the amount of credit you would like. <br> Up to <span class="esim-discount">15% discount available</span> now. The more you add the cheaper the price! </strong>
+                </p>
+                <?php
+                foreach ($customOptions as $option) {
+                    $values = $option->getValues();
+                    if (empty($values)) {
+                        continue;
+                    } ?>
+                    <?php if ($option->getTitle() == "Credit") : ?>
+                        <ul id="select-mobile" class="tabs-round-list d-flex ">
+                            <?php $i = 1;
+                            foreach ($values as $value) {
+                                $credit_value  =  $value->getTitle();
+                            ?>
+                                <li><label><input type="radio" name="credit_value" data-optionid="<?php echo $value->getId(); ?>" data-price="<?php echo $value->getPrice(); ?>"><span class="circle">
+                                            <?php echo $currencySymbol . round($credit_value * $rates_currency, 2); ?>
+                                            <i>Credit</i>
+                                            <?php //if ($product->getId() != 333) { ?>
+                                                <?php
+                                                if ($i == 1) {
+                                                    $sim_price = "+ SIM Price: " . $currencySymbol . round(10 * $rates_currency, 2); ?>
+                                                    <i style="color: #444;font-size: 12px;">
+                                                        <?php echo $sim_price; ?>
+                                                    </i>
+                                                <?php } elseif ($i == 2) {
+                                                    $sim_price = "+ SIM Price: " . $currencySymbol . round(5 * $rates_currency, 2); ?>
+                                                    <i style="color: #444;font-size: 12px;">
+                                                        <?php echo $sim_price; ?>
+                                                    </i>
+                                                <?php } elseif ($i == 3) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SIM &
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SHIPPING</i>
+                                                <?php } elseif ($i == 4) { ?>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">
+                                                        <span class="bonus-price" style="display:none;"><?php echo round(10 * $rates_currency, 2); ?></span>
+                                                        <?php echo $currencySymbol . round(10 * $rates_currency, 2) . " Bonus Credit"; ?>
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">
+                                                        FREE SIM &
+                                                    </i>
+                                                    <i style="color: red; font-weight:bold; font-size: 12px;">FREE SHIPPING</i>
+                                                <?php } ?>
+                                            <?php //} ?>
+                                        </span>
+                                    <?php
+                                    $i++;
+                                }
+                                    ?>
+                        </ul>
+                        <p>Top Up Validity is 1 Year.</p>
+                        <div class="totlePrice mt-4">
+                            Total Cost:
+                            <span id="selectedCreditPrice-mobile">£0</span>
+                            <input type="hidden" id="hiddenCreditPrice-mobile" value="" data-currency=<?php echo $currencySymbol; ?>>
+                        </div>
+                        <?php if ($product->getId() == 333) { ?>
+                            <div class="spinner quantity-of-product">
+                                <div class="input-group">
+                                    <input type="number" class="input" name="number" id="creditQty-mobile" min="1" value="1">
+                                    <div class="input-group-btn-vertical input-group-btn-vertical-tb">
+                                        <button class="btnnew number-up" type="button">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                        <button class="btnnew number-down" type="button">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="add_to_basket_button_click" id="sim_credit_add_esim_mobile">
+                                <span>Add to basket</span>
+                            </button>
+                            <div class="esim-outer-checkout">
+                                <input type="checkbox" name="include_esim" id="include_esim_mobile" checked>My mobile handset supports eSIM<br>
+                            </div>
+                            <div id="additional_esim_mobile" class="modal">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>My mobile supports eSIM?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p id="yes-and-no-buttons_esim_mobile">
+                                            <a id="sim_credit_add_btn_esim_mobile" data-optionid="1157" class="add_to_basket_button_click" href="javascript:void(0)">Yes Please!</a> &nbsp; &nbsp;
+                                            <a id="sim_credit_add_btn_orig_esim_mobile" href="javascript:void(0)">No Thanks!</a>
+                                        </p>
+                                        <p id="redirected-msg-mobile">
+                                            <span style="color:#67b903; font-weight:bold;">Please wait, you are being directed to the shopping cart.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                require(['jquery', 'Magento_Ui/js/modal/modal'], function($) {
+                                    $(document).ready(function() {
+                                        console.log('add to basket clicked 1');
+                                        var modal = document.getElementById("additional_esim");
+                                        var yes_no_btn = document.getElementById("yes-and-no-buttons_esim");
+                                        var btn = document.getElementById("sim_credit_add_esim");
+                                        var closebtn = document.getElementById("sim_credit_add_btn_orig_esim");
+                                        var usa_btn = document.getElementById("sim_credit_add_btn_esim");
+                                        var redirect_msg = document.getElementById("redirected-msg");
+                                        btn.onclick = function() {
+                                            console.log('add to basket clicked 1');
+                                            if ($("#include_esim_mobile").is(":checked") == true) {
+                                                $("button#product-addtocart-button").trigger("click");
+                                            } else {
+                                                modal.style.display = "block";
+                                            }
+                                        }
+                                        closebtn.onclick = function() {
+                                            yes_no_btn.style.display = "none";
+                                            modal.style.display = "none";
+                                            location.reload();
+                                        }
+                                        usa_btn.onclick = function() {
+                                            yes_no_btn.style.display = "none";
+                                            redirect_msg.style.display = "block";
+                                            $("button#product-addtocart-button").trigger("click");
+                                        }
+                                    });
+                                });
+                            </script>
+                        <?php } else { ?>
+                            <div class="spinner quantity-of-product">
+                                <div class="input-group">
+                                    <input type="number" class="input" name="number" id="creditQty-mobile" min="1" value="1">
+                                    <div class="input-group-btn-vertical input-group-btn-vertical-tb">
+                                        <button class="btnnew number-up" type="button">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                        <button class="btnnew number-down" type="button">
+                                            <i class="fa fa-angle-down"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="add_to_basket_button_click" id="sim_credit_add_btn_orig_mobile" style="display:none;">
+                                <span>Add to basket</span>
+                            </button>
+                        <?php } ?>
+                    <?php endif;
+                    if ($option->getData('option_id') == 444) { ?>
+                        <button class="add_to_basket_button_click" id="sim_credit_add_btn_mobile" style="display:none;">
+                            <span>Add to basket</span>
+                        </button>
+                        <div id="additional_usa_mobile" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Want to add an additional USA Number to your SIM?</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Our International SIM Card comes with a FREE UK Number.
+                                        <br>Do you want to add an additional USA Number to your SIM?
+                                        <br>(charges apply <?php
+                                                            foreach ($values as $value) {
+                                                                if ($value->getId() == 1157) {
+                                                                    $additional_usa_price = $value->getPrice();
+                                                                    echo $currencySymbol . round($additional_usa_price * $rates_currency, 2);
+                                                                }
+                                                            }
+                                                            ?>/Year)?
+                                    </p>
+                                    <p id="yes-and-no-buttons-mobile">
+                                        <a id="sim_credit_add_btn_usa_mobile" data-optionid="1157" class="add_to_basket_button_click" href="javascript:void(0)">Yes Please!</a> &nbsp; &nbsp;
+                                        <a id="sim_credit_add_btn_orig_n_mobile" href="javascript:void(0)">No Thanks!</a>
+                                    </p>
+
+
+
+                                    <p id="redirected-msg-mobile">
+                                        <span style="color:#67b903; font-weight:bold;">Please wait, you are being directed to the shopping cart.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            var modal = document.getElementById("additional_usa_mobile");
+                            var yes_no_btn = document.getElementById("yes-and-no-buttons-mobile");
+                            var btn = document.getElementById("sim_credit_add_btn_mobile");
+                            var closebtn = document.getElementById("sim_credit_add_btn_orig_n_mobile");
+                            var usa_btn = document.getElementById("sim_credit_add_btn_usa_mobile");
+                            var redirect_msg = document.getElementById("redirected-msg-mobile");
+                            btn.onclick = function() {
+                                modal.style.display = "block";
+                            }
+                            closebtn.onclick = function() {
+                                yes_no_btn.style.display = "none";
+                                redirect_msg.style.display = "block";
+                            }
+                            usa_btn.onclick = function() {
+                                yes_no_btn.style.display = "none";
+                                redirect_msg.style.display = "block";
+                            }
+                        </script>
+                <?php }
+                }
+                ?>
+                <script>
+                    require(['jquery', 'Magento_Ui/js/modal/modal'], function($) {
+                        $(document).ready(function() {
+
+                            $(".number-up, .number-down, .qty").click(function() {
+
+                                var totalCost = $("#hiddenCreditPrice-mobile").val();
+                                var currencySymbol = $("#hiddenCreditPrice-mobile").data('currency');
+                                var totalCost = Number(totalCost.replace(/[^0-9\.-]+/g, ""));
+                                var creditQty = $('#creditQty-mobile').val();
+                                var updatedCost = parseFloat(totalCost * creditQty).toFixed(2);
+                                var updatedCost = currencySymbol + updatedCost;
+                                $("#selectedCreditPrice-mobile").text(updatedCost);
+                                $(".price").text(updatedCost);
+                            });
+
+                            $("#sim_credit_add_btn_usa_mobile").click(function() {
+                                $("select#select_444").val($(this).attr("data-optionid"));
+                                $("select#select_444").change();
+                                console.log('prdQty = '+$('#creditQty_mobile').val());
+                                $("button#product-addtocart-button").trigger("click");
+                            });
+                            $("#select-mobile li input").on("click", function(e) {
+                                $(".product-custom-option").val($(this).attr("data-optionid"));
+                                $(".product-custom-option").change();
+
+                                $("#bonusValue").val(0);
+                                var findBonus = $(this).next('.circle').find('.bonus-price');
+                                if (findBonus && findBonus.length) {
+                                    $("#bonusValue").val(findBonus.text());
+                                }
+
+
+                            });
+                            setTimeout(function() {
+                                $("#select-mobile li:last-child label input").click();
+                                $("select#select_444").val("1158");
+                            }, 500);
+                            $(".product-custom-option").change(function() {
+                                setTimeout(function() {
+                                    var originalprice = $(".product-info-price span.price").html();
+                                    $("span#selectedCreditPrice-mobile").html(originalprice);
+                                    $("#hiddenCreditPrice-mobile").val(originalprice);
+                                }, 100);
+                            });
+
+                            // $("body").addClass("hide-price-section");
+
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+        <?php if (strpos($url, '/data-sim-card') !== false) :
+            //echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Magento_Catalog::product/view/data_bundle_tab.phtml")->toHtml();
+        endif; ?>
+    </div>
+</div>-->
+
+<?php if ($product->getId() == 333) : ?>
+    <style type="text/css">
+        
+        .product-international-esim-card .esim-outer-checkout{
+            display: block !important;
+        }
+        
+        .addtariff p{
+            font-size: 18px;
+        }
+        
+        @media (min-width: 769px){
+            .product-international-esim-card .tabs-round-list li .circle{
+                height: 160px;
+                width: 160px;
+            }
+            .product-international-esim-card .tabs-round-list li .circle{
+                font-size: 28px;
+            }
+            .esim_optins {
+                font-size: 24px;
+                padding-bottom: 15px;
+                font-weight: 600;
+            }
+            .product-data-sim-card .addtariff #add-credit .tabs-round-list li .circle,
+            .hide-price-section .addtariff #add-credit .tabs-round-list li .circle {
+                padding-top: 35px !important;
+            }
+        }
+        
+    </style>
+<?php endif; ?>

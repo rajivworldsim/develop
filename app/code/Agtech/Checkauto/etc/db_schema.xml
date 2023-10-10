@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="quote" resource="default" engine="innodb">
+        <column xsi:type="text" name="createaccountcust" nullable="true" comment="Create account checkbox"/>
+        <column xsi:type="text" name="password" nullable="true" comment="Password"/>
+		<column xsi:type="text" name="confpassword" nullable="true" comment="Confirm Password"/>
+    </table>
+    <table name="sales_order" resource="default" engine="innodb">
+	<column xsi:type="text" name="createaccountcust" nullable="true" comment="Create account checkbox"/>
+        <column xsi:type="text" name="password" nullable="true" comment="Password"/>
+        <column xsi:type="text" name="confpassword" nullable="true" comment="Confirm Password"/>
+    </table>
+</schema>

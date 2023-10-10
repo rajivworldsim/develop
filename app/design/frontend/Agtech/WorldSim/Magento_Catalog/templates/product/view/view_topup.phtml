@@ -1,0 +1,642 @@
+<?php
+    $msisdn='';
+    $mobpin='';
+    if(isset($_GET['MobileNo'])!=''){
+        $msisdn = $_GET['MobileNo'];
+    }
+    if(isset($_GET['Pin'])!=''){
+        $mobpin = $_GET['Pin'];
+    }
+
+ $_helper = $this->helper('Magento\Catalog\Helper\Output');
+$_product = $this->getProduct();
+ ?>
+<script type="text/javascript">
+   // var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+        
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$customerSession = $agtechobjBlock->getcustomerSession();
+    $msisdn_s = $customerSession->getCrmcusMsisdn();
+    $mobcusid_s = $customerSession->getCrmcusMobcusid();
+    $mobpin_s = $customerSession->getCrmcusMobpin();
+    $mobpuk_s = $customerSession->getCrmcusMobpuk();
+    $cusCrmId = $customerSession->getCrmcusId();
+
+    $username = '';
+    $password = '';
+    if($msisdn_s!=''){
+        $username = $msisdn_s;
+    } else if ($mobcusid_s!=''){
+        $username = $mobcusid_s;
+    }
+    if($mobpin_s!=''){
+        $password = $mobpin_s;
+    } else if($mobpuk_s!=''){
+        $password = $mobpuk_s;
+    }
+
+    //override if have query string
+    if($msisdn!=''){
+        $username = $msisdn;
+    }
+    if($mobpin!=''){
+        $password = $mobpin;
+    }
+
+    //check is customer login    
+    if($cusCrmId!=''){
+    $isLogin = true;
+    } else {
+        $isLogin = false;
+    }
+?>
+
+<?php
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$currencyCode =$storeManager->getStore()->getCurrentCurrencyCode();
+$currencyFactory = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$storeCode = $storeManager->getStore()->getCode();
+$storeId = $storeManager->getStore()->getId();
+ /* Currncy Code*/
+$currencySymbol = $currencyFactory->getCurrencySymbol(); /* Currency Symbol */
+$currencies = $storeManager->getStore()->getAllowedCurrencies();
+$baseCurrencyCode = $storeManager->getStore()->getBaseCurrencyCode();
+$defaultCurrencies = $storeManager->getStore()->getBaseCurrency();
+$Current_CurrencyCode =  $storeManager->getStore()->getCurrentCurrencyCode();
+
+
+$rates=$currencyFactory->getCurrencyRates($defaultCurrencies, $currencies);
+
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$convRate = $rates_currency;
+
+
+$dataBundle_link_with_store = $this->getUrl('')."data-bundles";
+
+$creditOption = "14";
+?>
+
+<div class="container mt-3 mb-5">
+        <div id="messages_product_view"><?php //echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+        <h1 class="heading heading-title ml-0">Recharge / Top Up</h1>
+        <h6 class="mt-3 subHeading">Add prepaid credit or a data package to your SIM. Get FREE bonus credit up to <?php if($currencyCode=="ZAR"): echo $currencySymbol."332.51"; elseif($currencyCode=="AUD"): echo $currencySymbol."26.60"; elseif($currencyCode=="INR"): echo $currencySymbol."1130.50"; else: echo $currencySymbol."20"; endif; ?> NOW!</h6>
+</div>
+
+<section class="addtariff topUp w-100 pull-left mb-4">
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" >Add Credit</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo $dataBundle_link_with_store; ?>">Add Bundle</a>
+            </li>
+
+        </ul>  
+        <!-- Tab panes -->
+        <div class="tab-content text-center">
+            <div class="tab-pane container active" id="add-credit">
+                <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form_<?php echo $_product->getId() ?>"  <?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+                <?php echo $this->getBlockHtml('formkey') ?>
+                <div class="no-display">
+                    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                    <input type="hidden" name="related_product" id="related-products-field" value="" />
+                </div>
+                <div class="w-90 mx-auto">
+                    <h2>HOW MUCH CREDIT WOULD YOU LIKE TO ADD? </h2>
+                    <?php
+                    $attVal = $_product->getOptions();
+                    $optStr = "";
+                    $first_credit_option = "";
+                    ?>
+                   
+                        <?php
+                        foreach($attVal as $optionKey => $optionVal):
+						
+                            $optionType = $optionVal->getType();
+                            $optionId = $optionVal->getId();
+                            $optionLabel = $optionVal->getTitle();
+                            if (strpos(strtolower($optionLabel), 'credit') !== false) { //credit
+                                $optStr = $optStr."<p style='display:none;'><span>".$optionVal->getTitle().$optionId."</span><br><select id='select_".$optionVal->getId()."' name='options[".$optionVal->getId()."]'>";
+                                foreach($optionVal->getValues() as $valuesKey => $valuesVal)
+                                {
+                                    $optStr.= "<option value='".$valuesVal->getId()."'>".$valuesVal->getTitle()."</option>";
+                                }
+                                $optStr = $optStr."</select></p>";
+                            }
+                        endforeach;
+                        echo $optStr;
+                        ?>
+                  
+                    <ul class="tabs-round-list d-flex ">
+                        <?php foreach($attVal as $optionKey => $optionVal): ?>
+                            <?php                
+                                $optionType = $optionVal->getType();
+                                $optionId = $optionVal->getId();
+                                $optionLabel = $optionVal->getTitle();
+                                if (strpos(strtolower($optionLabel), 'credit') !== false) { //credit
+                                    $ii = 1;
+                                    foreach($optionVal->getValues() as $valuesKey => $valuesVal){ 
+                                        //TopUp Promotion Code Starts
+                                        $textValue = $valuesVal->getTitle();
+                                        $creditCurrency = substr($textValue,0,1);
+                                        $credit_sku = $valuesVal->getSku();
+                                        if(strpos($credit_sku,strtolower($currencyCode))!==false){//only show Store Currency Credit Options NOT Others
+                                                    if($ii==1){
+                                                        $first_credit_option = $currencySymbol.$textValue;
+                                                        $first_credit_option_id = $valuesVal->getId();
+                                                    }
+                                                    
+                                                    $textValue = round($textValue/$convRate,2); //convert to GBP
+                                                    
+                                                    $extraCredit=0;
+                                                    if($ii==2){
+                                                          $extraCredit=$textValue*0.067*$convRate;
+                                                          $second_credit_option_id = $valuesVal->getId();
+                                                      } elseif ($ii==3){
+                                                          $extraCredit=$textValue*0.075*$convRate;
+                                                      } elseif ($ii==4){
+                                                          $extraCredit=$textValue*0.1*$convRate;
+                                                      } elseif ($ii==5){
+                                                          $extraCredit=$textValue*0.133*$convRate;
+                                                      }
+                                                    $extraCredit = number_format((float)$extraCredit, 2, '.', '');
+                                                    if($extraCredit=="2.01"){
+                                                        $extraCredit = "2.00";
+                                                    }elseif($extraCredit=="19.95"){
+                                                        $extraCredit = "20.00";
+                                                    }
+                                                    ?>
+                                                    <li onclick="selectCredit(<?php echo $valuesVal->getId(); ?>)" <?php if($ii==1){ ?>class="first_credit_option" <?php } ?> id="<?php echo "credit_".$valuesVal->getId(); ?>">
+                                                        <label>
+                                                            <input type="radio" name="topup_credit" />
+                                                            <span class="circle <?php echo $currencyCode; ?>">
+                                                                <?php echo $currencySymbol.$valuesVal->getTitle(); ?>
+                                                                <?php if($extraCredit>0) : ?>
+                                                                    <span class="extracredit">
+                                                                        <i class="grayColor"><?php echo "+ ".$currencySymbol.$extraCredit; ?></i>
+                                                                        <i class="grayColor">FREE</i>
+                                                                    </span>    
+                                                                <?php endif; ?>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                    <?php $ii++; ?>
+                                        <?php }//check for to show only Store Currency Credit Options NOT Others ?>                    
+                                    <?php } //endforeach for option value credit ?>
+                                <?php }//if Credit ?>    
+                        <?php endforeach; ?>
+                    </ul>
+                    <div class=" w-75 mx-auto text-left mb-4">
+                        
+                        <!--Auto TopUp Options-->
+                        <div class="auto-topup-options" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="mobile-customer"><strong>Mobile number</strong></label>
+                                    <input class="form-control inputH mob_cus_id auto_mob_cus_id" type="number" name="mob_cus_id_auto" value="<?php echo $username; ?>" placeholder="Mobile number" title="Please enter the uk mobile number and or Customer ID number provided with the sim">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="mobile-customer"><strong>Pin/PUK</strong></label>
+                                    <input type="password" name="pass_puk" value="" class="form-control inputH  pin-puk pin-topup">    
+                                    <a href="https://accounts.worldsim.com/store/forgotpassword.aspx" target="_blank" class="forget-pas">Forgot Pin/PUK?</a>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="mobile-customer"><strong>Auto Top Up</strong></label>
+                                    <select class="form-control inputH select-autotopup-options" name="select-autotopup-options" title="You can set your SIM card to Top Up automatically if your balance runs low by selecting this option">    
+                                        <option value="125">No</option>
+                                        <option value="126">Yes</option>
+                                    </select>
+                                </div>
+                                <!--Auto TopUp Amount-->
+                                <?php
+                                foreach($attVal as $optionKey => $optionVal):
+                                    $optionType = $optionVal->getType();
+                                    $optionId = $optionVal->getId();
+                                    if($optionId=="22"){//Auto TopUp Amount ?>
+                                        <div class="col-md-2" id="<?php echo "topupamount_".$optionVal->getId(); ?>">
+                                            <label class="mobile-customer"><strong>Amount</strong></label>
+                                            <select name="options[<?php echo $optionVal->getId(); ?>]" id='autotopupamount' class='form-control inputH'>
+                                            <?php foreach($optionVal->getValues() as $valuesKey => $valuesVal) { ?>
+                                                <option value="<?php echo $valuesVal->getId(); ?>"><?php if(floatval($valuesVal->getTitle())>0): echo round($convRate*floatval($valuesVal->getTitle())); else: echo $valuesVal->getTitle(); endif; ?></option>
+                                            <?php } ?>
+                                            </select>
+                                        </div>
+                                    <?php break; } 
+                                endforeach;
+                                ?>
+                                
+                                <!--Auto TopUp IF Amount-->    
+                                <?php
+                                foreach($attVal as $optionKey => $optionVal):
+                                    $optionType = $optionVal->getType();
+                                    $optionId = $optionVal->getId();
+                                    if($optionId=="19"){//Auto TopUp IF Amount
+                                        ?>
+                                        <div class="col-md-3" id="<?php echo "topupifamount_".$optionVal->getId(); ?>">
+                                            <label class="mobile-customer"><strong>If balance reaches</strong></label>
+                                            <select name="options[<?php echo $optionVal->getId(); ?>]" id='autotopupifamount' class='form-control inputH'>
+                                                <?php foreach($optionVal->getValues() as $valuesKey => $valuesVal) { ?>
+                                                    <option value="<?php echo $valuesVal->getId(); ?>"><?php if(floatval($valuesVal->getTitle())>0): echo round($convRate*floatval($valuesVal->getTitle())); else:echo $valuesVal->getTitle(); endif; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    <?php break; }
+                                endforeach;
+                                ?>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <p class="tabs-section-panel-basket-btn"><a href="javascript:void(0)" class="add_to_basket_button_click topup_add_btn">Add to basket</a></p>
+                                </div>
+                                <div class="col-md-12 text-center" id="autotopup_msg" style="color:red; padding:7px;"></div>
+                                <div class="col-md-12"  id="upgrade_sim_button_autotopup" style="text-align:center;display:none; margin-top:10px; margin-bottom:10px;">
+                                    <p class="tabs-section-panel-basket-btn">
+                                        <a class="add_to_basket_button_click uprade_sim_button_link" style="padding: 15px;" href="javascript:void(0)"><strong>GET NEW FREE SIM</strong></a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div><!--Auto TopUp Options-->
+                        
+                        
+                        <!--Only TopUp Options-->
+                        <div class="topup-options">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="mobile-customer"><strong>Mobile number/Customer ID</strong></label>
+                                    <input class="form-control inputH mob_cus_id topup_cus_id" type="number" id="mob_cus_id" name="options[15]" value="<?php echo $username; ?>" placeholder="Mobile number/Customer ID" title="Please enter the uk mobile number and or Customer ID number provided with the sim">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="mobile-customer"><strong>Auto Top Up</strong></label>
+                                    <select class="form-control inputH select-topup-options" name="options[21]" id="autotopup_21">
+                                        <option value="125" selected>No</option>
+                                        <option value="126">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 lastCustomer"> 
+                                    <label class="mobile-customer ">&nbsp;  <br /></label>
+                                    <input name="qty" type="hidden" class="input-text qty" id="qty" maxlength="12" value="<?php echo $this->getMinimalQty($_product) ?>" />
+                                    <a class="add_to_basket_button_click topup_add_btn" href="javascript:void(0)">Add to basket</a></div>
+                            </div>
+                            <div class="row">
+                                <div id="topup_msg" style=" clear: both;color:red; padding:20px;"></div>
+                                <div class="col-md-12" id="upgrade_sim_button_topup" style="text-align:center;display:none; margin-top:10px; margin-bottom:10px;">
+                                    <p class="tabs-section-panel-basket-btn">
+                                        <a class="add_to_basket_button_click uprade_sim_button_link" style="padding: 15px;" href="javascript:void(0)"><strong>GET NEW FREE SIM</strong></a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                            if($first_credit_option==""){
+                                $first_credit_option="£10";
+                            }
+                        ?>
+                        <ul class="unorerList  mt-4" >
+                            <li>You can find out your UK WorldSIM number by dialing 133 from your handset</li>
+                            <li>Top Up Validity is 1 Year except for <?php echo $first_credit_option ?>.</li>
+                            <li>For <?php echo $first_credit_option ?> Top Up Validity is 30 days.</li>
+                        </ul>
+                    </div>
+
+                    <p class="payment-icon mt-4">
+                        <img alt="" class="lozad lazy" data-src="<?php echo $this->getSkinUrl(''); ?>images/payment_icons_tabs.jpg" src="<?php echo $block->getViewFileUrl('images/payment_icons_tabs.jpg'); ?>">
+                    </p>
+                    <p class="text-center logos-Security">
+                        <span> Shopping secured by:</span> <img alt="" src="<?php echo $block->getViewFileUrl('images/logos-Security.jpg'); ?>"  class="lozad" data-src="<?php echo $this->getSkinUrl(''); ?>images/logos-Security.jpg" style="display: inline-block;">
+                    </p>
+                </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<section class="w-100 addAccording pull-left mt-3 mb-5">
+    <div class="container">
+    <a class="clickAcc" href="javascript:;">OTHER WAYS TO RECHARGE / TOP UP YOUR WORLDSIM ACCOUNT </a>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        TOP UP BY PHONE
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse in" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="row">  
+                        <div class="col-sm-5">
+                            <p class="text-center"><img alt="Top up by phone" class="lozad lazy" data-src="<?php echo $this->getSkinUrl(''); ?>images/topupphone.png"  src="<?php echo $block->getViewFileUrl('images/topupphone.png'); ?>"></p>
+                        </div>
+                        <div class="col-sm-7">
+                            <h3 class="text-center" >Top up by phone</h3>
+                            <p>1. If you are travelling abroad and do not have access to the internet, do not worry. Simply dial 190 Free from your WorldSIM for free 24 hours a day and we can top up your credit over the phone.</p>
+                            <p>2. If you prefer, you can log into My Account, click on 'Self Service Hub,' and request a call back from Customer Service.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            TOP UP BY TOP UP VOUCHER
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="row">  
+                            <div class="col-sm-5">
+                                <p class="text-center"><img src="<?php echo $block->getViewFileUrl('images/voucher.png'); ?>" alt="Top up by phone" class="lozad lazy" data-src="<?php echo $this->getSkinUrl(''); ?>images/voucher.png" ></p>
+                            </div>
+                            <div class="col-sm-7">
+                               
+                                    <h3 class="text-center">Top up with a voucher</h3>
+                                    <p>1. Enter the number on the back of your recharge voucher into your phone (including any '0s' at the beginning) and press dial. Your SIM will be topped up instantly &amp; you will receive an SMS confirmation. You can check your new balance by dialling 187.</p>
+                                    <p>2. On some handsets you will be required to enter your redeem code as follows *RedeemCode# and then press dial.</p>
+                              
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</section>   
+
+
+
+<script type="text/javascript">
+      require(['jquery'], function ($) {
+    $('.topup_add_btn').click(function(e) {
+        
+        if ($(".select-autotopup-options option:selected").text() == "Yes") {
+            $("#mob_cus_id").val($("input[name=mob_cus_id_auto]").val());//get Mob Cus Id from AUTO MOB CUS ID input field
+        }
+        e.preventDefault();
+        var $mob_cus_id = $("#mob_cus_id").val();
+        var $pass_puk ="";//Do Not take pass if normal topup button has been clicked
+        //var $pass_puk = "PinLess";
+        var $isauto_topup = $("#autotopup_21 option:selected").text();
+        var $autopupamount = $("#autotopupamount option:selected").text();
+        var $autopupifamount = $("#autotopupifamount option:selected").text();
+        var $topupvoucher = '';
+        var $is_customer_login = "<?php echo $cusCrmId; ?>";
+        
+        if($mob_cus_id==''){
+            alert("Plese enter Mobile Number or Customer ID");
+            return;
+        }
+        if($isauto_topup=="Yes"){
+            var $pass_puk =$(".pin-autotopup").val();
+            if($pass_puk==''){
+                alert("Plese enter PIN/PUK");
+                return;
+            } else if($autopupamount=='-'){
+                alert("Plese select Auto Top Up amount");
+                return;
+            } else if($autopupifamount=='-'){
+                alert("Plese select Auto Top Up threshold amount");
+                return;
+            }
+        }
+        $.ajax({
+            url:"<?php echo $this->getUrl(''); ?>customer-check.php",
+            cache: false,
+            type: 'post',
+            data: {'mob_cus_id': $mob_cus_id, 'pass_puk': $pass_puk, 'isauto_topup': $isauto_topup, 'topupvoucher': $topupvoucher},
+            success:function(result){
+                if(result.indexOf('successful') > -1){
+                    $("#topup_msg").hide();
+                    document.getElementById('product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                } else if(result.indexOf('notopupfound') > -1) {//means customer have account but not topup found, redirect to login page
+                    $("#topup_msg").hide();
+                    document.getElementById('product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                } else if(result.indexOf('nocustomerfound') > -1){ // means Number is not registered to any customer
+                    $("#topup_msg").hide();
+                    $credit_val = $('#select_<?php echo $creditOption; ?>').val();
+                    $pass_puk = $("input[name=pass_puk]").val();
+                    $autotopup_val = $("#autotopup_21").val();
+                    $autopupamount_val = $("#autotopupamount").val();
+                    $autopupifamount_val = $("#autotopupifamount").val();
+
+                    if($isauto_topup=="Yes" && $is_customer_login==""){
+                        window.location = "<?php echo $this->getUrl(''); ?>add-to-cart-autopup.php?credit="+$credit_val+"=&mob_cus_id="+$mob_cus_id+"&pin_puk="+$pass_puk+"&autotopup="+$autotopup_val+"&autotopup_if_amount="+$autopupifamount_val+"&autotopup_amount="+$autopupamount_val+"&promocode="+$topupvoucher;
+                    } else {
+                        document.getElementById('product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                    }
+
+                } else if(result.indexOf('topupfound') > -1){
+                    $("#topup_msg").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                    $("#autotopup_msg").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                    $("body").addClass("loading");
+                    document.getElementById('product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                } else if(result.indexOf('MsisdnIsValid') > -1){
+                    $("#topup_msg").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                    $("#autotopup_msg").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                    $("body").addClass("loading");
+                    $('#product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                } else if(result.indexOf('MsisdnNotValid') > -1){
+                    $("#topup_msg").html("Your details could not be located, please ensure you have typed them correctly. For assistance from our chat agents please <a href='javascript:void(Tawk_API.toggle())'>click here</a> ");// display error message
+                    $("#autotopup_msg").html("Your details could not be located, please ensure you have typed them correctly. For assistance from our chat agents please <a href='javascript:void(Tawk_API.toggle())'>click here</a> ");// display error message
+                } else if(result.indexOf('notvalidate') > -1){
+                    $("#topup_msg").html("Your details could not be located, please ensure you have typed them correctly. For assistance from our chat agents please <a href='javascript:void(Tawk_API.toggle())'>click here</a> ");// display error message
+                    $("#autotopup_msg").html("Your details could not be located, please ensure you have typed them correctly. For assistance from our chat agents please <a href='javascript:void(Tawk_API.toggle())'>click here</a> ");// display error message
+                } else if(result.indexOf('nottopup') > -1){
+                    $("#topup_msg").html("Couldn't able to TopUp. Please contact your sim agents.");// display error message
+                    $("#autotopup_msg").html("Couldn't able to TopUp. Please contact your sim agents.");// display error message    
+                } else if(result.indexOf('SimIsBlock') > -1){
+                    $("#topup_msg").html("Your account has been suspended. Please contact Worldsim customer services on press@wroldsim.com quoting your mobile number.");// display error message
+                    $("#autotopup_msg").html("Your account has been suspended. Please contact Worldsim customer services on press@wroldsim.com quoting your mobile number.");// display error message
+                } else if(result.indexOf('UR') > -1){
+                    $(".topup_add_btn").hide();
+                    $(".UR_hide_topup").hide();
+                    $(".first_credit_option").hide();
+                    
+                    $cur_selected_credit = $('#select_<?php echo $creditOption; ?>').val();
+                    if ($cur_selected_credit==<?php echo $first_credit_option_id ?>) {
+                        selectCredit(<?php echo $second_credit_option_id; ?>);
+                    }
+                    $("#upgrade_sim_button_topup").show();
+                    $("#upgrade_sim_button_autotopup").show();
+                    $("#topup_msg").html("Dear Customer, Your sim card is no longer active. Please select the amount of credit you require and click the button below and we will send you a complimentary upgraded sim.");// display error message
+                    $("#autotopup_msg").html("Dear Customer, Your sim card is no longer active. Please select the amount of credit you require and click the button below and we will send you a complimentary upgraded sim.");// display error message
+                    $.ajax({
+                        url:"https://www.worldsim.com/send_email_expired_topup.php",    //the page containing php script
+                        type: "post",    //request type,
+                        dataType: 'json',
+                        data: {'expired_mobile_number': $mob_cus_id},
+                        success:function(result){
+                            console.log(result.response);
+                        }
+                    });
+                } else if(result.indexOf('DeadSim') > -1){
+                    $(".topup_add_btn").hide();
+                    $(".UR_hide_topup").hide();
+                    $(".first_credit_option").hide();
+                    $(".extracredit").hide();
+                    if ($cur_selected_credit==<?php echo $first_credit_option_id ?>) {
+                        selectCredit(<?php echo $second_credit_option_id; ?>);
+                    }
+                    $("#upgrade_sim_button_topup").show();
+                    $("#upgrade_sim_button_autotopup").show();
+                    $("#topup_msg").html("Dear Customer, Your sim card is no longer active. Please select the amount of credit you require and click the button below and we will send you a complimentary upgraded sim.");// display error message
+                    $("#autotopup_msg").html("Dear Customer, Your sim card is no longer active. Please select the amount of credit you require and click the button below and we will send you a complimentary upgraded sim.");// display error message    
+                } else {
+                    $("#topup_msg").html(result);// display error message
+                    $("#autotopup_msg").html(result);// display error message
+                    //document.getElementById('product_addtocart_form_<?php echo $_product->getId(); ?>').submit();//add top up
+                }
+            }
+        });
+
+    });
+    
+    
+    //upgrade SIM Button has been clicked
+    $('.uprade_sim_button_link').click(function(){
+         //var $upgrade_credit_selected = $('#select_14').val();
+         var $upgrade_credit_selected = $("#select_14 option:selected").text();
+         var $upgrade_sim_number = $('#mob_cus_id').val();
+         $.ajax({
+            url:"<?php echo $this->getUrl(''); ?>add_upgrade_sim_card.php",
+            type: 'post',
+            data: {'product': '19', 'MobOptionId': '24', 'MobOptionValue': $upgrade_sim_number, 'CreditOptionId': '23', 'CreditOptionValue': $upgrade_credit_selected, 'current_currency_code': '<?php echo $currencyCode ?>' },
+            success:function(result){
+               window.location.href = result;
+			 
+            }
+         });
+    });
+    
+   
+  
+	  }); 
+</script>
+
+
+
+
+<script type="text/javascript">
+   //Select Credit
+    function selectCredit(creditId){
+        //$("select").val("val2");
+        jQuery('[id^="credit_"]').removeClass("active");
+        jQuery('#credit_'+creditId).addClass("active");
+        jQuery('#select_<?php echo $creditOption; ?>').val(creditId);
+    }
+     require(['jquery','Magento_Ui/js/modal/modal'], function ($) { 
+	
+    $( ".select-topup-options" ).change(function() {        
+        if ($(".select-topup-options option:selected").text() == "Yes") {
+
+            $(".auto-topup-options").show();
+            $(".topup-options").hide();
+            
+            $("input[name=pass_puk]").removeClass("pin-topup");
+            $("input[name=pass_puk]").addClass("pin-puk pin-autotopup");
+            
+            $(".select-autotopup-options").val($("#autotopup_21").val()); //select same value as per Auto TopUp
+            $("input[name=mob_cus_id_auto]").val($("#mob_cus_id").val());
+            
+        } else {
+            $(".auto-topup-options").hide();
+            $(".topup-options").show();
+        }
+    });
+    
+    $( ".select-autotopup-options" ).change(function() {        
+        if ($(".select-autotopup-options option:selected").text() == "No") {
+            //$(".select-autotopup-options").val("188");//select by default to Yes
+            $(".auto-topup-options").hide();
+            $(".topup-options").show();
+            
+            $("#autotopup_21").val($(".select-autotopup-options").val()); //select same value as per Auto TopUp
+            $("#mob_cus_id").val($("input[name=mob_cus_id_auto]").val());
+            
+        } else {
+            $(".auto-topup-options").show();
+            $(".topup-options").hide();
+        }
+    });
+    
+    //<![CDATA[
+    // var productAddToCartForm = new VarienForm('product_addtocart_form');
+// productAddToCartForm.submit = function(button, url) {
+//     if (this.validator.validate()) {
+//         var form = this.form;
+//         var oldUrl = form.action;
+
+//         if (url) {
+//            form.action = url;
+//         }
+//         var e = null;
+//         try {
+//             this.form.submit();
+//         } catch (e) {
+//         }
+//         this.form.action = oldUrl;
+//         if (e) {
+//             throw e;
+//         }
+
+//         if (button && button != 'undefined') {
+//             button.disabled = true;
+//         }
+//     }
+// }.bind(productAddToCartForm);
+
+// productAddToCartForm.submitLight = function(button, url){
+//     if(this.validator) {
+//         var nv = Validation.methods;
+//         delete Validation.methods['required-entry'];
+//         delete Validation.methods['validate-one-required'];
+//         delete Validation.methods['validate-one-required-by-name'];
+//       //  Remove custom datetime validators
+//         for (var methodName in Validation.methods) {
+//             if (methodName.match(/^validate-datetime-.*/i)) {
+//                 delete Validation.methods[methodName];
+//             }
+//         }
+
+//         if (this.validator.validate()) {
+//             if (url) {
+//                 this.form.action = url;
+//             }
+//             this.form.submit();
+//         }
+//         Object.extend(Validation.methods, nv);
+//     }
+// }.bind(productAddToCartForm);
+    //]]>
+	 });
+    </script>
+
+<script type="text/javascript">
+// dataLayer.push({
+  // 'event': 'productView' ,
+  // 'ecommerce': {
+    // 'detail': {
+      // 'products': [{
+        // 'name': 'Recharge / Top Up / Auto Top Up',         // Name or ID is required.
+        // 'id': 'top-up'
+       // }]
+     // }
+   // }
+// }); 
+</script>

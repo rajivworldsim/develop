@@ -1,0 +1,146 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_Blog
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\Blog\Block\Widget\Posts;
+
+/** @var Posts $block */
+$posts = $block->getCollection();
+?> 
+<div class="post-list-container mpcss mt-5 blog-sidebar" id="mpblog-list-container">
+	<div class="text-center">
+	<h3 class="heading heading-blog-title">WorldSIM Blog Posts</h3>
+	</div>
+    <div class="owl-carousel mt-4" id="post-carousel">
+        <?php foreach ($posts as $post) : 
+	/* 	echo "<pre>";
+		print_r ($post->getData());
+		echo "</pre>" */
+		
+		if($post->getShortDescription()!=''){
+		?>
+            <div class="post-list-item">
+                <div class="post-item-wraper">
+				
+                        <div class="blog-post-sidebar-cat">
+                            <a href="<?= $block->escapeUrl($post->getUrl()); ?>">
+						<?php if ($post->getImage()) : ?>
+							<img style="height: 220px"
+                                     src="<?= $block->escapeUrl($block->resizeImage($post->getImage(), '200x')) ?>"
+                                     alt="<?= $block->escapeHtml($post->getName()); ?>"/> 
+							<?php else :
+								if($post->getShortDescription()!=''){
+									preg_match_all('/<img[^>]+>/i',$post->getShortDescription(), $result);
+									echo $result[0][0]; 	
+								}else{
+									continue;
+								}
+							endif;
+						?>
+							<span class="blog-name"><?php echo $block->escapeHtml($post->getName()); ?></span>
+                         </a> 
+                        </div>
+                   
+                </div>
+            </div>
+			<?php } ?>
+        <?php endforeach; ?>
+    </div>
+</div>
+<style>
+.blog-post-home img{
+	height:290px;
+	transition: all 0.3s ease-in-out 0s;
+}
+.blog-name{
+    text-align: center;
+    display: block;
+    font-size: 16px;
+    color: #575757;
+    margin-top: 5px;
+}
+.post-item-wraper {
+    padding: 0 !important;
+}
+
+.post-image.blog-post-home {
+    overflow: hidden;
+}
+.post-item-wraper {
+    border: 0px;
+}
+.post-item-wraper:hover {
+    border:0px;
+    box-shadow: none;
+}
+.heading-blog-title{
+    margin-left: 0;
+    text-align: left; 
+    border-bottom: 1px solid #ccc;
+    color: #2084c7;
+    font-size: 19px;
+    font-weight: 400;
+    margin-bottom: 15px;
+    padding: 0 0 10px;
+    width: 100%;
+}
+div#mpblog-list-container a.ws-readmore {
+    border-radius: 48px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    padding: 15px 64px;
+    margin-top: 20px;
+    display: inline-block;
+}
+.blog-title-bottom {
+    color: #666;
+    font-size: 20px;
+}
+@media (max-width: 766px){
+.heading-blog-title{
+    font-size: 22px;
+}
+}
+@media (max-width: 980px){
+.heading-blog-title {
+    font-size: 35px;
+}
+}
+</style>
+<script>
+  require(['jquery', 'mageplaza/core/owl.carousel'], function($) { 
+$("#post-carousel").owlCarousel({
+	nav: true,
+	loop: true,
+	responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:1
+        },
+        1000:{
+            items:1
+        }
+    }
+});
+});
+</script>

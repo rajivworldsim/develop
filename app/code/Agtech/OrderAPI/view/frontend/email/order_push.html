@@ -1,0 +1,46 @@
+<!--@subject {{trans "Order Needs to Push to CRM"}} @-->
+{{template config_path="design/email/header_template"}}
+<table style="float:left; margin-right: 10px" class="fue-abc-items">
+   <tr>
+       <td>
+           <div class="greeting">Hi WorldSIM Team,</div>
+           <br/> 
+           <div>
+               Please push following Magento Order to CRM: {{var orderNumber}}
+           </div>
+       </td>
+   </tr>   
+   <!--<tr>
+       <td style="text-align: center;">
+           <a style="color: #fff;border: 1px solid transparent; padding: 16px 32px; outline: none; text-decoration: none; cursor: pointer; text-align: center;border-radius: 4px;"
+              href="{{var orderPushLink}}" target="_blank">
+               <button style="color: white; margin-top: 10px;margin-bottom: 30px;border: 0; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; background: #000; padding: 10px 15px; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px;">
+                   Push Order Now
+               </button>
+           </a>
+       </td>
+   </tr>-->
+   
+   <tr>
+       <td>
+           <strong>Error Message for Developer: </strong><br/>
+           <p>
+                {{var errorMsg}}
+           </p>
+       </td>
+   </tr>
+   <tr>
+       <td>
+           <br/>
+       </td>
+   </tr>
+   <tr>
+       <td>
+           <div>
+               Thank You!
+           </div>
+       </td>
+   </tr>
+ 
+</table>
+{{template config_path="design/email/footer_template"}}

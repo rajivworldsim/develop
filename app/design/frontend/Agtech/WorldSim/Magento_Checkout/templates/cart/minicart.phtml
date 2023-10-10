@@ -1,0 +1,149 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Checkout\Block\Cart\Sidebar */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+
+<div data-block="minicart" class="minicart-wrapper">
+    <a class="action showcart" href="<?= $block->escapeUrl($block->getShoppingCartUrl()) ?>"
+       data-bind="scope: 'minicart_content'">
+        <img alt="Basket" class="desktop" src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>">
+        <img alt="Basket" class="mobile" src="<?php echo $block->getViewFileUrl('images/icon-cart.svg'); ?>">
+        <!-- ko ifnot: getCartParam('summary_count') -->
+            <span class="counter-number">
+                0
+            </span>
+        <!-- /ko -->
+        <span class="counter-and-text">
+        <span class="counter qty empty"
+              data-bind="css: { empty: !!getCartParam('summary_count') == false && !isLoading() },
+               blockLoader: isLoading">
+           
+                <!-- ko if: getCartParam('summary_count') -->
+                 <span class="counter-number">
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                </span>
+                <!-- /ko -->
+                <!-- ko ifnot: getCartParam('summary_count') -->
+                <span class="counter-number">
+                0
+                </span>
+                <!-- /ko -->
+                
+            
+            
+            
+            <span class="counter-label">
+            <!-- ko if: getCartParam('summary_count') -->
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                <!-- ko i18n: 'items' --><!-- /ko -->
+            <!-- /ko -->
+            </span>
+        </span>
+        </span>
+    </a>
+    <?php if ($block->getIsNeedToDisplaySideBar()):?>
+        <div class="block block-minicart"
+             data-role="dropdownDialog"
+             data-mage-init='{"dropdownDialog":{
+                "appendTo":"[data-block=minicart]",
+                "triggerTarget":".showcart",
+                "timeout": "2000",
+                "closeOnMouseLeave": false,
+                "closeOnEscape": true,
+                "triggerClass":"active",
+                "parentClass":"active",
+                "buttons":[]}}'>
+            <div id="minicart-content-wrapper" data-bind="scope: 'minicart_content'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+            <?= $block->getChildHtml('minicart.addons') ?>
+        </div>
+    <?php else: ?>
+        <?php $scriptString = <<<script
+            require(['jquery'], function ($) {
+                $('a.action.showcart').on('click', function() {
+                    $(document.body).trigger('processStart');
+                });
+            });
+script;
+        ?>
+        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false); ?>
+    <?php endif ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], 'window.checkout = ' .
+     /* @noEscape */ $block->getSerializedConfig(), false); ?>
+    <script type="text/x-magento-init">
+    {
+        "[data-block='minicart']": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+        },
+        "*": {
+            "Magento_Ui/js/block-loader": "<?= $block->escapeJs(
+                $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif'))
+            ) ?>"
+        }
+    }
+    </script>
+</div>
+<style>
+.minicart-wrapper .action.showcart img {
+    object-fit: none;
+    object-position: -162px 0;
+    width: 28px;
+    height: 24px;
+    margin: -6px 2px 0 4px;
+    display: inline-block;
+}
+.minicart-wrapper a.action.showcart{
+    background: none;
+    border: 1px solid #fff;
+    border-radius: 3px 3px 0 0;
+    color: #515151;
+    font-size: 14px;
+    position: relative;
+    font-weight: 700;
+    padding: 10px 5px;
+    border-bottom:0px;
+}
+.minicart-wrapper a.action.showcart:hover{
+    border-color: #ccc #ccc currentcolor;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
+    box-shadow: 0 0 5px rgb(0 0 0 / 15%);
+}
+
+.minicart-wrapper a.action.showcart:before{
+    content:'';
+    display:none !important;
+}
+.navigation, .breadcrumbs, .page-header .header.panel, .header.content, .footer.content, .page-wrapper>.widget, .page-wrapper>.page-bottom, .block.category.event, .top-container, .page-main{
+    max-width:1200px;
+}
+.minicart-wrapper .action.showcart .counter-number{
+    text-shadow:none;
+}
+.minicart-wrapper .action.showcart .counter.qty{
+    display:inline;
+    background:none;
+    color:#515151;
+    padding:0;
+
+}
+.ammenu-header-container .header.content .minicart-wrapper {
+    position: relative;
+        margin-right: 30px;
+}
+.ammenu-header-container .header.content .minicart-wrapper:before{
+    position: absolute;
+    content: '';
+    width: 1px;
+    height: 32px;
+    left: 0;
+    top: 19px;
+    background: #ccc;
+    z-index: 1;}
+</style>

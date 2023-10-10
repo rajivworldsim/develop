@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Worldsim\Databundle\Api\RateSheetDataBundleRepositoryInterface" type="Worldsim\Databundle\Model\RateSheetDataBundleRepository"/>
+	<preference for="Worldsim\Databundle\Api\Data\RateSheetDataBundleInterface" type="Worldsim\Databundle\Model\RateSheetDataBundle"/>
+	<preference for="Worldsim\Databundle\Api\Data\RateSheetDataBundleSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="Worldsim\Databundle\Model\ResourceModel\RateSheetDataBundle\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">worldsim_databundle_rate_sheet_data_bundle</argument>
+			<argument name="resourceModel" xsi:type="string">Worldsim\Databundle\Model\ResourceModel\RateSheetDataBundle\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="worldsim_databundle_rate_sheet_data_bundle_listing_data_source" xsi:type="string">Worldsim\Databundle\Model\ResourceModel\RateSheetDataBundle\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+	
+	<!-- Clean Order Data -->
+   	<type name="Magento\Framework\Console\CommandList">
+		<arguments>
+			<argument name="commands" xsi:type="array">
+				<item name="rateSheetDataBundle" xsi:type="object">Worldsim\Databundle\Console\Command\DataBundleImportOptions</item>
+			</argument>
+		</arguments>
+	</type>
+
+
+
+	<preference for="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" type="Worldsim\Databundle\Model\GoAPIResponseRepository"/>
+	<preference for="Worldsim\Databundle\Api\Data\GoAPIResponseInterface" type="Worldsim\Databundle\Model\GoAPIResponse"/>
+	<preference for="Worldsim\Databundle\Api\Data\GoAPIResponseSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="Worldsim\Databundle\Model\ResourceModel\GoAPIResponse\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">worldsim_databundle_go_api_response</argument>
+			<argument name="resourceModel" xsi:type="string">Worldsim\Databundle\Model\ResourceModel\GoAPIResponse\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="worldsim_databundle_go_api_response_listing_data_source" xsi:type="string">Worldsim\Databundle\Model\ResourceModel\GoAPIResponse\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+
+</config>

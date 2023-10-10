@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+/** @var \Magefan\GoogleTagManager\Block\GtmCode $block */
+?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "mfGtmCustomerDataLayer": {}
+        }
+    }
+</script>
+
+<script>
+    "use strict";
+
+    function mfHyvaGtmCustomerDataLayer(event) {
+        let data, eventFired, i, j, k;
+        let sections = event.detail.data;
+        for ( j in sections) {
+            data = sections[j];
+            if (!data.mf_datalayer) continue;
+
+            for (i = 0; i < data.mf_datalayer.length; i++) {
+                window.dataLayer = window.dataLayer || [];
+                eventFired = false;
+                for (k = 0; k < window.dataLayer.length; k++) {
+                    if (data.mf_datalayer[i].magefanUniqueEventId
+                        && data.mf_datalayer[i].magefanUniqueEventId == window.dataLayer[k].magefanUniqueEventId
+                    ) {
+                        eventFired = true;
+                        break;
+                    }
+                }
+                if (!eventFired) {
+                    window.dataLayer.push(data.mf_datalayer[i]);
+                }
+            }
+            delete event.detail.data[j].mf_datalayer;
+            let mcs = localStorage.getItem('mage-cache-storage');
+            if (mcs) {
+                mcs = JSON.parse(mcs);
+                if (mcs && mcs[j] && mcs[j].mf_datalayer) {
+                    delete mcs[j].mf_datalayer;
+                    localStorage.setItem('mage-cache-storage', JSON.stringify(mcs));
+                }
+            }
+        }
+    }
+    window.addEventListener("private-content-loaded", mfHyvaGtmCustomerDataLayer);
+</script>

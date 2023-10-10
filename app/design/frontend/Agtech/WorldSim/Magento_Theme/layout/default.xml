@@ -1,0 +1,60 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<move element="store_switcher" destination="header.panel" after="store_language" />
+		<!-- <block class="Magento\Directory\Block\Currency" name="store.settings.currency" template="Magento_Directory::currency.phtml" cacheable="false"/> -->
+		<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+		<referenceBlock name="catalog.compare.link" remove="true"/>
+		<referenceBlock name="store.settings.currency" remove="true"/>
+		<referenceBlock name="menu_custom_agtech">
+			<!--<block class="Magento\Directory\Block\Currency" name="currency_mobile" cacheable="false" template="Magento_Directory::currency_mobile.phtml"/>-->
+		</referenceBlock>
+		<referenceContainer name="header.panel">
+			<block class="Magento\Directory\Block\Currency" name="currency" cacheable="false" before="store_language" template="Magento_Directory::currency.phtml"/>
+		</referenceContainer>
+		<referenceContainer name="header-wrapper">
+			 <referenceBlock name="catalog.compare.link" remove="true"/>
+		</referenceContainer>
+		<referenceBlock name="header.panel">
+			<block class="Magento\Cms\Block\Block" name="header-topblock">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">home-header</argument> 
+                </arguments>			
+		    </block>
+			<block class="Magento\Framework\View\Element\Template" name="top.search.nav" as="topSearchNav" template="Magento_Search::form.mini.phtml" after="-">
+                    <arguments>
+                        <argument name="configProvider" xsi:type="object">Magento\Search\ViewModel\ConfigProvider</argument>    
+                    </arguments>
+                </block>
+		</referenceBlock>
+		<move element="top.search.nav" destination="header.panel" after="currency"/>
+		<move element="navigation.sections" destination="header-wrapper" before="minicart" />
+		<referenceContainer name="footer-container"> 
+			<container name="footer-block" htmlTag="div" htmlClass="container-test">
+				<block class="Magento\Cms\Block\Block" name="footer-custom">
+					<arguments>
+						<argument name="block_id" xsi:type="string">home-footer</argument>
+					</arguments>
+				</block>
+			</container>
+		</referenceContainer>
+		<referenceBlock name="register-link" remove="true" />           
+		<referenceBlock name="authorization-link" remove="true" />      
+		<referenceBlock name="wish-list-link" remove="true" />          
+		<referenceBlock name="my-account-link" remove="true" /> 
+		<referenceBlock name="authorization-link-login" remove="true" />
+		<referenceBlock name="footer_links" remove="true"/>
+		<referenceBlock name="form.subscribe" remove="true" />
+		<referenceBlock name="copyright" remove="true"/>
+		<referenceBlock name="store_language" remove="true"/>
+		<referenceBlock name="store_switcher" remove="true"/>
+		<referenceBlock name="skip_to_content" remove="true"/>
+		<referenceContainer name="before.body.end">
+			<block class="Magento\Cms\Block\Block" name="custom-js">
+				<arguments>
+					<argument name="block_id" xsi:type="string">custom-js</argument>
+				</arguments>
+			</block>
+		</referenceContainer>
+
+    </body>
+</page>

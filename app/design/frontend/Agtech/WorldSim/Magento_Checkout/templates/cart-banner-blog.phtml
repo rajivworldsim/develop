@@ -1,0 +1,101 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+$cartHelper = $objectManager->get('Magento\Checkout\Helper\Cart');
+$product_model = $objectManager->create('Magento\Catalog\Model\Product')->load(113);
+$customOptions = $objectManager->get('Magento\Catalog\Model\Product\Option')->getProductOptionCollection($product_model);
+$currencyCode =$storeManager->getStore()->getCurrentCurrencyCode();
+$currencyFactory = $objectManager->get('Magento\Directory\Model\CurrencyFactory')->create()->load($currencyCode);
+$storeCode = $storeManager->getStore()->getCode();
+$storeId = $storeManager->getStore()->getId();
+ /* Currncy Code*/
+$currencySymbol = $currencyFactory->getCurrencySymbol(); /* Currency Symbol */
+$currencies = $storeManager->getStore()->getAllowedCurrencies();
+$baseCurrencyCode = $storeManager->getStore()->getBaseCurrencyCode();
+$defaultCurrencies = $storeManager->getStore()->getBaseCurrency();
+$Current_CurrencyCode =  $storeManager->getStore()->getCurrentCurrencyCode();
+
+?>
+
+<div class="securiyLogo w-100 pull-left mt-4 mb-4 text-center">
+    <p class="mb-1">Shopping secured by:</p>
+    <p>
+        <img alt="Secured Shopping" src="<?php echo $block->getViewFileUrl('images/securitylogo_cartpage.jpg'); ?>">
+    </p>
+</div>
+<div class="bannerBlog w-100 pull-left">
+    <div class="row ">
+        <div class="col-lg-6 mb-4 text-center">
+            <div class="bannerimg">
+                <a class="basket_adapter_mask" href="javascript:void(0)" onclick='document.getElementById("kn95-d").click()'>
+                    <img src="<?php echo $block->getViewFileUrl('images/KN95-checkout-dollar.jpg'); ?>" alt="">
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4 text-center">
+            <div class="bannerimg">
+                <a class="basket_adapter_red" href="javascript:void(0)" onclick='document.getElementById("adapter-wt").click()'>
+                    <img src="<?php echo $block->getViewFileUrl('images/TravelAdaptor_creative_ad_dollar-rev.jpg'); ?>" alt="">
+					
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-none add-tocart-form-product">
+<form data-role="tocart-form" action="<?php echo  $cartHelper->getAddUrl($product_model ); ?>" method="post">
+	<?php echo $block->getBlockHtml('formkey');
+	foreach($customOptions as $option){
+			$values = $option->getValues();
+			if($option->getId()==117){?>
+				<select name="options[117]" id="select_117" class=" required product-custom-option admin__control-select" title="" data-selector="options[117]" aria-required="true">
+				<?php foreach($values as $value_sev){  
+                    if ($value_sev->getId()==340){         ?>
+				<option  value="<?php echo $value_sev->getId(); ?>"> <?php echo $value_sev->getTitle(); ?></option>
+			<?php  }
+            } ?>
+			</select>
+			<?php } else if($option->getId()==319){ ?>
+				<select name="options[319]" id="select_319" class=" required product-custom-option admin__control-select" title="" data-selector="options[319]" aria-required="true">
+				<?php foreach($values as $value){  
+                    if ($value->getId()==827){ ?>
+				<option value="<?php echo $value->getId(); ?>"> <?php echo $value->getTitle(); ?></option>
+				<?php } 
+                } ?>
+				</select>
+			<?php }
+		}
+	?>
+		<div class="btn">
+        <button type="submit" title="Add to Cart" id="kn95-d" class="action tocart primary">
+            <span>Add to Cart</span>
+        </button>
+    </div>  
+	</form>
+<?php
+    $product_model_another = $objectManager->create('Magento\Catalog\Model\Product')->load(213);
+    $customOptions_another = $objectManager->get('Magento\Catalog\Model\Product\Option')->getProductOptionCollection($product_model_another);
+?>
+    <form data-role="tocart-form" action="<?php echo  $cartHelper->getAddUrl($product_model_another); ?>" method="post">
+	<?php echo $block->getBlockHtml('formkey');
+	foreach($customOptions_another as $option){
+			$values = $option->getValues();
+			if($option->getId()==294){?>
+				<select name="options[294]" id="select_294" class=" required product-custom-option admin__control-select" title="" data-selector="options[294]" aria-required="true">
+				<?php foreach($values as $value_sev){  
+                    if ($value_sev->getId()==780){?>
+				<option  value="<?php echo $value_sev->getId(); ?>"> <?php echo $value_sev->getTitle(); ?></option>
+			<?php  }
+            } ?>
+			</select>
+			<?php }
+		}
+	?>
+		<div class="btn">
+        <button type="submit" title="Add to Cart" id="adapter-wt" class="action tocart primary">
+            <span>Add to Cart</span>
+        </button>
+    </div>  
+	</form>
+
+    </div>

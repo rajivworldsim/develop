@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package Amasty Mega Menu GraphQl for Magento 2 (System)
+*/-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="ammegamenu_general_enabled" xsi:type="string">ammegamenu/general/enabled</item>
+                <item name="ammegamenu_general_sticky" xsi:type="string">ammegamenu/general/sticky</item>
+                <item name="ammegamenu_general_hamburger_enabled" xsi:type="string">ammegamenu/general/hamburger_enabled</item>
+                <item name="ammegamenu_general_mobile_template" xsi:type="string">ammegamenu/general/mobile_template</item>
+                <item name="ammegamenu_general_show_icons" xsi:type="string">ammegamenu/general/show_icons</item>
+
+                <item name="ammegamenu_color_color_template" xsi:type="string">ammegamenu/color/color_template</item>
+                <item name="ammegamenu_color_menu_background" xsi:type="string">ammegamenu/color/menu_background</item>
+                <item name="ammegamenu_color_main_menu_background" xsi:type="string">ammegamenu/color/main_menu_background</item>
+                <item name="ammegamenu_color_main_menu_background_hover" xsi:type="string">ammegamenu/color/main_menu_background_hover</item>
+                <item name="ammegamenu_color_menu_highlight" xsi:type="string">ammegamenu/color/menu_highlight</item>
+                <item name="ammegamenu_color_menu_text" xsi:type="string">ammegamenu/color/menu_text</item>
+                <item name="ammegamenu_color_main_menu_text" xsi:type="string">ammegamenu/color/main_menu_text</item>
+                <item name="ammegamenu_color_main_menu_text_hover" xsi:type="string">ammegamenu/color/main_menu_text_hover</item>
+                <item name="ammegamenu_color_submenu_background" xsi:type="string">ammegamenu/color/submenu_background</item>
+                <item name="ammegamenu_color_submenu_background_color" xsi:type="string">ammegamenu/color/submenu_background_color</item>
+                <item name="ammegamenu_color_submenu_background_image" xsi:type="string">ammegamenu/color/submenu_background_image</item>
+                <item name="ammegamenu_color_submenu_text" xsi:type="string">ammegamenu/color/submenu_text</item>
+                <item name="ammegamenu_color_submenu_text_hover" xsi:type="string">ammegamenu/color/submenu_text_hover</item>
+                <item name="ammegamenu_color_category_hover_color" xsi:type="string">ammegamenu/color/category_hover_color</item>
+                <item name="ammegamenu_color_current_category_color" xsi:type="string">ammegamenu/color/current_category_color</item>
+                <item name="ammegamenu_color_toggle_icon_color" xsi:type="string">ammegamenu/color/toggle_icon_color</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\MegaMenu\Model\Menu\Content\Resolver">
+        <plugin name="Amasty_MegaMenuGraphQl::disable_parse_category_content"
+                type="Amasty\MegaMenuGraphQl\Plugin\Menu\Content\Resolver\DisableCategoriesContent"/>
+    </type>
+
+    <type name="Amasty\MegaMenuLite\Model\Menu\Content\Resolver\GetVariableResolver">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="child_categories_content" xsi:type="object">Amasty\MegaMenuGraphQl\Model\Menu\Content\Resolver\GetChildCategoriesContent</item>
+                <item name="child_items_content" xsi:type="object">Amasty\MegaMenuGraphQl\Model\Menu\Content\Resolver\GetChildCategoriesContent</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

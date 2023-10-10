@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="checkout_cart_item_renderers"/>
+    <body>
+		
+		<!-- <container name="root">
+                <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
+        </container> -->
+        <referenceContainer name="sidebar.additional">
+			<block class="Magento\Framework\View\Element\Template" name="delivery_sidebar" template="Magento_Checkout::free-delivery.phtml" before="payment_icon"> 
+			</block>
+			
+			<block class="Magento\Cms\Block\Block" name="payment_icon">
+				<arguments>
+					<argument name="block_id" xsi:type="string">payment_icon</argument>
+				</arguments>
+			</block>
+			
+			<block class="Magento\Framework\View\Element\Template" name="newproduct_sidebar" template="Magento_Catalog::product/new_product.phtml" after="-"> 
+			
+			</block>
+			
+			<block class="Magento\Cms\Block\Block" name="category_blog" after="newproduct_sidebar">
+				<arguments>
+					<argument name="block_id" xsi:type="string">category_blog</argument>
+				</arguments>
+			</block>
+			
+		</referenceContainer>
+       <move element="page.main.title" destination="checkout.cart.container" before="checkout.cart.form" />
+       <move element="cart.summary" destination="checkout.cart.container" after="checkout.cart.form" />
+       <move element="cart-banner" destination="checkout.cart.container" after="cart.summary" /> 
+	   <move element="checkout.cart.coupon" destination="checkout.cart.container" before="cart.summary" />
+	     <move element="delivery-info" destination="checkout.cart.container" after="cart-banner" />
+		<container name="cart-banner" htmlTag="div" htmlClass="cart-banner w-100 pull-left mb-4" after="-">
+			<block class="Magento\Framework\View\Element\Template" name="blog.banner" before="-" template="Magento_Checkout::cart-banner-blog.phtml" />
+		</container>
+		
+		<container name="delivery-info" htmlTag="div" htmlClass="simaccording mb-5 w-100 pull-left mb-4" htmlId="delivey-info" after="cart-banner">
+			<block class="Magento\Framework\View\Element\Template" name="technical.specification1" before="-" template="Magento_Catalog::product/view/delivery-info.phtml" />
+		</container> 
+		
+    </body>
+</page>

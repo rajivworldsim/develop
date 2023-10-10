@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<referenceContainer name="page.wrapper">
+			<container name="sim-card-section" htmlTag="div" htmlClass="sim-card-section-nav mid-nav w-100" before="page-footer">
+				<block class="Magento\Catalog\Block\Product\View" name="sim-card-section-tabs" before="-" template="Magento_Catalog::product/view/sim-card-section-tabs.phtml" />
+			</container>
+			<container name="custom-overview" htmlTag="div" htmlClass="overviewSim w-100 pull-left mb-0 mt-3" htmlId="overview" after="sim-card-section">
+				<block class="Magento\Catalog\Block\Product\View" name="custom.overview" before="-" template="Magento_Catalog::product/view/custom-overview.phtml" />
+			</container>
+			<container name="content_faq" htmlTag="div" htmlClass="overviewSim w-100 pull-left mb-2 mt-5" before="custom-overview">
+				<block class="Magento\Catalog\Block\Product\View" name="content.faq" before="-" template="Magento_Catalog::product/view/faq.phtml" /> 
+			</container>
+			
+			<container name="whats_included" htmlTag="div" htmlClass="product-detail-include w-100 pull-left mb-2" htmlId="whats_included" after="custom-overview">
+				<block class="Magento\Catalog\Block\Product\View" name="whats.included" before="-" template="Magento_Catalog::product/view/whats_included.phtml" />
+			</container>
+			<container name="features" htmlTag="div" htmlClass="featuresSim inlude-feature w-100 mt-4 mb-0 pull-left" htmlId="features" after="content_faq">
+				<block class="Magento\Catalog\Block\Product\View" name="features.bottom" before="-" template="Magento_Catalog::product/view/features.phtml" />
+			</container>
+			
+			<container name="technical-specification" htmlTag="div" htmlClass="technical-section mb-5 w-100 pull-left mb-4" htmlId="technical_specs" after="whats_included">
+				<block class="Magento\Catalog\Block\Product\View" name="technical.specification" before="-" template="Magento_Catalog::product/view/technical-specification.phtml" />
+			</container>
+			
+
+			<container name="content_upsell" htmlTag="div" htmlClass="upsell-product container" after="features">
+				
+			</container>
+			 
+			<block class="Magento\Framework\View\Element\Template" name="googlereview" template="Agtech_CmsBlocks::google_reviews.phtml"/>
+			<referenceBlock name="googlereview">
+	            <arguments>
+	               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+	            </arguments>
+	        </referenceBlock>
+			<block class="Magento\Cms\Block\Block" name="blog_slider_bottom">
+			<arguments>
+				<argument name="block_id" xsi:type="string">blog_slider_bottom</argument>
+			</arguments>
+			</block>
+			
+			<!--<container name="delivery-info" htmlTag="div" htmlClass="simaccording mb-5 w-100 pull-left mb-4" htmlId="delivey-info" after="product.info.description"> <block class="Magento\Catalog\Block\Product\View" name="technical.specification1" before="-" template="Magento_Catalog::product/view/delivery-info.phtml" /></container>-->
+			 
+			 
+		</referenceContainer>
+		<referenceContainer name="root" htmlTag="div" htmlClass="custom-class">
+		</referenceContainer>
+		
+    </body>
+</page>

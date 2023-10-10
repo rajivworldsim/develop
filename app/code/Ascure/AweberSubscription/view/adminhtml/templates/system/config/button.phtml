@@ -1,0 +1,73 @@
+<?php
+$generateController = $block->getGenerateControllerUrl();
+$refreshController = $block->getRefreshControllerUrl();
+
+if ($block->isModuleEnabled()):
+    ?>
+    <?php echo $block->getGenerateButtonHtml(); ?>
+    <?php echo $block->getRefreshButtonHtml(); ?>
+    <script>
+        require([
+            'jquery',
+        ], function (jQuery) {
+            // Function to generate a new token
+            function generate() {
+                new Ajax.Request('<?php /* @escapeNotVerified */echo $generateController ?>', {
+                    loaderArea: true,
+                    asynchronous: true,
+                    showLoader: true,
+                    onSuccess: function (transport) {
+                        var response = transport.responseText; 
+                        var parsedResponse = JSON.parse(response);
+
+                        if (parsedResponse.success) {
+                            console.log(parsedResponse.message);
+                            console.log('Authorization URL: ' + parsedResponse.authorizationUrl); // Display authorization URL
+                            window.open(parsedResponse.authorizationUrl, '_blank');
+                            // Force a hard refresh of the page after a successful request
+                            location.reload(true);
+                        } else {
+                            console.log('Authentication failed: ' + parsedResponse.message);
+                        }
+                    }
+                });
+            }
+            
+            // Function to refresh the token
+            function refresh() {
+                console.log('Refresh button clicked');
+                new Ajax.Request('<?php /* @escapeNotVerified */echo $refreshController ?>', {
+                    loaderArea: true,
+                    asynchronous: true,
+                    showLoader: true,
+                    onSuccess: function (transport) {
+                        var response = transport.responseText;
+                        var parsedResponse = JSON.parse(response);
+
+                        if (parsedResponse.success) {
+                            console.log(parsedResponse.message);
+
+                            if (parsedResponse.data_new) {
+                                var newData = parsedResponse.data_new;
+                                var newDataString = JSON.stringify(newData, null, 2);
+                                console.log("New Token Data:\n" + newDataString);
+                            }
+                            // Force a hard refresh of the page after a successful request
+                            location.reload(true);
+                        } else {
+                            console.log('Authentication failed: ' + parsedResponse.message);
+                        }
+                    }
+                });
+            }
+
+            // Attach click event handlers to buttons
+            jQuery('#generate_btn_id').click(function () {
+                generate();
+            });
+            jQuery('#refresh_btn_id').click(function () {
+                refresh();
+            });
+        });
+    </script>
+<?php endif; ?>

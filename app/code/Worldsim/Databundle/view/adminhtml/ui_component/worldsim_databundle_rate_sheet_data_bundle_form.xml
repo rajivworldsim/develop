@@ -1,0 +1,434 @@
+<?xml version="1.0" ?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">worldsim_databundle_rate_sheet_data_bundle_form.rate_sheet_data_bundle_form_data_source</item>
+		</item>
+		<item name="label" xsi:type="string" translate="true">General Information</item>
+		<item name="template" xsi:type="string">templates/form/collapsible</item>
+	</argument>
+	<settings>
+		<buttons>
+			<button name="back" class="Worldsim\Databundle\Block\Adminhtml\Rate\Sheet\Data\Bundle\Edit\BackButton"/>
+			<button name="delete" class="Worldsim\Databundle\Block\Adminhtml\Rate\Sheet\Data\Bundle\Edit\DeleteButton"/>
+			<button name="save" class="Worldsim\Databundle\Block\Adminhtml\Rate\Sheet\Data\Bundle\Edit\SaveButton"/>
+			<button name="save_and_continue" class="Worldsim\Databundle\Block\Adminhtml\Rate\Sheet\Data\Bundle\Edit\SaveAndContinueButton"/>
+		</buttons>
+		<namespace>worldsim_databundle_rate_sheet_data_bundle_form</namespace>
+		<dataScope>data</dataScope>
+		<deps>
+			<dep>worldsim_databundle_rate_sheet_data_bundle_form.rate_sheet_data_bundle_form_data_source</dep>
+		</deps>
+	</settings>
+	<dataSource name="rate_sheet_data_bundle_form_data_source">
+		<argument name="data" xsi:type="array">
+			<item name="js_config" xsi:type="array">
+				<item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+			</item>
+		</argument>
+		<settings>
+			<submitUrl path="*/*/save"/>
+		</settings>
+		<dataProvider name="rate_sheet_data_bundle_form_data_source" class="Worldsim\Databundle\Model\Ratesheetdatabundle\DataProvider">
+			<settings>
+				<requestFieldName>id</requestFieldName>
+				<primaryFieldName>id</primaryFieldName>
+			</settings>
+		</dataProvider>
+	</dataSource>
+	<fieldset name="general">
+		<settings>
+			<label>General</label>
+		</settings>
+		<field name="country" formElement="select" sortOrder="20">
+		    <argument name="data" xsi:type="array">
+		        <item name="options" xsi:type="object">Magento\Directory\Model\ResourceModel\Country\Collection</item>
+		        <item name="config" xsi:type="array">
+		            <item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+		        </item>
+		    </argument>
+		    <settings>
+		        <dataType>text</dataType>
+		        <label translate="true">Country</label>
+		        <dataScope>country</dataScope>
+		        <validation>
+		            <rule name="required-entry" xsi:type="boolean">true</rule>
+		        </validation>
+		    </settings>
+		    <formElements>
+		        <select>
+		            <settings>
+		                <options>
+		                    <option name="empty_option" xsi:type="array">
+		                        <item name="label" xsi:type="string" translate="true">-- Please Select --</item>
+		                        <item name="value" xsi:type="string"></item>
+		                    </option>
+		                </options>
+		            </settings>
+		        </select>
+		    </formElements>
+		</field>
+		<field name="region" formElement="select" sortOrder="30">
+			<argument name="data" xsi:type="array">
+				<item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Region</label>
+				<dataScope>region</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+			<formElements>
+				<select>
+					<settings>
+						<options>
+							<option name="single" xsi:type="array">
+								<item name="label" xsi:type="string" translate="true">Single</item>
+								<item name="value" xsi:type="string">Single Country</item>
+							</option>
+							<option name="multiple" xsi:type="array">
+								<item name="label" xsi:type="string" translate="true">Multiple</item>
+								<item name="value" xsi:type="string">Multiple Country</item>
+							</option>
+						</options>
+					</settings>
+				</select>
+			</formElements>
+		</field>
+		<field name="supplier" formElement="input" sortOrder="30">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Supplier</label>
+				<dataScope>supplier</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="simtype" formElement="input" sortOrder="40">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Sim Type</label>
+				<dataScope>simtype</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="days" formElement="input" sortOrder="50">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Days</label>
+				<dataScope>days</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="onegb" formElement="input" sortOrder="60">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">1 GB Price</label>
+				<dataScope>onegb</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="threegb" formElement="input" sortOrder="70">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">3 GB Price</label>
+				<dataScope>threegb</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="fivegb" formElement="input" sortOrder="80">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">5 GB Price</label>
+				<dataScope>fivegb</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="sixgb" formElement="input" sortOrder="85">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">6 GB Price</label>
+				<dataScope>sixgb</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="tengb" formElement="input" sortOrder="90">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">10 GB Price</label>
+				<dataScope>tengb</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="twenty" formElement="input" sortOrder="100">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">20 GB Price</label>
+				<dataScope>twenty</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="unlimited" formElement="input" sortOrder="110">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Unlimited GB Price</label>
+				<dataScope>unlimited</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="topupavail" formElement="input" sortOrder="120">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Top-Up Avail</label>
+				<dataScope>topupavail</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="roaminginc" formElement="input" sortOrder="130">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Roaming inc</label>
+				<dataScope>roaminginc</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="roamingcountries" formElement="input" sortOrder="140">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Roaming Countries</label>
+				<dataScope>roamingcountries</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="onegbcode" formElement="input" sortOrder="150">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">1 GB Code</label>
+				<dataScope>onegbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="threegbcode" formElement="input" sortOrder="160">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">3 GB Code</label>
+				<dataScope>threegbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="fivegbcode" formElement="input" sortOrder="170">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">5 GB Code</label>
+				<dataScope>fivegbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="sixgbcode" formElement="input" sortOrder="175">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">6 GB Code</label>
+				<dataScope>sixgbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="tengbcode" formElement="input" sortOrder="180">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">10 GB Code</label>
+				<dataScope>tengbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="twentygbcode" formElement="input" sortOrder="190">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">20 GB Code</label>
+				<dataScope>twentygbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="unlimitedgbcode" formElement="input" sortOrder="200">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Unlimited GB Code</label>
+				<dataScope>unlimitedgbcode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="worldsimshortCode" formElement="input" sortOrder="210">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Worldsim Short Code</label>
+				<dataScope>worldsimshortCode</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="worldsimdistrubtor" formElement="input" sortOrder="220">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">rate_sheet_data_bundle</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Worldsim Distrubtor</label>
+				<dataScope>worldsimdistrubtor</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+	</fieldset>
+</form>

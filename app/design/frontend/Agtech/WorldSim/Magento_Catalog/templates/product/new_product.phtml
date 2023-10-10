@@ -1,0 +1,48 @@
+<?php
+$abstractProductBlock = $block->getLayout()->createBlock('\Magento\Catalog\Block\Product\AbstractProduct');
+
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$helperImport =  $agtechobjBlock->getHelperimagep();
+$productCollectionFactory = $agtechobjBlock->getCollectionFactoryResource();
+
+$collection = $productCollectionFactory->create();
+$collection->addAttributeToSelect('*');
+$collection->addAttributeToSort('entity_id','desc');
+$collection->setPageSize(5); // selecting only 5 products
+$upperLimit = 5;
+/* foreach ($collection as $product) {
+    print_r($product->getData());     
+    echo "<br>";
+}   */
+
+  
+?>
+<div class="NewWorldListing best-selling w-100 pull-left mb-5">
+<h6 class="category-heading">Newest Products</h6>
+  <div class="owl-carousel  mt-4">
+            <?php
+                $x = 1;
+                foreach($collection as $product){
+                    $_product = $product->getData();
+                    if(!$_product){
+                        continue;
+                    }
+                    if($x <= $upperLimit)  { ?>
+                    <div class="item text-center">
+					<?php $imageUrl = $helperImport->init($product, 'small_image')
+						->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
+						->resize(380)
+						->getUrl();		
+				?>
+					    <a href="<?php echo $product->getProductUrl(); ?>" title="<?php echo $_product['name']; ?>"> <img src="<?php echo $imageUrl; ?>" alt="<?php echo $_product['name']; ?>" />
+				
+                            <p><?php echo $_product['name']; ?></p>
+                        </a>
+                    </div>
+                    <?php
+                    }
+                    $x++;
+                } 
+            ?>
+        </div>
+</div>

@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Worldsim_Databundle::rate_sheet_data_bundle" title="rate_sheet_data_bundle" sortOrder="10">
+					<resource id="Worldsim_Databundle::rate_sheet_data_bundle_save" title="Save rate_sheet_data_bundle" sortOrder="10"/>
+					<resource id="Worldsim_Databundle::rate_sheet_data_bundle_delete" title="Delete rate_sheet_data_bundle" sortOrder="20"/>
+					<resource id="Worldsim_Databundle::rate_sheet_data_bundle_update" title="Update rate_sheet_data_bundle" sortOrder="30"/>
+					<resource id="Worldsim_Databundle::rate_sheet_data_bundle_view" title="View rate_sheet_data_bundle" sortOrder="40"/>
+				</resource>
+				<resource id="Worldsim_Databundle::Go_API_Response" title="Go_API_Response" sortOrder="11">
+					<resource id="Worldsim_Databundle::Go_API_Response_save" title="Save Go_API_Response" sortOrder="110"/>
+					<resource id="Worldsim_Databundle::Go_API_Response_delete" title="Delete Go_API_Response" sortOrder="120"/>
+					<resource id="Worldsim_Databundle::Go_API_Response_update" title="Update Go_API_Response" sortOrder="130"/>
+					<resource id="Worldsim_Databundle::Go_API_Response_view" title="View Go_API_Response" sortOrder="140"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

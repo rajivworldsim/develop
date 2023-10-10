@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * This XML file defines the acl configurations for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Magento_Backend::stores">
+					<resource id="Magento_Backend::stores_settings">
+						<resource id="Magento_Config::config">
+							<resource id="Ascure_AweberSubscription::configuration" title="ascure_awebersubscription"/>
+						</resource>
+					</resource>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

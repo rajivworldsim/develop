@@ -1,0 +1,1542 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$cartHelper = $agtechobjBlock->getCarthelperObj();
+
+// Dynamically loaded product
+$skuIds = [
+    'data-bundle-topup-new',
+    'data-sim-bundle-new',
+    'data-esim-bundle-new',
+];
+
+$productModels = [];
+$productIds = [];
+$customOptions = [];
+
+foreach ($skuIds as $sku) {
+    $productModel = $agtechobjBlock->getproductModel()->loadByAttribute('sku', $sku);
+    $productId = $productModel->getId();
+    $customOption = $agtechobjBlock->getproductOptionModel()->getProductOptionCollection($productModel);
+
+    $productModels[] = $productModel;
+    $productIds[] = $productId;
+    $customOptions[] = $customOption;
+}
+$product_model_topup = $productModels[0];
+$product_id_topup = $productIds[0];
+$customOptions_topup = $customOptions[0];
+
+$product_model_new_physical_sim = $productModels[1];
+$product_id_new_physical_sim = $productIds[1];
+$customOptions_new_physical_sim = $customOptions[1];
+
+$product_model_new_e_sim = $productModels[2];
+$product_id_new_e_sim = $productIds[2];
+$customOptions_new_e_sim = $customOptions[2];
+
+// end Dynamically loaded product
+
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$currencyFactory = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$storeCode = $storeManager->getStore()->getCode();
+$storeId = $storeManager->getStore()->getId();
+/* Currncy Code*/
+$currencySymbol = $currencyFactory->getCurrencySymbol(); /* Currency Symbol */
+$currencies = $storeManager->getStore()->getAllowedCurrencies();
+$baseCurrencyCode = $storeManager->getStore()->getBaseCurrencyCode();
+$defaultCurrencies = $storeManager->getStore()->getBaseCurrency();
+$Current_CurrencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+
+$convRate = 1;
+$rates = $currencyFactory->getCurrencyRates($defaultCurrencies, $currencies);
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$StoreConvRate = $rates_currency;
+
+$file_name_with_path = "./media/tariff/databundle_countries.json";
+$databundle_countries = file_get_contents($file_name_with_path);
+$databundle_countries = json_decode($databundle_countries);
+//$file_name_with_path = $this->getUrl('')."json/databundle_plans_info.json";
+//$db_info =  file_get_contents($file_name_with_path);
+//$db_info =  json_decode($db_info);
+
+if ($storeId == 1):
+    $defaultCountry = "United Kingdom";
+else:
+    $defaultCountry = "United States of America";
+endif;
+
+
+//new
+$newblock = $this->getLayout()->createBlock("Worldsim\Databundle\Block\Frontend\Country\Country");
+
+$countryData = $newblock->getCountryDataEsimConnect();
+$singleCountry = $countryData['singleCountryArray'];
+$multipleCountry = $countryData['multipleCountryArray'];
+
+$singleCountry = array_map("unserialize", array_unique(array_map("serialize", $singleCountry)));
+$multipleCountry = array_map("unserialize", array_unique(array_map("serialize", $multipleCountry)));
+
+
+$getplanData = $newblock->getPlanData();
+$url = 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+?>
+<section class="bundleData mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-12">
+                <form action="">
+                    <div class="tabs">
+                        <ul class="nav nav-tabs justify-content-center border-0 m-auto">
+                            <li class="w-50"><a data-toggle="tab" class="d-block text-center firstTab active"
+                                    id="popularCountries" href="#">Popular Countries</a></li>
+                            <li class="w-50"><a data-toggle="tab" class=" text-center d-block secondTab"
+                                    id="multipleCountries" href="#">Multiple Countries</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="popularCountriesshow" class="tab-pane fade active show">
+                                <div class="outer-country" style="display:none;">
+                                    <ul class="flagList d-flex flex-wrap justify-content-center popular-country-show"
+                                        role="tablist">
+                                        <li><label data-tag="tab1"><input type="radio" name="country" value="United States of America"
+                                                    data-target="#italyTabs">
+                                                <span class="flagData italy text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">USA</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab2"><input type="radio" name="country" value="France"
+                                                    data-target="#thailandTabs">
+                                                <span class="flagData thailand text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">France</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab3"><input type="radio" value="United Arab Emirates" name="country">
+                                                <span class="flagData canada text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">UAE</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab4"><input type="radio" value="Turkey" name="country">
+                                                <span class="flagData mexico text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Turkey</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab5"><input type="radio" value="Thailand" name="country">
+                                                <span class="flagData turkey text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Thailand</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab6"><input type="radio" value="Germany" name="country">
+                                                <span class="flagData germany text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Germany</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab7"><input type="radio" value="United Kingdom" name="country">
+                                                <span class="flagData israel text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">UK</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="outer-country">
+                                    <ul class="flagList d-flex flex-wrap justify-content-center multiple-country-show"
+                                        role="tablist" style="display:none !important;">
+                                        <li><label data-tag="tab8"><input type="radio" name="country" value="Global">
+                                                <span class="flagData global text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Global</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab9"><input type="radio" name="country" value="Asia">
+                                                <span class="flagData asia text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Asia</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab10"><input type="radio" name="country" value="Africa">
+                                                <span class="flagData africa text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Africa </i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab11"><input type="radio" name="country" value="Europe">
+                                                <span class="flagData europe text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Europe </i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab12"><input type="radio" name="country"
+                                                    value="Middle East">
+                                                <span class="flagData middleEast text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">Middle East </i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab13"><input type="radio" name="country"
+                                                    value="North America">
+                                                <span class="flagData northAmerica text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">North America</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                        <li><label data-tag="tab14"><input type="radio" name="country"
+                                                    value="South America">
+                                                <span class="flagData southAmerica text-center">
+                                                    <img
+                                                        src="<?php echo $block->getViewFileUrl('images/bundle-data/sprite.png'); ?>">
+                                                    <i class="d-block">South America</i>
+                                                </span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                    <div id="tab1" class="listTabs active">
+                                        <p class="tags single-country"  style="line-height: 20px;">Select Country:</p>
+                                        <div class="country_autoSelect d-flex justify-content-center">
+                                            <select class="tags single-country" id="databundle_topup_location"name="single" style="background-image: url(<?php echo $block->getViewFileUrl('images/bundle-data/searchicon.png'); ?>);background-size: initial;    background-position: 16px 15px;    background-repeat: no-repeat; padding: 12px 20px 12px 45px;">
+                                                <?php foreach ($singleCountry as $countryData) { ?>
+                                                    <option value="<?php echo $countryData['country']; ?>"><?php echo $countryData['country']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <select class="tags multiple-country"
+                                                id="databundle_topup_location_multiple" name="multiple">
+                                                <?php foreach ($multipleCountry as $countryData) { ?>
+                                                    <option value="<?php echo $countryData['country']; ?>"><?php echo $countryData['country']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="validityBlock">
+                                            <div class="row d-flex justify-content-center plan-content" id="totalcost">
+                                            </div>
+                                        </div>
+
+                                        <div class="roamingcountry_autoSelect" id="roamingcountry_autoSelect">
+                                            <!--<h3>You can also use this bundle in list of following countries: </h3>-->
+                                            <!--<select class="tags" id="databundle_roamingcountries">
+                                            </select>-->
+                                            <div class="faqPage card-body" id="faqs">                                    
+                                                <ul class="accordion">
+                                                    <li>
+                                                        <a class="toggleAcc" href="javascript:void(0);">You can also use this bundle in list of following countries:</a>
+                                                        <div class="inner">
+                                                            <p>
+                                                                <ul class="roaming_countries_list" id="databundle_roamingcountries"></ul>
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="priceTable text-center" id="preload">
+                                            <h2>Total Cost: <!-- &#163; --><span class="span1 total-cost"
+                                                    id="total_cost">0.0</span></h2>
+                                            <div>
+                                                <a style="pointer-events: none; cursor: pointer;" href="javascript:;"
+                                                    class="proceedBtn" id="click-me">Proceed</a>
+                                            </div>
+                                            <div class="modal simModal fade" id="popup-modal" style="opacity: 1;">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body text-left">
+                                                            <button type="button" class="close"
+                                                                data-dismiss="modal">&times;</button>
+                                                            <div class="dataCard">
+                                                                <div class="dataGrid d-flex" id="existing-customer">
+                                                                    <div class="leftradio"><label
+                                                                            class="checkbox"><input type="radio"
+                                                                                name="customers"
+                                                                                id="mob_cus_id_btn"><span></span></label>
+                                                                    </div>
+                                                                    <div class="rightBar"><label>Existing
+                                                                            Customers</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="Mobile"
+                                                                            placeholder="Enter Mobile number/ICCID"
+                                                                            id="mob_cus_id_mobile">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="dataGrid d-flex" id="new-customer">
+                                                                    <div class="leftradio"><label class="checkbox">
+                                                                            <input type="radio" name="customers"
+                                                                                id="include_sim_new"><span></span></label>
+                                                                    </div>
+                                                                    <div class="rightBar">
+                                                                        <label class="pb-3">New to WorldSIM? Please
+                                                                            Select your preferred SIM card</label>
+                                                                        <a href="javascript:;"
+                                                                            class="simBtn mr-2 active"
+                                                                            id="esim_button">eSIM Card</a>
+                                                                        <a href="javascript:;" class="simBtn"
+                                                                            id="physicalsim_button">Physical SIM
+                                                                            Card</a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-center mt-5">
+                                                                    <a class="proceedBtn bundle_add_btn_new"
+                                                                        id="bundle_add_btn" href="javascript:;">Add to
+                                                                        basket</a>
+                                                                </div>
+                                                                <div class="col-md-12 mt-3 text-center"
+                                                                    id="databundle_topup_msg_new" style="color:red;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="debug-forms" style="display:none">
+<form class="ajax_custom_form_for_new " data-role="tocart-form"
+    action="<?php echo $cartHelper->getAddUrl($product_model_new_e_sim); ?>" method="post">
+    <?php
+    foreach ($customOptions_new_e_sim as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_new_e_sim' name='options[" . $option->getId() . "]'data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+                    $credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . ">" . $value->getTitle() . "</option>";
+                }
+            }
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getTitle() == "SIM Type") { ?>
+            <?php if (strpos($url, '/data-esim') !== false) { ?>
+                <?php echo "<input name=options[" . $option->getId() . "] type='text' value='eSIM Connect'>";
+            } else {
+                echo "<input name=options[" . $option->getId() . "] type='text' value='Data SIM Card'>";
+            }
+        }
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary new_esimcard_cart_add ">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+<form class="ajax_custom_form_for_new " data-role="tocart-form"
+    action="<?php echo $cartHelper->getAddUrl($product_model_new_physical_sim); ?>" method="post">
+    <?php
+
+    foreach ($customOptions_new_physical_sim as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_new_physical_sim' name='options[" . $option->getId() . "]'data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+                    $credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . ">" . $value->getTitle() . "</option>";
+                }
+            }
+
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getTitle() == "SIM Type") { ?>
+            <?php if (strpos($url, '/data-esim') !== false) { ?>
+                <?php echo "<input name=options[" . $option->getId() . "] type='text' value='eSIM Connect'>";
+            } else {
+                echo "<input name=options[" . $option->getId() . "] type='text' value='Data SIM Card'>";
+            }
+        }
+
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary new_simcard_cart_add ">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+<form data-role="tocart-form" action="<?php echo $cartHelper->getAddUrl($product_model_topup); ?>" method="post" class="ajax_custom_form_for_topup ">
+    <?php
+    foreach ($customOptions_topup as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_topup' name='options[" . $option->getId() . "]' data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+                    $credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . " >" . $value->getTitle() . "</option>";
+                }
+            }
+
+            echo "</select>";
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getId() == "2") {
+            echo "<input id='mob_cus_id_orig' name=options[" . $option->getId() . "] type='text' >";
+        }
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary bundle_topup_cart_add">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+</div>
+
+<div class="overviewSim w-100 pull-left mb-0 mt-3">
+<div class="container"><!--esim-desktop-overview-->
+    <h2 class="heading text-center mt-3 mb-4">Overview</h2>
+    <div class="row align-items-md-center">
+        <div class="row ">
+            <div class="col-md-6" style="margin-top: 50px;">
+                <div class="callView w-100 pull-left mt-3">
+                    <div class="textbar">
+                        <h6 style="text-align: left; margin-bottom: 30px;">Get instant connectivity in over 195+ countries with our international eSIM Connect.</h6>
+                        <ul style="text-align: left; font-size: 16px;">
+                            <li>No Physical SIM Card Required- Simply scan a QR code and download your eSIM in under 3 mins</li>
+                            <li>Superior Reliability- WorldSIM's travel eSIM Connect supports <strong>superfast data</strong> at incredibly low rates.</li>
+                            <li>Keep Your Existing Number Active- No need to swap out your existing SIM card or eSIM card, Keep your regular WhatsApp number active.</li>
+                        </ul>
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img class="lozad" data-src="<?php echo $block->getViewFileUrl('images/simcard/eSIM-new-final-transparent-min.png'); ?>" alt="" src="<?php echo $block->getViewFileUrl('images/simcard/eSIM-new-final-transparent-min.png'); ?>" style="max-width:50%" data-loaded="true">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!--=========================eSIM Compatible Devices for Desktop==============================-->
+<div class="container text-center esim-desktop-FAQ">
+<h3 class="heading text-center mb-5">eSIM Compatible Devices</h3>
+<div class="faqPage card-body" id="esim-compatible-devices">                                    
+    <ul class="accordion">
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Apple</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>iPhone 14</li>
+						<li>iPhone 14 Plus</li>
+						<li>iPhone 14 Pro</li>
+						<li>iPhone 14 Pro Max</li>
+						<li>iPhone 13</li>
+						<li>iPhone 13 Pro</li>
+						<li>iPhone 13 Pro Max</li>
+						<li>iPhone 13 Mini</li>
+						<li>iPhone 12</li>
+						<li>iPhone 12 Mini</li>
+						<li>iPhone 12 Pro</li>
+						<li>iPhone 12 Pro Max</li>
+						<li>iPhone 11</li>
+						<li>iPhone 11 Pro</li>
+						<li>iPhone 11 Pro Max</li>
+						<li>iPhone XS</li>
+						<li>iPhone XS Max</li>
+						<li>iPhone XR</li>
+						<li>iPhone SE (2020)</li>
+						<li>iPhone SE (2022)</li>
+						<li>iPad Air (3rd Generation)</li>
+						<li>iPad Air (4th generation)</li>
+						<li>iPad Pro 11 inch (1st generation)</li>
+						<li>iPad Pro 11 inch (2nd generation)</li>
+						<li>iPad Pro 11-inch (3rd generation)</li>
+						<li>iPad Pro 12.9 inch (3rd generation)</li>
+						<li>iPad Pro 12.9 inch (4th generation)</li>
+						<li>iPad Pro 12.9-inch (5th generation)</li>
+						<li>iPad (7th generation)</li>
+						<li>iPad (8th generation)</li>
+						<li>iPad (9th generation)</li>
+						<li>iPad Mini (5th generation)</li>
+						<li>iPad Mini (6th generation)</li>
+					</ul>					
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Samsung</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Samsung Galaxy S23 Ultra</li>
+						<li>Samsung Galaxy S23+</li>
+						<li>Samsung Galaxy S23</li>
+						<li>Samsung Galaxy S22 Ultra 5G</li>
+						<li>Samsung Galaxy S22+ 5G</li>
+						<li>Samsung Galaxy S22 5G</li>
+						<li>Samsung Galaxy S21 Ultra 5G</li>
+						<li>Samsung Galaxy S21 5G</li>
+						<li>Samsung Galaxy S21+ 5G</li>
+						<li>Samsung Galaxy S20</li>
+						<li>Samsung Galaxy S20+</li>
+						<li>Samsung Galaxy Note 20+</li>
+						<li>Samsung Galaxy Note 20</li>
+						<li>Samsung Galaxy Note 20 Ultra</li>
+						<li>Samsung Galaxy Z Fold</li>
+						<li>Samsung Galaxy Z Fold2</li>
+						<li>Samsung Galaxy Z Fold3</li>
+						<li>Samsung Galaxy Z Fold4</li>
+						<li>Samsung Galaxy Z Flip</li>
+						<li>Samsung Galaxy Z Flip3 5G</li>
+						<li>Samsung Galaxy Z Flip4</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Google Pixel</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Google Pixel 3 & 3 XL*</li>
+						<li>Google Pixel 3a & 3a XL*</li>
+						<li>Google Pixel 4, 4a & 4 XL</li>
+						<li>Google Pixel 5</li>
+						<li>Google Pixel 6</li>
+						<li>Google Pixel 6 Pro</li>
+						<li>Google Pixel 6a</li>
+						<li>Google Pixel 7</li>
+						<li>Google Pixel 7 Pro</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">HAMMER</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>HAMMER Explorer PRO</li>
+						<li>HAMMER Blade 3</li>
+						<li>HAMMER Blade 5G</li>
+						<li>myPhone NOW eSIM</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Motorola</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Motorola Razr 2019</li>
+						<li>Motorola Razr 5G</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Huawei</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Huawei P40</li>
+						<li>Huawei P40 Pro</li>
+						<li>Huawei Mate 40 Pro</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">OnePlus</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>OnePlus 11 5G</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">OPPO</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>OPPO Find X3 Pro</li>
+						<li>OPPO Find X5</li>
+						<li>OPPO Find X5 Pro</li>
+						<li>OPPO Reno A</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Sony</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Sony Xperia 10 III Lite</li>
+						<li>Sony Xperia 10 IV</li>
+						<li>Sony Xperia 1 IV</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Others</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Nuu Mobile X5</li>
+						<li>Gemini PDA 4G+Wi-Fi</li>
+						<li>Fairphone 4</li>
+						<li>Xiaomi 12T Pro (Global)</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+
+    </ul>
+</div>
+	<p>Still not sure if your device supports eSIM? Contact our support via email/live chat. </p>
+</div>
+
+
+<!--=========================eSIM Compatible Devices for Mobile==============================-->
+<div class="container text-center esim-mobile-FAQ">
+<h3 class="heading text-center mb-5">eSIM Compatible Devices</h3>
+<div class="faqPage card-body" id="esim-compatible-devices">                                    
+    <ul class="accordion">
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Apple</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>iPhone 14</li>
+						<li>iPhone 14 Plus</li>
+						<li>iPhone 14 Pro</li>
+						<li>iPhone 14 Pro Max</li>
+						<li>iPhone 13</li>
+						<li>iPhone 13 Pro</li>
+						<li>iPhone 13 Pro Max</li>
+						<li>iPhone 13 Mini</li>
+						<li>iPhone 12</li>
+						<li>iPhone 12 Mini</li>
+						<li>iPhone 12 Pro</li>
+						<li>iPhone 12 Pro Max</li>
+						<li>iPhone 11</li>
+						<li>iPhone 11 Pro</li>
+						<li>iPhone 11 Pro Max</li>
+						<li>iPhone XS</li>
+						<li>iPhone XS Max</li>
+						<li>iPhone XR</li>
+						<li>iPhone SE (2020)</li>
+						<li>iPhone SE (2022)</li>
+						<li>iPad Air (3rd Generation)</li>
+						<li>iPad Air (4th generation)</li>
+						<li>iPad Pro 11 inch (1st generation)</li>
+						<li>iPad Pro 11 inch (2nd generation)</li>
+						<li>iPad Pro 11-inch (3rd generation)</li>
+						<li>iPad Pro 12.9 inch (3rd generation)</li>
+						<li>iPad Pro 12.9 inch (4th generation)</li>
+						<li>iPad Pro 12.9-inch (5th generation)</li>
+						<li>iPad (7th generation)</li>
+						<li>iPad (8th generation)</li>
+						<li>iPad (9th generation)</li>
+						<li>iPad Mini (5th generation)</li>
+						<li>iPad Mini (6th generation)</li>
+					</ul>					
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Samsung</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Samsung Galaxy S23 Ultra</li>
+						<li>Samsung Galaxy S23+</li>
+						<li>Samsung Galaxy S23</li>
+						<li>Samsung Galaxy S22 Ultra 5G</li>
+						<li>Samsung Galaxy S22+ 5G</li>
+						<li>Samsung Galaxy S22 5G</li>
+						<li>Samsung Galaxy S21 Ultra 5G</li>
+						<li>Samsung Galaxy S21 5G</li>
+						<li>Samsung Galaxy S21+ 5G</li>
+						<li>Samsung Galaxy S20</li>
+						<li>Samsung Galaxy S20+</li>
+						<li>Samsung Galaxy Note 20+</li>
+						<li>Samsung Galaxy Note 20</li>
+						<li>Samsung Galaxy Note 20 Ultra</li>
+						<li>Samsung Galaxy Z Fold</li>
+						<li>Samsung Galaxy Z Fold2</li>
+						<li>Samsung Galaxy Z Fold3</li>
+						<li>Samsung Galaxy Z Fold4</li>
+						<li>Samsung Galaxy Z Flip</li>
+						<li>Samsung Galaxy Z Flip3 5G</li>
+						<li>Samsung Galaxy Z Flip4</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Google Pixel</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Google Pixel 3 & 3 XL*</li>
+						<li>Google Pixel 3a & 3a XL*</li>
+						<li>Google Pixel 4, 4a & 4 XL</li>
+						<li>Google Pixel 5</li>
+						<li>Google Pixel 6</li>
+						<li>Google Pixel 6 Pro</li>
+						<li>Google Pixel 6a</li>
+						<li>Google Pixel 7</li>
+						<li>Google Pixel 7 Pro</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">HAMMER</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>HAMMER Explorer PRO</li>
+						<li>HAMMER Blade 3</li>
+						<li>HAMMER Blade 5G</li>
+						<li>myPhone NOW eSIM</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Motorola</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Motorola Razr 2019</li>
+						<li>Motorola Razr 5G</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Huawei</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Huawei P40</li>
+						<li>Huawei P40 Pro</li>
+						<li>Huawei Mate 40 Pro</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">OnePlus</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>OnePlus 11 5G</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">OPPO</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>OPPO Find X3 Pro</li>
+						<li>OPPO Find X5</li>
+						<li>OPPO Find X5 Pro</li>
+						<li>OPPO Reno A</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Sony</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Sony Xperia 10 III Lite</li>
+						<li>Sony Xperia 10 IV</li>
+						<li>Sony Xperia 1 IV</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Others</a>
+            <div class="inner" >
+                <p>
+					<ul>
+						<li>Nuu Mobile X5</li>
+						<li>Gemini PDA 4G+Wi-Fi</li>
+						<li>Fairphone 4</li>
+						<li>Xiaomi 12T Pro (Global)</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+
+    </ul>
+</div>
+	<p>Still not sure if your device supports eSIM? Contact our support via email/live chat. </p>
+</div>
+
+
+<!--========================== Desktop FAQs ========================-->
+
+<div class="container text-center esim-desktop-FAQ">
+<h3 class="heading text-center mt-5 mb-5">Frequently asked questions</h3>
+<div class="faqPage card-body" id="faqs">                                    
+    <ul class="accordion">
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">What is eSIM?</a>
+            <div class="inner" >
+                <p>An eSIM is a virtual SIM card directly integrated into your device by the provider. It does not need to be inserted into your smartphone and can be programmed remotely. The operation of the eSIM is identical to a physical SIM card. Only the installation of the eSIM profile and the activation is slightly different. When activating your eSIM you will require wifi or data connection.</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is there a phone number, voice, SMS, and data included with my WorldSIMeSIM Plus purchase?</a>
+            <div class="inner" >
+                <p>Yes, WorldSIM eSIM comes with a UK mobile and supports Voice calls, data, and SMS etcas long as you have balance in your account. You can buy data plans and or recharge your eSIM by purchasing airtime from the <a href="<?php $this->getUrl('') ?>top-up">Top-Up page</a> on our website. Once you have downloaded your eSIM and its connected to an operator you can dial the following numbers to get information on your account;
+					<br/>133 – Returns your mobile number
+					<br/>187 – Returns your account balance 
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How do I activate eSIM on my iPhone using QR Code</a>
+            <div class="inner" >
+                <p>
+					1. 	Go to Settings<br/>
+					2.	Tap either Cellular or Mobile Data<br/>
+					3.	Add Data Plan or Add Cellular Plan or Add eSIM<br/>
+					4.	Scan QR code (Ensure phone is connected to mobile data/Wi-Fi while scanning)<br/>
+					5.	Follow step-by-step process<br/>
+					6.	Your mobile plan will be downloaded and activated on your eSIM<br/>
+					7.	Restart your phone – you may have to wait for 3 minutes for a network signal
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How do I activate eSIM on my Samsung (Android) using QR Code</a>
+            <div class="inner" >
+                <p>
+					1.	Go to Settings > Connections > SIM card manager<br/>
+					2.	Tap Add mobile plan or Add eSIM<br/>
+					3.	Tap Add using QR code<br/>
+					4.	Scan the QR code (Ensure phone is connected to mobile data/Wi-Fi while scanning)<br/>
+					5.	Follow step-by-step process<br/>
+					6.	Your mobile plan will be downloaded and activated on your eSIM<br/>
+					7.	Restart your phone – you may have to wait for 3 minutes for network signal<br/>
+					8.	Ensure you allow your eSIM by clicking on the toggle until its blue<br/>
+					9.	From the menu choose your ‘Preferred Sim’ from which to make and receive calls from. Both your existing sim and new eSIM will be able to receive incoming calls, unless you decide to switch one off.
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">I cannot scan the QR Code, what do I do?</a>
+            <div class="inner" >
+                <p>
+					If you cannot scan the provided QR Code, you can install the eSIM by entering details manually. You will be asked to enter the SM-DP+ Address, Activation Code all of which are included in the eSIM confirmation details provided after purchase.
+					Please follow our guides on how to install an eSIM manually:
+					<ul>
+						<li>iOS eSIM Installation Guide</li>
+						<li>Android eSIM Installation Guide</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is the activation immediate?</a>
+            <div class="inner" >
+                <p>Yes, your eSIM is activated immediately if you have arrived at your destination already. If you are still abroad, please install the eSIM via the QR code either once you have arrived at your destination or shortly before the flight as the validity starts counting from the time of installation. You will need a wifi or data connection to install the eSIM</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Can I make calls & send SMS with an eSIM?</a>
+            <div class="inner" >
+                <p>Yes, with WorldSIM eSIM you can use data, voice calls, SMS etc just like a physical SIM card. </p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is my smartphone eSIM-compatible?</a>
+            <div class="inner" >
+                <p>You can check this by following the steps: Go to Settings> Connections> SIM card manager> Add Mobile plan. If the “Add Mobile plan” of ‘Add eSIM’ is available, it should mean that your device supports eSIMs. You can also tap “IMEI” in the search bar of your settings, and the option “IMEI information” (or similar) should show up. Alternatively you can contact your handset provider to check if your 	model is eSIM compatible or not. 
+				<br/>**Note that - country and carrier-specific restrictions may apply.</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How can I contact customer support?</a>
+            <div class="inner" >
+                <p>Our team will remain at your disposal via our
+					1) Live Chat:  <a href="https://www.worldsim.com/live-chat">https://www.worldsim.com/live-chat</a>
+					2) Email support: <a href="mailto:customerservice@worldsim.com">customerservice@worldsim.com</a>
+				</p>
+            </div>
+        </li>
+		
+		
+		
+		
+        <!--<li>
+            <a class="toggleAcc" href="javascript:void(0);">How to check if my iOS device is eSIM compatible and carrier unlocked?</a>
+            <div class="inner" >
+                <p>To learn if your iOS device is eSIM compatible and carrier unlocked, you will need to:<br/>
+                <ul class="faq-inner-list">
+                  <li>Go to Settings> General> About.</li>
+                  <li>Scroll down to view the “Carrier lock” section.</li>
+                  <li>It should say “NO SIM restrictions”, which means that the device is unlocked.</li>
+                  <li>Scroll down to view the “AVAILABLE SIM” (iOS 15 and newer) or “DIGITAL SIM”(older iOS versions) section. It should contain an IMEI under AVAILABLE SIM or DIGITAL SIM, which means that the device is eSIM compatible.</li>
+                </ul>Depending on your device’s capability, if you have more than one SIM on the device, you may need to temporarily disable/remove one of the SIM cards before trying to download the eSIM.</p> 
+            </div>
+        </li>-->
+
+        <!--<li>
+            <a class="toggleAcc" href="javascript:void(0);">How to check if my Android device is eSIM compatible?</a>
+            <div class="inner" >
+                <p>Your bundle is valid for 7 days, post 7 days the sim can be recharged locally from Ooredoo website or from any authorised store Ooredoo</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">How long does it takes to activate an eSIM? </a>
+            <div class="inner" >
+                <p>Need to ensure that you have an unlocked 3G/4G/5G handset which is not locked by the operator and have minimum 3G capabilities.</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">Can I use eSIM on locked iPhone?</a>
+            <div class="inner" >
+                <p>Yes you can; simply select your desired product from the available range and recharge from Ooredoo website: or from Ooredoo App or from any authorised store Ooredoo</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">What are eSIM compatible handsets?</a>
+            <div class="inner" >
+                <p>Just dial *129# and you will get a notification message about the available balance.</p>
+            </div>
+        </li>-->
+        
+
+    </ul>
+</div>
+</div>
+
+
+<!--================Mobile View FAQs main=========================-->
+<div class="container text-center esim-mobile-FAQ">
+<h3 class="heading text-center mt-5 mb-5">Frequently asked questions</h3>
+<div class="faqPage card-body" id="faqs">                                    
+    <ul class="accordion">
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">What is eSIM?</a>
+            <div class="inner" >
+                <p>An eSIM is a virtual SIM card directly integrated into your device by the provider. It does not need to be inserted into your smartphone and can be programmed remotely. The operation of the eSIM is identical to a physical SIM card. Only the installation of the eSIM profile and the activation is slightly different. When activating your eSIM you will require wifi or data connection.</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is there a phone number, voice, </br> SMS, and data included with </br> my WorldSIMeSIM Plus purchase?</a>
+            <div class="inner" >
+                <p>Yes, WorldSIM eSIM comes with a UK mobile and supports Voice calls, data, and SMS etcas long as you have balance in your account. You can buy data plans and or recharge your eSIM by purchasing airtime from the <a href="<?php $this->getUrl('') ?>top-up">Top-Up page</a> on our website. Once you have downloaded your eSIM and its connected to an operator you can dial the following numbers to get information on your account;
+					<br/>133 – Returns your mobile number
+					<br/>187 – Returns your account balance 
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How do I activate eSIM on </br> my iPhone using QR Code</a>
+            <div class="inner" >
+                <p>
+					1. 	Go to Settings<br/>
+					2.	Tap either Cellular or Mobile Data<br/>
+					3.	Add Data Plan or Add Cellular Plan or Add eSIM<br/>
+					4.	Scan QR code (Ensure phone is connected to mobile data/Wi-Fi while scanning)<br/>
+					5.	Follow step-by-step process<br/>
+					6.	Your mobile plan will be downloaded and activated on your eSIM<br/>
+					7.	Restart your phone – you may have to wait for 3 minutes for a network signal
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How do I activate eSIM on </br> my Samsung (Android) </br> using QR Code</a>
+            <div class="inner" >
+                <p>
+					1.	Go to Settings > Connections > SIM card manager<br/>
+					2.	Tap Add mobile plan or Add eSIM<br/>
+					3.	Tap Add using QR code<br/>
+					4.	Scan the QR code (Ensure phone is connected to mobile data/Wi-Fi while scanning)<br/>
+					5.	Follow step-by-step process<br/>
+					6.	Your mobile plan will be downloaded and activated on your eSIM<br/>
+					7.	Restart your phone – you may have to wait for 3 minutes for network signal<br/>
+					8.	Ensure you allow your eSIM by clicking on the toggle until its blue<br/>
+					9.	From the menu choose your ‘Preferred Sim’ from which to make and receive calls from. Both your existing sim and new eSIM will be able to receive incoming calls, unless you decide to switch one off.
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">I cannot scan the QR Code,</br> what do I do?</a>
+            <div class="inner" >
+                <p>
+					If you cannot scan the provided QR Code, you can install the eSIM by entering details manually. You will be asked to enter the SM-DP+ Address, Activation Code all of which are included in the eSIM confirmation details provided after purchase.
+					Please follow our guides on how to install an eSIM manually:
+					<ul>
+						<li>iOS eSIM Installation Guide</li>
+						<li>Android eSIM Installation Guide</li>
+					</ul>
+				</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is the activation immediate?</a>
+            <div class="inner" >
+                <p>Yes, your eSIM is activated immediately if you have arrived at your destination already. If you are still abroad, please install the eSIM via the QR code either once you have arrived at your destination or shortly before the flight as the validity starts counting from the time of installation. You will need a wifi or data connection to install the eSIM</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Can I make calls & send SMS </br> with an eSIM?</a>
+            <div class="inner" >
+                <p>Yes, with WorldSIM eSIM you can use data, voice calls, SMS etc just like a physical SIM card. </p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">Is my smartphone is <br> eSIM-compatible?</a>
+            <div class="inner" >
+                <p>You can check this by following the steps: Go to Settings> Connections> SIM card manager> Add Mobile plan. If the “Add Mobile plan” of ‘Add eSIM’ is available, it should mean that your device supports eSIMs. You can also tap “IMEI” in the search bar of your settings, and the option “IMEI information” (or similar) should show up. Alternatively you can contact your handset provider to check if your 	model is eSIM compatible or not. 
+				<br/>**Note that - country and carrier-specific restrictions may apply.</p>
+            </div>
+        </li>
+		<li>
+            <a class="toggleAcc" href="javascript:void(0);">How can I contact with <br> customer support?</a>
+            <div class="inner" >
+                <p>Our team will remain at your disposal via our
+					1) Live Chat:  <a href="https://www.worldsim.com/live-chat">https://www.worldsim.com/live-chat</a>
+					2) Email support: <a href="mailto:customerservice@worldsim.com">customerservice@worldsim.com</a>
+				</p>
+            </div>
+        </li>
+		
+		
+		
+		
+        <!--<li>
+            <a class="toggleAcc" href="javascript:void(0);">How to check if my iOS device is eSIM compatible and carrier unlocked?</a>
+            <div class="inner" >
+                <p>To learn if your iOS device is eSIM compatible and carrier unlocked, you will need to:<br/>
+                <ul class="faq-inner-list">
+                  <li>Go to Settings> General> About.</li>
+                  <li>Scroll down to view the “Carrier lock” section.</li>
+                  <li>It should say “NO SIM restrictions”, which means that the device is unlocked.</li>
+                  <li>Scroll down to view the “AVAILABLE SIM” (iOS 15 and newer) or “DIGITAL SIM”(older iOS versions) section. It should contain an IMEI under AVAILABLE SIM or DIGITAL SIM, which means that the device is eSIM compatible.</li>
+                </ul>Depending on your device’s capability, if you have more than one SIM on the device, you may need to temporarily disable/remove one of the SIM cards before trying to download the eSIM.</p> 
+            </div>
+        </li>-->
+
+        <!--<li>
+            <a class="toggleAcc" href="javascript:void(0);">How to check if my Android device is eSIM compatible?</a>
+            <div class="inner" >
+                <p>Your bundle is valid for 7 days, post 7 days the sim can be recharged locally from Ooredoo website or from any authorised store Ooredoo</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">How long does it takes to activate an eSIM? </a>
+            <div class="inner" >
+                <p>Need to ensure that you have an unlocked 3G/4G/5G handset which is not locked by the operator and have minimum 3G capabilities.</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">Can I use eSIM on locked iPhone?</a>
+            <div class="inner" >
+                <p>Yes you can; simply select your desired product from the available range and recharge from Ooredoo website: or from Ooredoo App or from any authorised store Ooredoo</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="toggleAcc" href="javascript:void(0);">What are eSIM compatible handsets?</a>
+            <div class="inner" >
+                <p>Just dial *129# and you will get a notification message about the available balance.</p>
+            </div>
+        </li>-->
+        
+
+    </ul>
+</div>
+</div>
+
+
+
+
+
+
+<style type="text/css">
+.faq-inner-list li{
+      list-style: disc !important;
+}
+.mtop-50{
+      margin-top: -50px !important;
+	  margin-bottom: 20px;
+}
+.faq-subheading{
+    font-size: 24px;
+    color: #696969;
+}
+.faqPage{
+    text-align: left;
+}
+.faqPage .accordion li.arrowMine .toggleAcc {
+    background: url(<?php echo $block->getViewFileUrl('images/faq_mins.gif'); ?>)97% 24px no-repeat;
+}
+.faqPage .toggleAcc {
+    font-size: 18px;
+    color: #000;
+    display: block;
+    border-bottom: 1px solid #e7e7e7;
+    padding: 17px 38px;
+    background: url(<?php echo $block->getViewFileUrl('images/faq_plus.gif'); ?>)97% 24px no-repeat;
+}
+
+.faqPage .accordion .inner {
+    margin: 20px 0;
+}
+.faqPage .accordion li p {
+    font-size: 16px;
+    padding: 0 24px;
+    line-height: 28px;
+}
+.inner {
+    padding-left: 1em;
+    overflow: hidden;
+    display: none;
+}
+.faqPage .accordion {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.faqPage .accordion li {
+    list-style: none;
+}
+
+.add_to_basket_button_click{
+	color: #ffffff !important;
+}
+
+#include_esim {
+    pointer-events: none;
+}
+    
+    /*@media(max-width:766px){
+        
+    }*/
+</style>
+<!--<script type="text/javascript">
+      require(['jquery'], function ($) { 
+            $(document).ready(function() {
+                $('.toggleAcc').click(function() { 
+                    var $this = $(this);
+                    $('li').removeClass('arrowMine')                      
+                    if ($(this).next().hasClass('showAcc')) {
+                        $(this).next().removeClass('showAcc');
+                        $(this).next().slideUp(350);
+                    } else {
+                        $(this).parent().parent().find('li .inner').removeClass('showAcc');
+                        $(this).parent().parent().find('li .inner').slideUp(350);
+                        $(this).next().toggleClass('showAcc');
+                        $(this).next().slideToggle(350);
+                        $(this).parent('li').toggleClass('arrowMine') 
+                    }
+                });
+            });          
+	 });
+</script>-->
+
+
+<style>
+    .page-main{
+        padding-top: 0px;
+    }
+    div#databundle_topup_msg {
+        color: #ff0000;
+    }
+    .faqPage{
+        text-align: left;
+    }
+    .faqPage .accordion li.arrowMine .toggleAcc {
+        background: url(<?php echo $block->getViewFileUrl('images/faq_mins.gif'); ?>)97% 24px no-repeat;
+    }
+    .faqPage .toggleAcc {
+        font-size: 18px;
+        color: #000;
+        display: block;
+        border-bottom: 1px solid #e7e7e7;
+        padding: 17px 38px;
+        background: url(<?php echo $block->getViewFileUrl('images/faq_plus.gif'); ?>)97% 24px no-repeat;
+    }
+    
+    .faqPage .accordion .inner {
+        margin: 20px 0;
+    }
+    .faqPage .accordion li p {
+        font-size: 16px;
+        padding: 0 24px;
+        line-height: 28px;
+    }
+    .inner {
+        padding-left: 1em;
+        overflow: hidden;
+        display: none;
+    }
+    .faqPage .accordion {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    .faqPage .accordion li {
+        list-style: none;
+    }
+    
+    .roaming_countries_list{
+        list-style: none;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+    }
+    @media(max-width:766px){
+        .roaming_countries_list{
+            list-style: none;
+            -webkit-column-count: 2;
+            -moz-column-count: 2;
+            column-count: 2;
+        }
+        .page-main{
+            margin-top: 50px;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+		
+		$("#html-body").addClass("product-data-bundles");
+
+        $(document).ready(function () {
+            
+            $('.toggleAcc').click(function() { 
+                var $this = $(this);
+                $('li').removeClass('arrowMine')                      
+                if ($(this).next().hasClass('showAcc')) {
+                    $(this).next().removeClass('showAcc');
+                    $(this).next().slideUp(350);
+                } else {
+                    $(this).parent().parent().find('li .inner').removeClass('showAcc');
+                    $(this).parent().parent().find('li .inner').slideUp(350);
+                    $(this).next().toggleClass('showAcc');
+                    $(this).next().slideToggle(350);
+                    $(this).parent('li').toggleClass('arrowMine') 
+                }
+            });
+
+            $('.simBtn').on('click', function () {
+                $('.simBtn').removeClass('active');
+                $(this).addClass('active');
+            })
+            
+            var locationValue = (new URL(location.href)).searchParams.get('country');
+
+            if (locationValue != null) {
+                $('input:radio[value="'+locationValue+'"]').prop('checked', true);
+                $('#databundle_topup_location').val(locationValue).trigger('change');
+                $('.multiple-country').attr("style", "display:none !important");
+            }else{
+                $('input:radio[value="United States of America"]').prop('checked', true);
+                $('#databundle_topup_location').val('United States of America').trigger('change');
+                $('.multiple-country').attr("style", "display:none !important");
+            }
+
+            $("#multipleCountries").click(function () {
+                $('.popular-country-show').attr("style", "display:none !important");
+                $('.single-country').attr("style", "display:none !important");
+                $('.multiple-country-show').removeAttr("style");
+                $('.multiple-country').removeAttr("style");
+                $('#popularCountries').removeClass('active');
+                $("input:radio[value='Global']").prop('checked', true);
+                $('#databundle_topup_location_multiple').val('Global').trigger('change');
+            });
+
+            $("#popularCountries").click(function () {
+                $('.multiple-country-show').attr("style", "display:none !important");
+                $('.multiple-country').attr("style", "display:none !important");
+                $('.popular-country-show').removeAttr("style");
+                $('.single-country').removeAttr("style");
+                $('#multipleCountries').removeClass('active');
+                $('input:radio[value="United States of America"]').prop('checked', true);
+                $('#databundle_topup_location').val('United States of America').trigger('change');
+
+            });
+
+            $("input:radio[name='customers']").change(function () {
+                $('.bundle_add_btn_new').css('pointer-events', '');
+            });
+
+            const includeSimNewRadio = $('#include_sim_new');
+            const dataBundleMsgNew = $('#databundle_topup_msg_new');
+            const mobileInput = $('#mob_cus_id_mobile');
+
+            // Add a click event listener to the radio button
+            includeSimNewRadio.on('click', function () {
+                // Clear the message and empty the input field
+                dataBundleMsgNew.text('');
+                mobileInput.val('');
+            });
+
+            $(document).on('click', '.plan-box', function () {
+
+                var planid = $('input[name="text"]:checked').data('planid');
+                var bundleCountry = $(".country_select_drop").val();
+                var planCode = bundleCountry + $('input[name="text"]:checked').data('planname');
+                var mob_cus_id = $("#mob_cus_id_mobile").val();
+
+                $('.total-cost').text($('input[name="text"]:checked').data('bundlerate'));
+                $('#click-me').css('pointer-events', 'auto');
+                //alert(bundleCountry);
+                // AJAX request to fetch the data
+                $.ajax({
+                    url: "<?php echo $newblock->getRomingAjaxUrl(); ?>", // Replace with the actual URL to your server-side script
+                    type: 'POST',
+                    data: { planid: planid }, // Pass the 'planid' value to the server
+                    dataType: 'JSON',
+                    showLoader: true,
+                    success: function (response) {
+                        if (response.success) {
+                            var optionsHtml = response.optionsHtml;
+                            $('#databundle_roamingcountries').html(optionsHtml);
+                        } else {
+                            console.error('Error: ' + response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX Error: ' + textStatus + ' ' + errorThrown);
+                    }
+                });
+            });
+            $("input:radio[name='country']").change(function () {
+                var country = $(this).val();
+                if ($("#popularCountries").hasClass("active")) {
+                    $('#databundle_topup_location').val(country).trigger('change');
+                } else {
+                    $('#databundle_topup_location_multiple').val(country).trigger('change');
+                }
+            });
+        });
+        $("#click-me").click(function () {
+            var bundleCountry = $(".country_select_drop").val();
+            var planCode = bundleCountry + $('input[name="text"]:checked').data('planname');
+            var skuCode = $('input[name="text"]:checked').data('sku');
+            dataBundleClass = 'data_bundle_new_e_sim';
+            $(".country_select_drop").val(bundleCountry);
+            //$("select.product-custom-option option:contains(" + planCode + ")").attr('selected', 'selected');
+            $('*[data-sku='+skuCode+']').attr('selected', 'selected');
+            //console.log('selected option = '+$('*[data-sku='+skuCode+']').text());
+            $("#click-me").addClass('disabled-btn');
+            $("#click-me").html("Adding...");
+            $(".new_esimcard_cart_add").click();
+			
+			//var simType = $('input[name="text"]:checked').data('simtype');
+            //var supplier = $('input[type="radio"][name="text"]:checked').data('supplier');
+            //if (supplier == 'E-Sim2Fly') {
+            //    $("#existing-customer").removeClass('d-flex');
+            //    $("#existing-customer").hide();
+            //} else {
+            //    $("#existing-customer").addClass('d-flex');
+            //    $("#existing-customer").show();
+            //}
+            //if (simType == "eSIM") {
+            //    // display none for #esim_button
+            //    document.getElementById("physicalsim_button").style.display = "none";
+            //    document.getElementById("esim_button").style.display = "unset";
+            //} else if (simType == "Physical Sim") {
+            //    // display none for #physicalsim_button
+            //    document.getElementById("esim_button").style.display = "none";
+            //    document.getElementById("physicalsim_button").style.display = "unset";
+            //} else {
+            //    document.getElementById("esim_button").style.display = "unset";
+            //    document.getElementById("physicalsim_button").style.display = "unset";
+            //}
+
+        })
+
+
+        //Country Change Event for New prices 
+        $("#databundle_topup_location,#databundle_topup_location_multiple").change(function () {
+            var bundleCountry = $(this).val();
+           
+            if (bundleCountry != 'Italy' && bundleCountry != 'Thailand' && bundleCountry != 'Canada' && bundleCountry != 'Mexico' && bundleCountry != 'Turkey' && bundleCountry != 'Germany' && bundleCountry != 'Israel' && bundleCountry != 'Global' && bundleCountry != 'Asia' && bundleCountry != 'Africa' && bundleCountry != 'Europe' && bundleCountry != 'Middle East' && bundleCountry != 'North America' && bundleCountry != 'South America') {
+                $('input:radio[name="country"]').prop('checked', false);
+            } else {
+                $('input:radio[value="' + bundleCountry + '"]').prop('checked', true);
+            }
+            var bundleRegion = $(this).val();
+
+            $.ajax({
+                url: "<?php echo $newblock->getAjaxUrl(); ?>",
+                method: 'POST',
+                data: {
+                    'bundle_country': bundleCountry,
+                    'region_code': bundleRegion,
+                    'page': 'Data-GOSIM-Page'
+                },
+                dataType: 'JSON',
+                showLoader: true,
+                success: function (result) {
+                    if (result.plans !== '') {
+                        $(".plan-content").html(result.plans);
+                        $('#roamingcountry_autoSelect, #preload').show();
+                        $("input[name='bundle_value']").first().trigger("change");
+                        var radioButton = $('input[type="radio"][name="text"]:first');
+                        radioButton.prop('checked', true).trigger('change');
+                        $('.plan-box').trigger('click');
+                        $(".country_select_drop").val(bundleCountry);
+                    } else {
+                        $(".plan-content").html("<div id='error_message' style='color: green;'>Currently No plan for this Country. Please Visit After Some Time....</div>");
+                        $('#roamingcountry_autoSelect, #preload').hide();
+                    }
+                }
+            });
+        });
+
+        //bundle options click function
+        $("body").on("change", "input[name='bundle_value']", function () {
+            var convrRate = '<?php echo $StoreConvRate; ?>';
+            var currencySymbol = '<?php echo $currencySymbol; ?>';
+
+            var bundle_shortcode = $(this).data('shortcode');
+            $('#selected_bundle_shortcode').html(bundle_shortcode);
+
+            var bundle_price = $(this).data('bundlerate');
+            var final_selection_price = parseFloat(bundle_price);
+            $('#selected_bundle_price').html(currencySymbol + final_selection_price.toFixed(2));
+
+        });
+
+        //Add to cart Button which has all data
+        $('.bundle_add_btn_new').click(function (e) {
+
+            e.preventDefault();
+            var bundleCountry = $(".country_select_drop").val();
+            var supplier = $('input[type="radio"][name="text"]:checked').data('supplier');
+            var planCode = bundleCountry + $('input[name="text"]:checked').data('planname');
+            var dataBundleClass = '';
+            var btnId = '';
+            <?php
+            if (strpos($url, '/data-bundles') !== false) { ?>  
+                var mob_cus_id = $("#mob_cus_id_mobile").val();
+                    if (mob_cus_id == '' && $('#mob_cus_id_btn').is(":checked")) {
+                        alert("Plese enter Mobile Number or Customer ID");
+                        return;
+                    }
+                    if (mob_cus_id != '') {
+                        dataBundleClass = 'data_bundle_topup';
+                        btnId = 'bundle_topup_cart_add'
+                        var bundle_cat = "D";//Data Bundle Only, VD code for Voice + Data Bundle
+                        var pass_puk = "PinLess";
+                        $.ajax({
+                            url: "<?php echo $this->getUrl(''); ?>customer-check.php",
+                            type: 'post',
+                            data: { 'mob_cus_id': mob_cus_id, 'pass_puk': pass_puk, 'bundle_cat': bundle_cat, 'page': 'DataBundleTopUp', 'supplier': supplier, 'planCode': planCode },
+                            showLoader: true,
+                            success: function (result) {
+                                if (result.indexOf('ok-to-add-bundle') > -1) {
+                                    //Bundle-Is-Valid and add bundle product into cart
+                                    $("#databundle_topup_msg_new").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                                    $("input#mob_cus_id_orig").val(mob_cus_id);
+                                    $("select.product-custom-option option:contains(" + planCode + ")").attr('selected', 'selected');
+                                    $(".country_select_drop").val(bundleCountry);
+                                    $("." + btnId).click();
+
+
+                                } else if (result.indexOf('notvalidate') > -1) {
+                                    $("#databundle_topup_msg_new").html("Your details could not be located, please ensure you have typed them correctly").css("color", "red");// display error message
+                                } else if (result.indexOf('Bundle-Not-Valid') > -1 || result.indexOf('UR')) {
+                                    if (supplier != 'Go') {
+                                        $("#databundle_topup_msg_new").html("Bundle is NOT valid on your current SIM, please purchase our new SIM card <a href='https://www.worldsim.com/data-sim-card'>here</a>");// display error message
+                                    }else{
+                                        $("#databundle_topup_msg_new").html("This bundle is valid on eSIM only, please select new eSIM option");// display error message
+                                    }
+                                } else if (result.indexOf('Voice-Bundle-Selected-Over-Data-SIM') > -1) {
+                                    $("#databundle_topup_msg_new").html("You cannot buy Voice Bundle over Data SIM Card.");// display error message
+                                }
+                            }
+                        });
+                    } else if ($('#include_sim_new').is(":checked")) {
+                        var activeButton = $('.rightBar .simBtn.active');
+                        if (activeButton.attr('id') === 'esim_button') {
+                            dataBundleClass = 'data_bundle_new_e_sim';
+                            btnId = 'new_esimcard_cart_add';
+                        } else if (activeButton.attr('id') === 'physicalsim_button') {
+                            dataBundleClass = 'data_bundle_new_physical_sim';
+                            btnId = 'new_simcard_cart_add';
+                        }
+                        $(".country_select_drop").val(bundleCountry);
+                        $("select.product-custom-option option:contains(" + planCode + ")").attr('selected', 'selected');
+                        //$("." + btnId).click();
+						$(".new_esimcard_cart_add").click();
+                    }
+            <?php } else { //if not data bundle page ?>
+                    $(".country_select_drop").val(bundleCountry);
+                    $("select.product-custom-option option:contains("+ planCode + ")").attr('selected', 'selected');
+                $(".bundle_topup_cart_add").click();
+            <?php } ?>
+    });
+});
+</script>

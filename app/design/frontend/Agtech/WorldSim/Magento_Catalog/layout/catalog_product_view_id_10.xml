@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<referenceContainer name="page.wrapper">
+			<container name="addtariff-section" htmlTag="div" htmlClass="addtariff topUp w-100 pull-left mb-4" before="page-footer">
+				<block class="Magento\Catalog\Block\Product\View" name="addtariff-section-tabs" before="-" template="Magento_Catalog::product/view/view_bundle.phtml" />
+			</container> 
+			 
+		</referenceContainer>
+	<referenceBlock name="page.main.title" remove="true"/>
+	<referenceBlock name="product.info.media" remove="true"/>
+	<referenceBlock name="product.info.main" remove="true" />
+    </body>
+</page>

@@ -1,0 +1,105 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_BannerSlider
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\BannerSlider\Model\Config\Source\Type;
+
+$banners = $block->getBannerCollection();
+$baseUrl = $block->getBaseUrl();
+$check   = is_array($banners) ? !empty($banners) : $banners->getSize();
+if ($check): ?>
+    <?php
+    $sliderId      = $block->getSliderId() . uniqid('-', false);
+    $sliderOptions = $block->getBannerOptions(); ?>
+    <div class="container owl-theme desktop">
+        <a href="<?php echo $baseUrl; ?>international-sim-card" title="Award Winning Roaming Free SIM Card" class="owl-image"> 
+            <img class="img-responsive owl-lazy" src="<?php echo $this->getViewFileUrl('images/banner/global_carousel-v20_1200x420.jpg'); ?>" style="width:100%; height: auto;" alt="Award Winning Roaming Free SIM Card">
+        </a>
+    </div>
+    <!-- mobile view -->
+    <div class="carousel-container mp-banner-slider" id="bannerslider-list-items-mobile" style="margin-top:30px;">
+        <a href="<?php echo $baseUrl; ?>international-sim-card" title="Award Winning Roaming Free SIM Card" class="owl-image"> 
+            <img class="img-responsive owl-lazy" src="<?php echo $this->getViewFileUrl('images/banner/global_carousel_Mobile-v13.jpg'); ?>" style="width:100%; height: auto;" alt="Award Winning Roaming Free SIM Card">
+        </a>
+        <!--<div id="banner-slider-carousel">
+            <div id="bannerslider-list-items-mobile" class="owl-carousel owl-theme">
+               <div class="banner-item banner-slider">
+                    <div class="item-image">
+                        <div class="carousel-item-mobile">
+                            <a href="<?php echo $baseUrl; ?>international-sim-card" title="First Banner" class="owl-image"> 
+                                <img class="img-responsive owl-lazy" class="d-none d-sm-block" src="<?php echo $this->getViewFileUrl('images/banner/mobile-home_page_slider1.jpg'); ?>" width="428" height="416" alt="First banner">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-item banner-slider">
+                    <div class="item-image">
+                        <div class="carousel-item-mobile">
+                            <a href="<?php echo $baseUrl; ?>international-esim-card" title="WorldSIM International eSIM" class="owl-image">
+                                <img class="img-responsive owl-lazy" class="d-none d-sm-block" src="<?php echo $this->getViewFileUrl('images/banner/mobile-home_page_slider-esim.jpg'); ?>" width="428" height="416" alt="eSIM">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-item banner-slider">
+                    <div class="item-image">
+                        <div class="carousel-item-mobile">
+                            <a href="<?php echo $baseUrl; ?>top-up" title="First Banner" class="owl-image"> 
+                                <img class="img-responsive owl-lazy" class="d-none d-sm-block" src="<?php echo $this->getViewFileUrl('images/banner/mobile-home_page_slider3.jpg'); ?>" width="428" height="416" alt="First banner">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-item banner-slider">
+                    <div class="item-image">
+                        <div class="carousel-item-mobile">
+                            <a href="<?php echo $baseUrl; ?>portable-wifi" title="First Banner" class="owl-image">
+                                <img class="img-responsive owl-lazy" class="d-none d-sm-block" src="<?php echo $this->getViewFileUrl('images/banner/mobile-home_page_slider4.jpg'); ?>" width="428" height="416" alt="First banner">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-item banner-slider">
+                    <div class="item-image">
+                        <div class="carousel-item-mobile">
+                            <a href="javascript:;" title="First Banner" class="owl-image">
+                                <img class="img-responsive owl-lazy" class="d-none d-sm-block" src="<?php echo $this->getViewFileUrl('images/banner/mobile-home_page_slider5.jpg'); ?>" width="428" height="416" alt="First banner">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <!--<script>
+        require(['jquery', 'mageplaza/core/owl.carousel'], function ($) {
+            $('#bannerslider-list-items-<?= /* @noEscape */ $sliderId ?>').owlCarousel(<?= /* @noEscape */ $sliderOptions ?>);
+            if(/Android|webOS|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                var widthMb = parseFloat($('.page-wrapper').width()) - 30;
+                $('.mp-banner-sidebar').attr('style','max-width: '+widthMb+'px');
+            }
+            $('#bannerslider-list-items-mobile').owlCarousel(<?= /* @noEscape */ $sliderOptions ?>);
+            if(/Android|webOS|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                var widthMb = parseFloat($('.page-wrapper').width()) - 30;
+                $('.mp-banner-sidebar').attr('style','max-width: '+widthMb+'px');
+            }
+        });
+    </script>-->
+<?php endif; ?>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magedia\StripeIntegration\Api\StripeTopupInterface" type="Magedia\StripeIntegration\Api\StripeTopup" />
+    <preference for="Magedia\StripeIntegration\Api\Data\TopupInterface" type="Magedia\StripeIntegration\Model\Topup"/>
+    <preference for="Magedia\StripeIntegration\Api\Data\StripeCustomerInterface" type="Magedia\StripeIntegration\Model\StripeCustomer"/>
+    <preference for="Magedia\StripeIntegration\Api\Data\StripeProductInterface" type="Magedia\StripeIntegration\Model\StripeProduct"/>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="topup_management_listing_data_source" xsi:type="string">MagediaTopupGridCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MagediaTopupGridCollection" type="Magedia\StripeIntegration\Ui\DataProvider\Topup\Listing\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">magedia_stripe_subscriptions</argument>
+            <argument name="resourceModel" xsi:type="string">Magedia\StripeIntegration\Model\ResourceModel\Topup</argument>
+        </arguments>
+    </virtualType>
+    <type name="StripeIntegration\Payments\Model\PaymentMethod">
+        <plugin name="Magedia_StripeIntegration::capture" type="Magedia\StripeIntegration\Plugin\BeforeCapture"/>
+    </type>
+</config>

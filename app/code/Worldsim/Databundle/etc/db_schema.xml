@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+	<table name="worldsim_databundle_rate_sheet_data_bundle" resource="default" engine="innodb" comment="worldsim_databundle_rate_sheet_data_bundle Table">
+		<column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="id"/>
+		</constraint>
+		<column name="country" nullable="true" xsi:type="text" comment="country"/>
+		<column name="region" nullable="true" xsi:type="text" comment="region"/>
+		<column name="supplier" nullable="true" xsi:type="text" comment="supplier"/>
+		<column name="simtype" nullable="true" xsi:type="text" comment="simtype"/>
+		<column name="days" nullable="true" xsi:type="text" comment="validity days"/>
+		<column name="onegb" nullable="true" xsi:type="text" comment="onegb"/>
+		<column name="threegb" nullable="true" xsi:type="text" comment="threegb"/>
+		<column name="fivegb" nullable="true" xsi:type="text" comment="fivegb"/>
+		<column name="sixgb" nullable="true" xsi:type="text" comment="sixgb"/>
+		<column name="tengb" nullable="true" xsi:type="text" comment="tengb"/>
+		<column name="twenty" nullable="true" xsi:type="text" comment="twenty"/>
+		<column name="unlimited" nullable="true" xsi:type="text" comment="unlimited"/>
+		<column name="topupavail" nullable="true" xsi:type="text" comment="topupavail"/>
+		<column name="roaminginc" nullable="true" xsi:type="text" comment="roaminginc"/>
+		<column name="roamingcountries" nullable="true" xsi:type="text" comment="roamingcountries"/>
+		<column name="onegbcode" nullable="true" xsi:type="text" comment="onegbcode"/>
+		<column name="threegbcode" nullable="true" xsi:type="text" comment="threegbcode"/>
+		<column name="fivegbcode" nullable="true" xsi:type="text" comment="fivegbcode"/>
+		<column name="sixgbcode" nullable="true" xsi:type="text" comment="sixgbcode"/>
+		<column name="tengbcode" nullable="true" xsi:type="text" comment="tengbcode"/>
+		<column name="twentygbcode" nullable="true" xsi:type="text" comment="twentygbcode"/>
+		<column name="unlimitedgbcode" nullable="true" xsi:type="text" comment="unlimitedgbcode"/>
+		<column name="worldsimshortCode" nullable="true" xsi:type="text" comment="worldsimshortCode"/>
+		<column name="worldsimdistrubtor" nullable="true" xsi:type="text" comment="worldsimdistrubtor"/>
+	</table>
+	<table name="worldsim_databundle_rate_sheet_data_bundle_operator" resource="default" engine="innodb" comment="worldsim_databundle_rate_sheet_data_bundle_operator Table">
+		<column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="id"/>
+		</constraint>
+		<column name="country" nullable="true" xsi:type="text" comment="country"/>
+		<column name="roamingcountries" nullable="true" xsi:type="text" comment="roamingcountries"/>
+		<column name="operators" nullable="true" xsi:type="text" comment="operators"/>
+	</table>
+	<table name="worldsim_databundle_go_api_response" resource="default" engine="innodb" comment="worldsim_databundle_go_api_response Table">
+		<column xsi:type="int" name="go_api_response_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="go_api_response_id"/>
+		</constraint>
+		<column name="iccid" nullable="false" xsi:type="text" comment="ICCID"/>
+		<column name="email" nullable="false" xsi:type="text" comment="Customer Email"/>
+		<column name="order_id" nullable="false" xsi:type="text" comment="Order Id"/>
+		<column name="bundle_code" nullable="false" xsi:type="text" comment="Bundle Code"/>
+		<column name="is_new_sim" nullable="false" xsi:type="text" comment="Is New Sim?"/>
+		<column name="pin" nullable="false" xsi:type="text" comment="Pin"/>
+		<column name="puk" nullable="false" xsi:type="text" comment="Puk code"/>
+		<column name="matchingId" nullable="false" xsi:type="text" comment="Matching Id"/>
+		<column name="smdpAddress" nullable="false" xsi:type="text" comment="SMDP Address"/>
+		<column name="profileStatus" nullable="false" xsi:type="text" comment="Profile Status"/>
+		<column name="firstInstalledDateTime" nullable="false" xsi:type="datetime" comment="First Install Date"/>
+		<column name="customerRef" nullable="true" xsi:type="text" comment="Customer Reference"/>
+	</table>
+</schema>

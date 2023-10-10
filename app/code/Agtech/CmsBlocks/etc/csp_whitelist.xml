@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp/etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <!--CDN-->
+                <value id="cloudflare" type="host">*.cloudflare.com</value>
+                <value id="hotjar" type="host">*.hotjar.com</value>
+                <value id="app-us1" type="host">*.app-us1.com</value>
+                <value id="klaviyo" type="host">*.klaviyo.com</value>
+                <value id="pcapredict" type="host">*.pcapredict.com</value>
+                <value id="postcodeanywhere" type="host">*.postcodeanywhere.co.uk</value>
+                <!--Google-->
+                <value id="google-analytics" type="host">*.google-analytics.com</value>
+                <value id="google-api" type="host">*.googleapis.com</value>
+                <value id="doubleclick" type="host">*.doubleclick.net</value>
+
+                <!--Functions-->
+                <value id="trustpilot" type="host">*.trustpilot.com</value>
+                <value id="googleadservices" type="host">*.googleadservices.com</value>
+                <value id="trackcmp" type="host">https://trackcmp.net</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+                <value id="cloudflareinsights" type="host">*.cloudflareinsights.com</value>
+                <value id="newrelic" type="host">*.newrelic.com</value>
+                <value id="jsdelivr" type="host">*.jsdelivr.net</value>
+                <value id="nrdata" type="host">bam.eu01.nr-data.net</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <!--CDN-->
+                <value id="cloudflare" type="host">*.cloudflare.com</value>
+                <value id="hotjar" type="host">*.hotjar.com</value>
+                <!--Design-->
+                <value id="typekit" type="host">*.typekit.net</value>
+
+                <!--Functions-->
+                <value id="googleapis" type="host">*.googleapis.com</value>
+                <value id="usercentrics" type="host">*.usercentrics.eu</value>
+                <value id="klaviyo" type="host">*.klaviyo.com</value>
+                <value id="pcapredict" type="host">*.pcapredict.com</value>
+                <value id="postcodeanywhere" type="host">*.postcodeanywhere.co.uk</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <!--CDN-->
+                <value id="cloudflare" type="host">*.cloudflare.com</value>
+                <value id="klarna-base" type="host">https://cdn.klarna.com</value>
+                <value id="googleuk" type="host">*.google.co.uk</value>
+                <value id="google" type="host">*.google.com</value>
+                <value id="google-api" type="host">*.googleapis.com</value>
+                <value id="doubleclick" type="host">*.doubleclick.net</value>
+                <!--Payments-->
+                <value id="paypal" type="host">*.paypal.com</value>
+
+                <!--Video-->
+                <value id="vimeocdn" type="host">*.vimeocdn.com</value>
+                <value id="youtube-img" type="host">https://s.ytimg.com</value>
+                <value id="pcapredict" type="host">*.pcapredict.com</value>
+                <value id="postcodeanywhere" type="host">*.postcodeanywhere.co.uk</value>
+                <value id="worldsim" type="host">*.worldsim.com</value>
+
+                <!--Functions-->
+                <value id="usercentrics" type="host">*.usercentrics.eu</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+                <value id="jsdelivr" type="host">cdn.jsdelivr.net</value>
+                <value id="tawklink" type="host">*.tawk.link</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <!--CDN-->
+                <value id="cloudflare" type="host">*.cloudflare.com</value>
+                <value id="hotjar" type="host">*.hotjar.com</value>
+                <value id="trustpilot" type="host">*.trustpilot.com</value>
+                <value id="typekit" type="host">*.typekit.net</value>
+
+                <!--Functions-->
+                <value id="googleapis" type="host">*.googleapis.com</value>
+                <value id="usercentrics" type="host">*.usercentrics.eu</value>
+                <value id="youtube" type="host">*.youtube.com</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <!--CDN-->
+                <value id="cloudflare" type="host">*.cloudflare.com</value>
+                <value id="googleuk" type="host">*.google.co.uk</value>
+                <value id="google" type="host">*.google.com</value>
+                <value id="google-api" type="host">*.googleapis.com</value>
+                <value id="doubleclick" type="host">*.doubleclick.net</value>
+                <!--Payments-->
+                <value id="paypal" type="host">*.paypal.com</value>
+                <value id="hotjar" type="host">*.hotjar.com</value>
+                <value id="hotjarw3" type="host">wss://ws3.hotjar.com/api/v2/client/ws</value>
+                <value id="trustpilot" type="host">*.trustpilot.com</value>
+                <value id="youtube" type="host">*.youtube.com</value>
+                <value id="klaviyo" type="host">*.klaviyo.com</value>
+                <value id="pcapredict" type="host">*.pcapredict.com</value>
+                <value id="postcodeanywhere" type="host">*.postcodeanywhere.co.uk</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+                <value id="wsstawk" type="host">wss://*.tawk.to</value>
+                <value id="nrdata" type="host">bam.eu01.nr-data.net</value>
+
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <!--CDN-->
+                <value id="fontawesome" type="host">*.fontawesome.com</value>
+
+                <!--Design-->
+                <value id="typekit" type="host">*.typekit.net</value>
+
+                <!--Functions-->
+                <value id="gstatic" type="host">*.gstatic.com</value>
+                <value id="tawk" type="host">*.tawk.to</value>
+            </values>
+        </policy>
+        <policy id="form-action">
+            <values>
+                <value id="tawk" type="host">*.tawk.to</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

@@ -1,0 +1,163 @@
+<?php
+
+use Mageplaza\Blog\Block\Post\View;
+use Mageplaza\Blog\Helper\Image;
+use Mageplaza\Blog\Model\Config\Source\Comments\Type;
+
+/** @var View $block */
+$helper       = $block->getBlogHelper();
+$_post        = $block->getPost();
+$author       = $helper->getAuthorByPost($_post);
+$authorName   = $author !== null ? $author->getName() : '';
+$modifier     = $helper->getAuthorByPost($_post, true);
+$modifierName = $modifier !== null ? $modifier->getName() : '';
+$isLogged     = ($block->isLoggedIn()) ? 'Yes' : 'No';
+$color        = $helper->getBlogConfig('general/font_color');
+?>
+<div class="mp-blog-view">
+<h1 class="category-listing-view-heading">
+<?= $block->escapeHtmlAttr($_post->getName()) ?>
+</h1>
+
+    <div class="mpcss post-view" id="mpblog-list-container">
+        <div class="post-list-content col-md-12 col-sm-8 p-0">
+            <div class="post-view-image col-xs-12 pl-0">
+                <?php if ($_post->getImage()) : ?>
+                    <img class="img-responsive" src="<?= $block->escapeUrl($block->getImageUrl($_post->getImage())) ?>"
+                         alt="<?= $block->escapeHtmlAttr($_post->getName()) ?>"/>
+                <?php endif; ?>
+            </div>
+            <div class="post-post_content col-xs-12 pl-0">
+                <?= /** @noEscape */ $block->getPageFilter($_post->getPostContent() ?: '') ?>
+            </div>
+            <div class="mp-clear"></div>
+          
+        </div>
+    </div>
+    <?php if ($helper->isEnabledReview()) : ?>
+        <div class="mp-blog-review-title">
+            <span><?= $block->escapeHtml(__('Did you find it helpful?')) ?></span>
+        </div>
+        <div id="mp-blog-review">
+            <div class="mp-blog-like">
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                <span><?= $block->escapeHtml(__('LIKE')) ?></span>
+                <span class="mp-blog-view">
+                    <?php if (!empty($block->getPostLike($_post->getId(), '1'))) : ?>
+                        (<?= $block->escapeHtml($block->getPostLike($_post->getId(), '1')) ?>)
+                    <?php endif; ?>
+                    </span>
+            </div>
+            <div class="mp-blog-dislike">
+                <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                <span><?= $block->escapeHtml(__('DISLIKE')) ?></span>
+                <span class="mp-blog-view">
+                    <?php if (!empty($block->getPostLike($_post->getId(), '0'))) : ?>
+                        (<?= $block->escapeHtml($block->getPostLike($_post->getId(), '0')) ?>)
+                    <?php endif; ?>
+                    </span>
+            </div>
+        </div>
+        <div class="mp-blog-review-label"></div>
+        <script type="text/x-magento-init">
+            {
+                "#mp-blog-review": {
+                    "Mageplaza_Blog/js/helpful-rate": {
+                        "url": "<?= /* @noEscape */ $block->getUrl('mpblog/post/review') ?>",
+                        "post_id" : <?= /* @noEscape */ $_post->getId() ?>,
+                        "mode": <?= /* @noEscape */ $helper->getReviewMode() ?>
+                    }
+                }
+            }
+        </script>
+    <?php endif; ?>
+    <?php if ($helper->getBlogConfig('share/enabled')) : ?>
+        <div class="mp-clear"></div>
+        <script type="text/javascript"
+                src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?= /* @noEscape */
+                $block->getPubId() ?>"
+                async="async"></script>
+        <div class="mpcss">
+            <div id="sharing">
+                <div class="share-col-left">
+                    <h5 class="sharingBtn"><?= $block->escapeHtml(__('Share this post:')) ?></h5>
+                </div>
+                <div class="share-col-right">
+                    <div class="post-sharing-button">
+                        <div class="addthis_inline_share_toolbox"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+	<p class="text-center mt-4 back-btn">
+	<a href="<?php echo $block->getUrl('') ?>blog" class="btn btn-primary"> 
+	<i class="fa fa-angle-left"></i> 
+		Back
+	</a>
+	</p>
+</div>
+<style>
+.mpblog-post-view .page-title-wrapper h1.page-title{
+	display:none;
+}
+.blogForm .btn, .social-blog-links .btn {
+    border-radius: 20px;
+    background: #2881bf;
+    padding: 8px 26px;
+    color: #fff!important;
+    border-radius: 48px;
+    font-size: 22px;
+}
+.blogForm {
+    border: 1px solid #ddd;
+    padding: 12px 10px;
+}
+.category-listing-view-heading {
+    border-bottom: 1px solid #ccc;
+    color: #2084c7;
+    font-weight: 700;
+    margin:  -15px 0 15px ;
+    font-size: 32px;
+    padding-bottom: 10px;
+}
+#mpblog-search-box{
+	border-radius:4px;
+}
+.mpblog-post-view .category-listing-view-heading {
+    font-size: 22px;
+}
+.mpblog-post-view .breacrum-full{
+	visibility:hidden;
+}
+.mpblog-post-view  .mp-blog-view p {
+    font-size: 16px;
+    line-height: 30px;
+}
+.mpblog-post-view  .addthis-smartlayers .slideInLeft{
+   display:none;
+}
+.sharingBtn {
+    font-size: 28px;
+    color: #2084c7;
+}
+.mp-blog-view .back-btn .btn {
+    font-size: 18px;
+}
+.mp-blog-view .back-btn .btn {
+    border-radius: 20px;
+    background: #2881bf;
+    padding: 8px 26px;
+    color: #fff!important;
+    border-radius: 48px;
+    font-size: 22px;
+}
+@media (min-width: 769px){
+.page-layout-2columns-right .column.main {
+    width: 69.166667%;
+}
+.page-layout-2columns-right .sidebar-main {
+    width: 30.833333%;
+}
+}
+</style>

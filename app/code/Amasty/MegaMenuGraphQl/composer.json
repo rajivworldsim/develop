@@ -1,0 +1,24 @@
+{
+    "name": "amasty/mega-menu-graphql",
+    "description": "Mega Menu Graphql By Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.13.4",
+        "amasty/mega-menu": ">=1.9.0",
+        "magento/module-graph-ql": "*",
+        "magento/framework": ">=103.0.3"
+    },
+    "type": "magento2-module",
+    "version": "1.0.10",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\MegaMenuGraphQl\\": ""
+        }
+    }
+}

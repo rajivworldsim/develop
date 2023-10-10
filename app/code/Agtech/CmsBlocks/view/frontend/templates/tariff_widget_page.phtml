@@ -1,0 +1,210 @@
+<?php
+$viewModel = $block->getData('viewModel');
+$countryDataFrom = $viewModel->getAllCountryFrom();
+$operatorRates = $viewModel->getOperatorRates();
+$currencySymbol = $viewModel->getCurrencySymbol();
+$currencyRate = $viewModel->getCurrencyRate();
+?>
+<section class="sim-card-section w-100" id="rates">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 offset-lg-7">
+                <div class="map-select-box"> 
+                    <h2 class="text-center mb-4">Where are you traveling to?</h2>                           
+                    <div class="form-group">
+                        <label>I am in/traveling to:</label>
+                        <select name="calling_from" id="calling_from" class="calling-country form-control" >
+                            <?php
+                                if(isset($_GET['cf'])){
+                                    $defaultCountry = $_GET['cf'];
+                                } else {
+                                    $defaultCountry="United Kingdom";
+                                }
+                            ?>
+                            <?php foreach ($countryDataFrom as $country) { ?>
+                                 <option value="<?php echo $country->getCountry(); ?>" <?php if($country->getCountry() ==$defaultCountry): ?>selected<?php endif; ?>><?php echo $country->getCountry(); ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Calling to... </label>
+                        <select name="calling_to" id="calling_to" class="calling-country form-control">
+                              <?php foreach ($countryDataFrom as $country) { ?>
+                                <option value="<?php echo $country->getCountry(); ?>" <?php if($country->getCountry()==$defaultCountry): ?>selected<?php endif; ?>><?php echo $country->getCountry(); ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Operator </label>
+                        <select name="operators_from" id="operators_from" class="form-control">
+                            <?php
+                                foreach ($operatorRates as $rates){
+                                    if($rates->getCountry()==$defaultCountry){
+                                        $operator_counter = 0;
+                                        $data_from=$rates->getData('data');
+                                        $incoming_from= $rates->getIncoming();
+                                        $outgoing_from=$rates->getOutgoing();
+                                        $sms_from=$rates->getSms();
+                                        
+                                        //since by default calling from and calling to countries are same so outgoing_to rate will be 0
+                                        $outgoing_to=0;
+                                        
+                                        $out_rate = $outgoing_from + $outgoing_to;
+                                        $out_cheap = round($out_rate*$currencyRate,2);
+                                        $out_cheap = $currencySymbol.number_format((float)$out_cheap, 2, '.', '');
+                                        
+                                        $in_cheap = round($incoming_from*$currencyRate,2);
+                                        $in_cheap = number_format((float)$in_cheap, 2, '.', '');
+                                        if($in_cheap <= 0):
+                                          $in_cheap='FREE';
+                                        else:
+                                          $in_cheap = $currencySymbol.$in_cheap;
+                                        endif;
+                                        
+                                        $sms_send = round($sms_from*$currencyRate,2);
+                                        $sms_send = $currencySymbol.number_format((float)$sms_send, 2, '.', '');
+                                        
+                                        $data_receive = round($data_from*$currencyRate,2);
+                                        $data_receive = $currencySymbol.number_format((float)$data_receive, 2, '.', '');
+                                        
+                                        
+                                        if($outgoing_from<=0){
+                                            $out_cheap="N/A";
+                                        }
+                                        if($sms_from<=0){
+                                            $sms_send="N/A";
+                                        }
+                                        if($data_from<=0){
+                                            $data_receive="N/A";
+                                        }
+                                        
+                                        if($operator_counter==0){ //show by default rate for fist operator
+                                            $data_receive_1st = $data_receive;
+                                            $in_cheap_1st = $in_cheap;
+                                            $out_cheap_1st = $out_cheap;
+                                            $sms_send_1st = $sms_send;
+                                        }
+                                        ?>
+                                        <option value="<?php echo $rates->getOperator(); ?>" data-datarate="<?php echo $data_receive; ?>" data-incoming="<?php echo $in_cheap; ?>" data-outgoing="<?php echo $out_cheap; ?>" data-sms="<?php echo $sms_send; ?>"><?php echo $rates->getOperator(); ?></option>
+                                        <?php $operator_counter++;
+                                    }   
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div id="global_tariff_list" class="text-center mt-5"> 
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3 col-3 col-select-result"> 
+                                <img alt=""  class="dataicon" src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>"  /> 
+                                <span class="text-uppercase mt-2 mb-1">Data</span>
+                                <h5 id="data_rate"> <?php echo $data_receive_1st; ?></h5>
+                                <p>/1MB</p>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-3  col-select-result"> 
+                                <img alt=""  class="incomingicon" src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>"/>
+                                <span class="text-uppercase mt-2 mb-1">Incoming</span>
+                                <h5 id="incoming_rate"> <?php echo $in_cheap_1st; ?></h5>
+                                <p>/MIN</p>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-3  col-select-result"> 
+                                <img alt=""  class="outgoingicon" src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>" />
+                                <span class="text-uppercase mt-2 mb-1">Outgoing</span>
+                                <h5 id="outgoing_rate"><?php echo $out_cheap_1st; ?></h5>
+                                <p>/MIN</p>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-3  col-select-result"> 
+                                <img alt="" class="smscon"  src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>" /> 
+                                <span class="text-uppercase mt-2 mb-1">SMS</span>
+                                <h5 id="sms_rate"><?php echo $sms_send_1st; ?></h5>
+                                <p>/SMS</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center mt-4 mb-4"> <a href="<?php echo $this->getUrl('') ?>international-sim-card#add-credit" id="read_more_p" class="ws-readmore">Buy sim Now</a> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+// <![CDATA[
+requirejs(['jquery'], function(jQuery){
+    jQuery(".calling-country").change(function() {
+        var callingFrom = jQuery('#calling_from').find(":selected").text();
+        var callingTo = jQuery('#calling_to').find(":selected").text();
+        var urlTariff = '<?php echo $block->getUrl('') ?>pub/get-tariff-new.php';
+        var currencyRate = "<?php echo $currencyRate; ?>";
+        var currencySymbol = "<?php echo $currencySymbol; ?>";
+        var baseUrl = '<?php echo $block->getBaseUrl(); ?>';
+        jQuery.ajax({
+            url: urlTariff,
+            async : false,
+            method: 'POST',
+            data: {'calling_from': callingFrom, 'calling_to': callingTo, 'page': 'Tariff-Widget-From', 'currencyRate' : currencyRate, 'currencySymbol' : currencySymbol,'baseUrl' : baseUrl},
+            dataType: 'JSON',
+            global: false,
+            success:function(result){
+                alert(result.outgoing);
+                jQuery("#operators_from").html(result.operators);
+                jQuery("#data_rate").html(result.datarate);
+                jQuery("#incoming_rate").html(result.incoming);
+                jQuery("#outgoing_rate").html(result.outgoing);
+                jQuery("#sms_rate").html(result.sms);
+            }
+        });
+    });
+    
+    jQuery("#operators_from").change(function() {
+        var dataRate = jQuery(this).find(':selected').data('datarate');
+        var incoming = jQuery(this).find(':selected').data('incoming');
+        var outgoing = jQuery(this).find(':selected').data('outgoing');
+        var sms = jQuery(this).find(':selected').data('sms');
+
+        jQuery("#data_rate").html(dataRate);
+        jQuery("#incoming_rate").html(incoming);
+        jQuery("#outgoing_rate").html(outgoing);
+        jQuery("#sms_rate").html(sms);
+    });
+    
+    //jQuery("#read_more_p").click(function() {
+    //    var callingFrom = jQuery('#calling_from').find(":selected").text();
+    //    if(callingFrom=="United Kingdom"){
+    //        var url_for_sim = "<?php echo $block->getUrl(''); ?>uk-sim-card#add-credit";
+    //    }else {
+    //        var url_for_sim = "<?php echo $block->getUrl(''); ?>international-sim-card&cf="+callingFrom+"#collapseCredit";
+    //    }
+    //    window.location.replace(url_for_sim);        
+    //});
+    
+    //jQuery(document).ready(function() {
+    //    jQuery('#calling_from').trigger("change");
+    //});
+    
+    jQuery(document).ready(function() {
+        var datarate = '<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>';
+        var incoming = "FREE";
+        var operators = '<option value="EE Limited" data-datarate="<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>" data-incoming="FREE" data-outgoing="<?php echo $currencySymbol.round(0.10*$currencyRate,2); ?>" data-sms="<?php echo $currencySymbol.round(0.13*$currencyRate,2); ?>">EE Limited</option><option value="EE Tmobile" data-datarate="<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>" data-incoming="FREE" data-outgoing="<?php echo $currencySymbol.round(0.10*$currencyRate,2); ?>" data-sms="<?php echo $currencySymbol.round(0.13*$currencyRate,2); ?>">EE Tmobile</option><option value="Hutchison 3G Ltd" data-datarate="<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>" data-incoming="FREE" data-outgoing="<?php echo $currencySymbol.round(0.10*$currencyRate,2); ?>" data-sms="<?php echo $currencySymbol.round(0.13*$currencyRate,2); ?>">Hutchison 3G Ltd</option><option value="Telefonica UK Limited" data-datarate="<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>" data-incoming="FREE" data-outgoing="<?php echo $currencySymbol.round(0.30*$currencyRate,2); ?>" data-sms="<?php echo $currencySymbol.round(0.18*$currencyRate,2); ?>">Telefonica UK Limited</option><option value="Vodafone UK Ltd" data-datarate="<?php echo $currencySymbol.round(0.05*$currencyRate,2); ?>" data-incoming="FREE" data-outgoing="<?php echo $currencySymbol.round(0.10*$currencyRate,2); ?>" data-sms="<?php echo $currencySymbol.round(0.13*$currencyRate,2); ?>">Vodafone UK Ltd</option>';
+        var outgoing = '<?php echo $currencySymbol.round(0.10*$currencyRate,2); ?>'; 
+        var sms = '<?php echo $currencySymbol.round(0.13*$currencyRate,2); ?>';
+        
+        jQuery("#operators_from").html(operators);  
+        jQuery("#data_rate").html(datarate);
+        jQuery("#incoming_rate").html(incoming);
+        jQuery("#outgoing_rate").html(outgoing);
+        jQuery("#sms_rate").html(sms);
+    });
+
+});
+// ]]>
+</script>
+
+<style type="text/css">
+    .page-wrapper{
+        margin-top: -170px;
+    }
+    .sim-card-section{
+        margin-top: -300px;
+    }
+</style>

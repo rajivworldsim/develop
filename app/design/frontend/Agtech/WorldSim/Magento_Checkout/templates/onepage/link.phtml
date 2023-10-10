@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Checkout\Block\Onepage\Link;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Link $block
+ * @var Escaper $escaper
+ */
+?>
+<?php //if ($block->getContinueShoppingUrl()): ?>
+    <a style="float:left;margin: 14px 0;" class="action"
+       href="/" title="<?= $block->escapeHtml(__('Continue Shopping')) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span>
+    </a>
+<?php //endif; ?>
+<?php if ($block->isPossibleOnepageCheckout()): ?>
+    <button style="float:right;margin: 0;" type="button"
+            data-role="proceed-to-checkout"
+            title="<?= $escaper->escapeHtmlAttr(__('Fast Checkout')) ?>"
+            data-mage-init='{
+                "Magento_Checkout/js/proceed-to-checkout":{
+                    "checkoutUrl":"<?= $escaper->escapeJs($block->getCheckoutUrl()) ?>"
+                }
+            }'
+            class="action primary fastCheckout checkout<?= ($block->isDisabled()) ? ' disabled' : '' ?>"
+            <?php if ($block->isDisabled()): ?>
+                disabled="disabled"
+            <?php endif; ?>>
+        <span><?= $escaper->escapeHtml(__('Fast Checkout')) ?></span>
+    </button>
+<?php endif?>

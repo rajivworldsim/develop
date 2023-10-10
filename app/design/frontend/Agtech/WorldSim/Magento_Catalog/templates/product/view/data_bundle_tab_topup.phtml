@@ -1,0 +1,786 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$cartHelper = $agtechobjBlock->getCarthelperObj();
+
+// Dynamically loaded product
+$skuIds = [
+    'data-bundle-topup-new',
+    'data-sim-bundle-new',
+    'data-esim-bundle-new',
+];
+
+$productModels = [];
+$productIds = [];
+$customOptions = [];
+
+foreach ($skuIds as $sku) {
+    $productModel = $agtechobjBlock->getproductModel()->loadByAttribute('sku', $sku);
+    $productId = $productModel->getId();
+    $customOption = $agtechobjBlock->getproductOptionModel()->getProductOptionCollection($productModel);
+
+    $productModels[] = $productModel;
+    $productIds[] = $productId;
+    $customOptions[] = $customOption;
+}
+$product_model_topup = $productModels[0];
+$product_id_topup = $productIds[0];
+$customOptions_topup = $customOptions[0];
+
+$product_model_new_physical_sim = $productModels[1];
+$product_id_new_physical_sim = $productIds[1];
+$customOptions_new_physical_sim = $customOptions[1];
+
+$product_model_new_e_sim = $productModels[2];
+$product_id_new_e_sim = $productIds[2];
+$customOptions_new_e_sim = $customOptions[2];
+
+// end Dynamically loaded product
+
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$currencyFactory = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$storeCode = $storeManager->getStore()->getCode();
+$storeId = $storeManager->getStore()->getId();
+/* Currncy Code*/
+$currencySymbol = $currencyFactory->getCurrencySymbol(); /* Currency Symbol */
+$currencies = $storeManager->getStore()->getAllowedCurrencies();
+$baseCurrencyCode = $storeManager->getStore()->getBaseCurrencyCode();
+$defaultCurrencies = $storeManager->getStore()->getBaseCurrency();
+$Current_CurrencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+
+$convRate = 1;
+$rates = $currencyFactory->getCurrencyRates($defaultCurrencies, $currencies);
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$StoreConvRate = $rates_currency;
+
+$file_name_with_path = "./media/tariff/databundle_countries.json";
+$databundle_countries = file_get_contents($file_name_with_path);
+$databundle_countries = json_decode($databundle_countries);
+//$file_name_with_path = $this->getUrl('')."json/databundle_plans_info.json";
+//$db_info =  file_get_contents($file_name_with_path);
+//$db_info =  json_decode($db_info);
+
+if ($storeId == 1):
+    $defaultCountry = "United Kingdom";
+else:
+    $defaultCountry = "United States of America";
+endif;
+
+
+//new
+$newblock = $this->getLayout()->createBlock("Worldsim\Databundle\Block\Frontend\Country\Country");
+
+$countryData = $newblock->getSingleCountryDataWorldsim();
+$singleCountry = $countryData['singleCountryArray'];
+
+$singleCountry = array_map("unserialize", array_unique(array_map("serialize", $singleCountry)));
+
+
+$getplanData = $newblock->getPlanData();
+$url = 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+?>
+
+
+<div class="tab-pane container bundleData active" id="add-bundle"> 
+	<div class="w-75 mx-auto">
+		<h2 style="margin-top:25px;">Get an International Data Bundle for your WorldSIM SIM card!</h2>
+		<p>Get even lower data rates with an international data bundle that lasts for up to 30 days... </p>
+		<div class="select-country-panel">
+			<label class="mobile-customer"><strong>Select the country you are travelling to:</strong></label>
+			<label class="selectDropDown">
+                <select class="tags single-country form-control" id="databundle_topup_location"
+                    name="single">
+                    <?php foreach ($singleCountry as $countryData) { ?>
+                        <option value="<?php echo $countryData['country']; ?>"><?php echo $countryData['country']; ?></option>
+                    <?php } ?>
+                </select>
+			</label>
+		</div>
+        
+        <div class="validityBlock">
+            <div class="row d-flex justify-content-center plan-content" id="totalcost">
+            </div>
+        </div>
+        
+         <div class="roamingcountry_autoSelect" id="roamingcountry_autoSelect">
+			<!--<h3>You can also use this bundle in list of following countries: </h3>-->
+			<!--<select class="tags" id="databundle_roamingcountries">
+			</select>-->
+			<div class="faqPage card-body" id="faqs">                                    
+				<ul class="accordion">
+					<li>
+						<a class="toggleAcc" href="javascript:void(0);">You can also use this bundle in list of following countries:</a>
+						<div class="inner">
+							<p>
+								<ul class="roaming_countries_list" id="databundle_roamingcountries"></ul>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+        <div class="priceTable text-center" id="preload">
+            <h2>Total Cost: <!-- &#163; --><span class="span1 total-cost"
+                    id="total_cost">0.0</span></h2>
+            <div class="mb-5">
+                <a style="pointer-events: none; cursor: pointer;" data-toggle="modal"
+                    data-target="#popup-modal" data-id="model" href="javascript:;"
+                    class="proceedBtn" id="click-me">Proceed</a>
+            </div>
+            <!--<div>
+                <p class="mobile-customer">After purchasing a data bundle please log into your WorldSIM online account and click "Activate" from "My Bundle" section</p>
+            </div>-->
+            <div class="modal simModal fade" id="popup-modal" style="opacity: 1;">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal body -->
+                        <div class="modal-body text-left">
+                            <button type="button" class="close"
+                                data-dismiss="modal">&times;</button>
+                            <div class="dataCard">
+                                <div class="dataGrid d-flex" id="existing-customer">
+                                    <div class="leftradio"><label
+                                            class="checkbox"><input type="radio"
+                                                name="customers"
+                                                id="mob_cus_id_btn"><span></span></label>
+                                    </div>
+                                    <div class="rightBar"><label>Existing
+                                            Customers</label>
+                                        <input type="text" class="form-control"
+                                            name="Mobile"
+                                            placeholder="Enter Mobile number"
+                                            id="mob_cus_id_mobile">
+                                    </div>
+                                </div>
+                                <div class="dataGrid d-flex" id="new-customer">
+                                    <div class="leftradio"><label class="checkbox">
+                                            <input type="radio" name="customers"
+                                                id="include_sim_new" checked><span></span></label>
+                                    </div>
+                                    <div class="rightBar">
+                                        <label class="pb-3">New to WorldSIM? Please
+                                            Select your preferred SIM card</label>
+                                        <a href="javascript:;"
+                                            class="simBtn mr-2 active"
+                                            id="esim_button">eSIM Pro</a>
+                                        <a href="javascript:;" class="simBtn"
+                                            id="physicalsim_button">Physical SIM
+                                            Card</a>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-5">
+                                    <a class="proceedBtn bundle_add_btn_new"
+                                        id="bundle_add_btn" href="javascript:;">Add to
+                                        basket</a>
+                                </div>
+                                <div class="col-md-12 mt-3 text-center"
+                                    id="databundle_topup_msg_new" style="color:red;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form class="ajax_custom_form_for_new d-none" data-role="tocart-form"
+    action="<?php echo $cartHelper->getAddUrl($product_model_new_e_sim); ?>" method="post">
+    <?php
+    foreach ($customOptions_new_e_sim as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_new_e_sim' name='options[" . $option->getId() . "]'data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+					$credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . ">" . $value->getTitle() . "</option>";
+                }
+            }
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getTitle() == "SIM Type") { ?>
+            <?php if (strpos($url, '/data-bundles') !== false) { ?>
+                <?php echo "<input name=options[" . $option->getId() . "] type='text' value='International eSIM Pro'>";
+            } else {
+                echo "<input name=options[" . $option->getId() . "] type='text' value='Data SIM Card'>";
+            }
+        }
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary new_esimcard_cart_add ">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+<form class="ajax_custom_form_for_new d-none" data-role="tocart-form"
+    action="<?php echo $cartHelper->getAddUrl($product_model_new_physical_sim); ?>" method="post">
+    <?php
+
+    foreach ($customOptions_new_physical_sim as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_new_physical_sim' name='options[" . $option->getId() . "]'data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+					$credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . ">" . $value->getTitle() . "</option>";
+                }
+            }
+
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getTitle() == "SIM Type") { ?>
+            <?php if (strpos($url, '/data-bundles') !== false) { ?>
+                <?php echo "<input name=options[" . $option->getId() . "] type='text' value='International SIM Card'>";
+            } else {
+                echo "<input name=options[" . $option->getId() . "] type='text' value='Data SIM Card'>";
+            }
+        }
+
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary new_simcard_cart_add ">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+<form data-role="tocart-form" action="<?php echo $cartHelper->getAddUrl($product_model_topup); ?>" method="post" class="ajax_custom_form_for_topup d-none">
+    <?php
+    foreach ($customOptions_topup as $option) {
+        $values = $option->getValues();
+        if ($option->getTitle() == "Bundle") {
+            echo "<select class='bundle_sim_option_choose product-custom-option data_bundle_topup' name='options[" . $option->getId() . "]' data-selector='options[" . $option->getId() . "]' >";
+            if ($values) {
+                foreach ($values as $value) {
+                    $credit_value = $value->getId();
+					$credit_sku = $value->getSku();
+                    echo "<option data-sku='$credit_sku' value=" . $credit_value . " >" . $value->getTitle() . "</option>";
+                }
+            }
+
+            echo "</select>";
+        }
+        if ($option->getTitle() == "Bundle Country") {
+            echo "<input class='country_select_drop' name=options[" . $option->getId() . "] type='text'>";
+        }
+        if ($option->getId() == "2") {
+            echo "<input id='mob_cus_id_orig' name=options[" . $option->getId() . "] type='text' >";
+        }
+    }
+    ?>
+    <div class="btn">
+        <button type="submit" title="Add to Cart" class="action tocart primary bundle_topup_cart_add">
+            <span>Add to Cart</span>
+        </button>
+    </div>
+</form>
+
+
+<style>
+    div#databundle_topup_msg {
+        color: #ff0000;
+    }
+</style>
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+
+        $(document).ready(function () {
+			
+			$("#html-body").addClass("product-data-bundle-topup");
+			
+            $('.simBtn').on('click', function () {
+                $('.simBtn').removeClass('active');
+                $(this).addClass('active');
+            })
+			
+			$('.toggleAcc').click(function() { 
+                var $this = $(this);
+                $('li').removeClass('arrowMine')                      
+                if ($(this).next().hasClass('showAcc')) {
+                    $(this).next().removeClass('showAcc');
+                    $(this).next().slideUp(350);
+                } else {
+                    $(this).parent().parent().find('li .inner').removeClass('showAcc');
+                    $(this).parent().parent().find('li .inner').slideUp(350);
+                    $(this).next().toggleClass('showAcc');
+                    $(this).next().slideToggle(350);
+                    $(this).parent('li').toggleClass('arrowMine') 
+                }
+            });
+
+            $('input:radio[value="Italy"]').prop('checked', true);
+            $('#databundle_topup_location').val('Italy').trigger('change');
+            $('.multiple-country').attr("style", "display:none !important");
+
+            $("#multipleCountries").click(function () {
+                $('.popular-country-show').attr("style", "display:none !important");
+                $('.single-country').attr("style", "display:none !important");
+                $('.multiple-country-show').removeAttr("style");
+                $('.multiple-country').removeAttr("style");
+                $('#popularCountries').removeClass('active');
+                $("input:radio[value='Global']").prop('checked', true);
+                $('#databundle_topup_location_multiple').val('Global').trigger('change');
+            });
+
+            $("#popularCountries").click(function () {
+                $('.multiple-country-show').attr("style", "display:none !important");
+                $('.multiple-country').attr("style", "display:none !important");
+                $('.popular-country-show').removeAttr("style");
+                $('.single-country').removeAttr("style");
+                $('#multipleCountries').removeClass('active');
+                $('input:radio[value="Italy"]').prop('checked', true);
+                $('#databundle_topup_location').val('Italy').trigger('change');
+
+            });
+            
+            const radioBtn = document.getElementById('mob_cus_id_btn');
+            const iccidInput = document.getElementById('mob_cus_id_mobile');
+            
+            // Add event listener for focus on ICCID input
+            iccidInput.addEventListener('focus', function() {
+                // Set the radio button as checked
+                radioBtn.checked = true;
+            });
+
+            $("input:radio[name='customers']").change(function () {
+                $('.bundle_add_btn_new').css('pointer-events', '');
+            });
+
+            const includeSimNewRadio = $('#include_sim_new');
+            const dataBundleMsgNew = $('#databundle_topup_msg_new');
+            const mobileInput = $('#mob_cus_id_mobile');
+
+            // Add a click event listener to the radio button
+            includeSimNewRadio.on('click', function () {
+                // Clear the message and empty the input field
+                dataBundleMsgNew.text('');
+                mobileInput.val('');
+            });
+
+            $(document).on('click', '.plan-box', function () {
+
+                var planid = $('input[name="text"]:checked').data('planid');
+                var bundleCountry = $(".country_select_drop").val();
+                var planCode = bundleCountry + $('input[name="text"]:checked').data('planname');
+                var mob_cus_id = $("#mob_cus_id_mobile").val();
+
+                $('.total-cost').text($('input[name="text"]:checked').data('bundlerate'));
+                $('#click-me').css('pointer-events', 'auto');
+                //alert(bundleCountry);
+                // AJAX request to fetch the data
+                $.ajax({
+                    url: "<?php echo $newblock->getRomingAjaxUrl(); ?>", // Replace with the actual URL to your server-side script
+                    type: 'POST',
+                    data: { planid: planid }, // Pass the 'planid' value to the server
+                    dataType: 'JSON',
+                    showLoader: true,
+                    success: function (response) {
+                        if (response.success) {
+                            var optionsHtml = response.optionsHtml;
+                            $('#databundle_roamingcountries').html(optionsHtml);
+                        } else {
+                            console.error('Error: ' + response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX Error: ' + textStatus + ' ' + errorThrown);
+                    }
+                });
+            });
+            $("input:radio[name='country']").change(function () {
+                var country = $(this).val();
+                if ($("#popularCountries").hasClass("active")) {
+                    $('#databundle_topup_location').val(country).trigger('change');
+                } else {
+                    $('#databundle_topup_location_multiple').val(country).trigger('change');
+                }
+            });
+        });
+        $("#click-me").click(function () {
+            var simType = $('input[name="text"]:checked').data('simtype');
+            var supplier = $('input[type="radio"][name="text"]:checked').data('supplier');
+            if (supplier == 'E-Sim2Fly') {
+                $("#existing-customer").removeClass('d-flex');
+                $("#existing-customer").hide();
+            } else {
+                $("#existing-customer").addClass('d-flex');
+                $("#existing-customer").show();
+            }
+            if (simType == "eSIM") {
+                // display none for #esim_button
+                document.getElementById("physicalsim_button").style.display = "none";
+                document.getElementById("esim_button").style.display = "unset";
+            } else if (simType == "Physical Sim") {
+                // display none for #physicalsim_button
+                document.getElementById("esim_button").style.display = "none";
+                document.getElementById("physicalsim_button").style.display = "unset";
+            } else {
+                document.getElementById("esim_button").style.display = "unset";
+                document.getElementById("physicalsim_button").style.display = "unset";
+            }
+
+        })
+
+
+        //Country Change Event for New prices 
+        $("#databundle_topup_location,#databundle_topup_location_multiple").change(function () {
+            var bundleCountry = $(this).val();
+           
+            if (bundleCountry != 'Italy' && bundleCountry != 'Thailand' && bundleCountry != 'Canada' && bundleCountry != 'Mexico' && bundleCountry != 'Turkey' && bundleCountry != 'Germany' && bundleCountry != 'Israel' && bundleCountry != 'Global' && bundleCountry != 'Asia' && bundleCountry != 'Africa' && bundleCountry != 'Europe' && bundleCountry != 'Middle East' && bundleCountry != 'North America' && bundleCountry != 'South America') {
+                $('input:radio[name="country"]').prop('checked', false);
+            } else {
+                $('input:radio[value="' + bundleCountry + '"]').prop('checked', true);
+            }
+            var bundleRegion = $(this).val();
+
+            $.ajax({
+                url: "<?php echo $newblock->getAjaxUrl(); ?>",
+                method: 'POST',
+                data: {
+                    'bundle_country': bundleCountry,
+                    'region_code': bundleRegion,
+                    'page': 'Data-Bundle-Page'
+                },
+                dataType: 'JSON',
+                showLoader: true,
+                success: function (result) {
+                    if (result.plans !== '') {
+                        $(".plan-content").html(result.plans);
+                        $('#roamingcountry_autoSelect, #preload').show();
+                        $("input[name='bundle_value']").first().trigger("change");
+                        var radioButton = $('input[type="radio"][name="text"]:first');
+                        radioButton.prop('checked', true).trigger('change');
+                        $('.plan-box').trigger('click');
+                        $(".country_select_drop").val(bundleCountry);
+                    } else {
+                        $(".plan-content").html("<div id='error_message' style='color: green;'>Currently No plan for this Country. Please Visit After Some Time....</div>");
+                        $('#roamingcountry_autoSelect, #preload').hide();
+                    }
+                }
+            });
+        });
+
+        //bundle options click function
+        $("body").on("change", "input[name='bundle_value']", function () {
+            var convrRate = '<?php echo $StoreConvRate; ?>';
+            var currencySymbol = '<?php echo $currencySymbol; ?>';
+
+            var bundle_shortcode = $(this).data('shortcode');
+            $('#selected_bundle_shortcode').html(bundle_shortcode);
+
+            var bundle_price = $(this).data('bundlerate');
+            var final_selection_price = parseFloat(bundle_price);
+            $('#selected_bundle_price').html(currencySymbol + final_selection_price.toFixed(2));
+
+        });
+
+        //Add to cart Button which has all data
+        $('.bundle_add_btn_new').click(function (e) {
+
+            e.preventDefault();
+            var bundleCountry = $(".country_select_drop").val();
+            var supplier = $('input[type="radio"][name="text"]:checked').data('supplier');
+            var planCode = bundleCountry + $('input[name="text"]:checked').data('planname');
+			var skuCode = $('input[name="text"]:checked').data('sku');
+            var dataBundleClass = '';
+            var btnId = '';
+            <?php
+            if (strpos($url, '/data-bundles') !== false) { ?>  
+                var mob_cus_id = $("#mob_cus_id_mobile").val();
+                    if (mob_cus_id == '' && $('#mob_cus_id_btn').is(":checked")) {
+                        alert("Plese enter Mobile Number or Customer ID");
+                        return;
+                    }
+                    if (mob_cus_id != '') {
+                        dataBundleClass = 'data_bundle_topup';
+                        btnId = 'bundle_topup_cart_add'
+                        var bundle_cat = "D";//Data Bundle Only, VD code for Voice + Data Bundle
+                        var pass_puk = "PinLess";
+                        $.ajax({
+                            url: "<?php echo $this->getUrl(''); ?>customer-check.php",
+                            type: 'post',
+                            data: { 'mob_cus_id': mob_cus_id, 'pass_puk': pass_puk, 'bundle_cat': bundle_cat, 'page': 'DataBundleTopUp', 'supplier': supplier, 'planCode': planCode },
+                            showLoader: true,
+                            success: function (result) {
+                                if (result.indexOf('ok-to-add-bundle') > -1) {
+                                    //Bundle-Is-Valid and add bundle product into cart
+                                    $("#databundle_topup_msg_new").html("<span style='color:#67b903; font-weight:bold;'>Please wait, you are being directed to the shopping cart.</span>");
+                                    $("input#mob_cus_id_orig").val(mob_cus_id);
+                                    //$("select.product-custom-option option:contains(" + planCode + ")").attr('selected', 'selected');
+									$('*[data-sku='+skuCode+']').attr('selected', 'selected');
+                                    $(".country_select_drop").val(bundleCountry);
+                                    $("." + btnId).click();
+
+
+                                } else if (result.indexOf('notvalidate') > -1) {
+                                    $("#databundle_topup_msg_new").html("Your details could not be located, please ensure you have typed them correctly").css("color", "red");// display error message
+                                } else if (result.indexOf('Bundle-Not-Valid') > -1 || result.indexOf('UR')) {
+                                    $("#databundle_topup_msg_new").html("Bundle is NOT valid on your current SIM, please purchase our new SIM card <a href='https://magento-940968-3321072.cloudwaysapps.com/data-sim-card'>here</a>");// display error message
+                                } else if (result.indexOf('Voice-Bundle-Selected-Over-Data-SIM') > -1) {
+                                    $("#databundle_topup_msg_new").html("You cannot buy Voice Bundle over Data SIM Card.");// display error message
+                                }
+                            }
+                        });
+                    } else if ($('#include_sim_new').is(":checked")) {
+                        var activeButton = $('.rightBar .simBtn.active');
+                        if (activeButton.attr('id') === 'esim_button') {
+                            dataBundleClass = 'data_bundle_new_e_sim';
+                            btnId = 'new_esimcard_cart_add';
+                        } else if (activeButton.attr('id') === 'physicalsim_button') {
+                            dataBundleClass = 'data_bundle_new_physical_sim';
+                            btnId = 'new_simcard_cart_add';
+                        }
+                        $(".country_select_drop").val(bundleCountry);
+                        //$("select.product-custom-option option:contains(" + planCode + ")").attr('selected', 'selected');
+						$('*[data-sku='+skuCode+']').attr('selected', 'selected');
+                        $("." + btnId).click();
+                    }
+            <?php } else { //if not data bundle page ?>
+                    $(".country_select_drop").val(bundleCountry);
+                    //$("select.product-custom-option option:contains("+ planCode + ")").attr('selected', 'selected');
+					$('*[data-sku='+skuCode+']').attr('selected', 'selected');
+                $(".bundle_topup_cart_add").click();
+            <?php } ?>
+    });
+});
+</script>
+
+<style type="text/css">
+.product-data-bundles .tab-content{
+	background: #efefef;
+}
+.page-main{
+    display: none;
+}
+.bundleData .validityBlock{
+    margin-top: 30px;
+}
+.bundleData .priceTable{
+    margin-top: 10px;
+}
+.product-data-bundle-topup .country_autoSelect select {
+    border-radius: 20px;
+    box-shadow: unset;
+    height: 40px;
+    padding-left: 15px;
+}
+
+.product-data-bundle-topup .tab-content .bundleData .nav-tabs li {
+    margin: 0;
+}
+
+.product-data-bundle-topup  .breadcrumbs {
+    display: none;
+}
+
+.product-data-bundle-topup 
+ .tab-content {
+    padding-bottom: 0;
+}
+
+/*data-bundle-page-2-jun-start*/
+
+.product-data-bundle-topup .country_autoSelect select {
+    box-shadow: 0px 0 6px rgba(0, 0, 0, 0.13);
+    font-size: 16px;
+    width: 100%;
+    border: none;
+    height: 45px;
+    margin: 0 auto;
+    border-radius: 30px;
+    padding-left: 20px;
+}
+
+.product-data-bundle-topup .tab-content .bundleData .nav-tabs li {
+    margin: 0;
+}
+
+.product-data-bundle-topup  .breadcrumbs {
+    display: none;
+}
+
+.product-data-bundle-topup 
+ .tab-content {
+    padding-bottom: 0;
+}
+.product-data-bundle-topup tabs .flagList img { object-fit: none; object-position: 0 0; width: 52px; height: 35px; border-radius:5px; margin-bottom: 4px;}
+.product-data-bundle-topup .tabs .flagList li{list-style: none; padding: 0 13px; margin-bottom: 0px;}
+.product-data-bundle-topup .tabs .flagList li input{display: none;}
+.product-data-bundle-topup .tabs .flagList li label{cursor: pointer;}
+.product-data-bundle-topup .tabs .flagList .italy img { object-position: -276px -657px;}
+.product-data-bundle-topup .tabs .flagList .thailand img { object-position: -328px -657px;}
+.product-data-bundle-topup .tabs .flagList .canada img { object-position: -382px -657px;}
+.product-data-bundle-topup .tabs .flagList .mexico img { object-position: -435px -657px;}
+.product-data-bundle-topup .tabs .flagList .turkey img { object-position: -488px -657px;}
+.product-data-bundle-topup .tabs .flagList .germany img { object-position: -541px -657px;}
+.product-data-bundle-topup .tabs .flagList .israel img { object-position: -593px -657px;}
+/*.product-data-bundle-topup .tabs #popularCountriesshow .flagList img {width: 65px; height: 59px;}*/
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .global img { object-position: -198px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .asia img { object-position: -66px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .africa img { object-position: 0px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .europe img { object-position: -132px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .middleEast img { object-position: -396px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .northAmerica img { object-position: -264px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList .southAmerica img { object-position: -330px -713px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li i{font-size: 18px; color: #000; font-style: normal;}
+/*.product-data-bundle-topup .tabs #popularCountriesshow li .flagData{border:1px solid transparent; padding: 11px 12px; display: inline-block;}*/
+.product-data-bundle-topup .tabs #popularCountriesshow li input:checked + .flagData{border:1px solid #81BA38; border-radius:6px;}
+
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .global img { object-position: -198px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .asia img { object-position: -66px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .africa img { object-position: 0px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .europe img { object-position: -132px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .middleEast img { object-position: -396px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .northAmerica img { object-position: -264px -772px;}
+.product-data-bundle-topup .tabs #popularCountriesshow .flagList li input:checked + .southAmerica img { object-position: -330px -772px;}
+  
+.product-data-bundle-topup .modal-backdrop.fade {
+    opacity: .5;
+}
+
+/*data-bundle-page-2-jun-start*/
+
+.product-data-bundle-topup .roamingcountry_autoSelect {
+    margin-top: 15px;
+}
+
+.product-data-bundle-topup .roamingcountry_autoSelect h3 {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.product-data-bundle-topup .roamingcountry_autoSelect select {
+    width: 399px;
+    margin: 0 auto;
+    box-shadow: 0px 0 6px rgba(0, 0, 0, 0.13);
+    font-size: 16px;
+    height: 45px;
+    border-radius: 30px;
+    padding-left: 20px;
+}
+ 
+ @media(max-width:767px){
+     .product-data-bundle-topup .roamingcountry_autoSelect select{
+         width:100%;
+     }
+ }
+
+
+/* june-12*/
+
+.product-data-bundle-topup section.bundleBanner.mb-5 {
+    margin-bottom: 5rem !important;
+}
+.product-data-bundle-topup .tab-content {
+    padding: 0 !important;
+}
+.product-data-bundle-topup .bundleData .validList{
+    margin-bottom: 0px !important;
+}
+
+.product-data-bundle-topup .bundleData .validList{
+    box-shadow: 0px 2px 18px rgba(0, 0, 0, 0.18);
+    border-radius: 26px;
+}
+
+/*modla-start*/
+.product-data-bundle-topup .modal-content {
+    border-radius: 10px !important;
+}
+
+.product-data-bundle-topup .simModal .dataGrid .rightBar .form-control::placeholder {
+  color: #BABABA !important;
+  opacity: 1; 
+}
+
+.product-data-bundle-topup .simModal .dataGrid .rightBar .form-control:-ms-input-placeholder { 
+ color: #BABABA !important;
+}
+
+.product-data-bundle-topup .simModal .dataGrid .rightBar .form-control::-ms-input-placeholder {  
+ color: #BABABA !important;
+}
+.product-data-bundle-topup .simModal .dataGrid .rightBar .form-control{
+   color: #BABABA !important;
+ }
+.product-data-bundle-topup .simModal .modal-body {
+    padding-bottom: 50px;
+}
+
+.product-data-bundle-topup .dataCard div {
+    display: inline-block;
+    width: 100%;
+}
+</style>
+
+<style>
+    .page-main{
+        padding-top: 0px;
+    }
+    div#databundle_topup_msg {
+        color: #ff0000;
+    }
+    .faqPage{
+        text-align: left;
+    }
+    .faqPage .accordion li.arrowMine .toggleAcc {
+        background: url(<?php echo $block->getViewFileUrl('images/faq_mins.gif'); ?>)97% 24px no-repeat;
+    }
+    .faqPage .toggleAcc {
+        font-size: 18px;
+        color: #000;
+        display: block;
+        border-bottom: 1px solid #e7e7e7;
+        padding: 17px 38px;
+        background: url(<?php echo $block->getViewFileUrl('images/faq_plus.gif'); ?>)97% 24px no-repeat;
+    }
+    
+    .faqPage .accordion .inner {
+        margin: 20px 0;
+    }
+    .faqPage .accordion li p {
+        font-size: 16px;
+        padding: 0 24px;
+        line-height: 28px;
+    }
+    .inner {
+        padding-left: 1em;
+        overflow: hidden;
+        display: none;
+    }
+    .faqPage .accordion {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    .faqPage .accordion li {
+        list-style: none;
+    }
+    
+    .roaming_countries_list{
+        list-style: none;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+    }
+    @media(max-width:766px){
+        .roaming_countries_list{
+            list-style: none;
+            -webkit-column-count: 2;
+            -moz-column-count: 2;
+            column-count: 2;
+        }
+    }
+</style>

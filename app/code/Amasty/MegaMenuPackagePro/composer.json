@@ -1,0 +1,23 @@
+{
+    "name": "amasty/module-mega-menu-package-pro",
+    "description": "Mega Menu Pro by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.13.6",
+        "amasty/mega-menu": ">=2.4.0"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "2.4.1",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\MegaMenuPackagePro\\": ""
+        }
+    }
+}

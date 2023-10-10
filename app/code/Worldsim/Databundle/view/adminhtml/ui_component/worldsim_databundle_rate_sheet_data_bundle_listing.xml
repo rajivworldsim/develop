@@ -1,0 +1,399 @@
+<?xml version="1.0" ?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_listing_data_source</item>
+		</item>
+	</argument>
+	<settings>
+		<spinner>worldsim_databundle_rate_sheet_data_bundle_columns</spinner>
+		<deps>
+			<dep>worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_listing_data_source</dep>
+		</deps>
+		<buttons>
+			<button name="add">
+				<url path="*/*/new"/>
+				<class>primary</class>
+				<label translate="true">Add New Rate Sheet Data Bundle</label>
+			</button>
+			<button name="import">
+				<url path="worldsim_databundle/ratesheetdatabundle/importcsv"/>
+				<class>primary</class>
+				<label translate="true">Import Rate Sheet Data Bundle</label>
+			</button>
+		</buttons>
+	</settings>
+	<dataSource name="worldsim_databundle_rate_sheet_data_bundle_listing_data_source" component="Magento_Ui/js/grid/provider">
+		<settings>
+			<storageConfig>
+				<param name="indexField" xsi:type="string">id</param>
+			</storageConfig>
+			<updateUrl path="mui/index/render"/>
+		</settings>
+		<aclResource>Worldsim_Databundle::rate_sheet_data_bundle</aclResource>
+		<dataProvider name="worldsim_databundle_rate_sheet_data_bundle_listing_data_source" class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+			<settings>
+				<requestFieldName>id</requestFieldName>
+				<primaryFieldName>id</primaryFieldName>
+			</settings>
+		</dataProvider>
+	</dataSource>
+	<listingToolbar name="listing_top">
+		<settings>
+			<sticky>true</sticky>
+		</settings>
+        <bookmark name="bookmarks"/>
+         
+        <columnsControls name="columns_controls"/>
+
+        <filterSearch name="fulltext" />
+
+        <filters name="listing_filters"/>
+
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions" class="\Magento\Catalog\Ui\Component\Product\MassAction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="*/*/massDelete" />
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+        <exportButton name="export_button"/>
+    </listingToolbar>
+	<columns name="worldsim_databundle_rate_sheet_data_bundle_columns">
+		<settings>
+			<editorConfig>
+				<param name="selectProvider" xsi:type="string">worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_columns.ids</param>
+				<param name="enabled" xsi:type="boolean">true</param>
+				<param name="indexField" xsi:type="string">id</param>
+				<param name="clientConfig" xsi:type="array">
+					<item name="saveUrl" xsi:type="url" path="worldsim_databundle/ratesheetdatabundle/inlineEdit"/>
+					<item name="validateBeforeSave" xsi:type="boolean">false</item>
+				</param>
+			</editorConfig>
+			<childDefaults>
+				<param name="fieldAction" xsi:type="array">
+					<item name="provider" xsi:type="string">worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_listing.worldsim_databundle_rate_sheet_data_bundle_columns_editor</item>
+					<item name="target" xsi:type="string">startEdit</item>
+					<item name="params" xsi:type="array">
+						<item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+						<item name="1" xsi:type="boolean">true</item>
+					</item>
+				</param>
+			</childDefaults>
+		</settings>
+		<selectionsColumn name="ids">
+			<settings>
+				<indexField>id</indexField>
+			</settings>
+		</selectionsColumn>
+		<column name="id">
+			<settings>
+				<filter>textRange</filter>
+				<sorting>asc</sorting>
+				<label translate="true">ID</label>
+			</settings>
+		</column>
+		<column name="country">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Country</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="region">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Region</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="supplier">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Supplier</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="simtype">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Sim Type</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="days">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Days</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="onegb">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">1 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="threegb">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">3 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="fivegb">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">5 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="sixgb">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">6 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="tengb">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">10 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="twenty">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">20 GB</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="unlimited">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Unlimited</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="topupavail">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Top-Up Avail</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="roaminginc">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Roaming Inc</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="roamingcountries">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Roaming Countries</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="onegbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">1 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="threegbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">3 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="fivegbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">5 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="sixgbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">6 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="tengbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">10 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="twentygbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">20 GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="unlimitedgbcode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Unlimited GB code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="worldsimshortCode">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Worldsim Short Code</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<column name="worldsimdistrubtor">
+			<settings>
+				<filter>text</filter>
+				<label translate="true">Worldsim Distrubtor</label>
+				<editor>
+					<editorType>text</editorType>
+					<validation>
+						<rule name="required-entry" xsi:type="boolean">false</rule>
+					</validation>
+				</editor>
+			</settings>
+		</column>
+		<actionsColumn name="actions" class="Worldsim\Databundle\Ui\Component\Listing\Column\RatesheetdatabundleActions">
+			<settings>
+				<indexField>id</indexField>
+				<resizeEnabled>false</resizeEnabled>
+				<resizeDefaultWidth>107</resizeDefaultWidth>
+			</settings>
+		</actionsColumn>
+	</columns>
+</listing>

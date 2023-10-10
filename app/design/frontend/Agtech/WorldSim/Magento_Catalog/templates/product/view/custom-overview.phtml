@@ -1,0 +1,127 @@
+<?php
+
+$_product = $this->getProduct();
+
+?>
+<?php if ($_product->getOverviewImage() != 'no_selection') {  ?>
+	<?php if ($_product->getData('overview_subheading') || $_product->getData('overview_description')) { ?>
+		<div class="container esim-desktop-overview">
+			<h2 class="heading text-center mt-3 mb-4">Overview</h2>
+			<div class="row min-height-overview-content align-items-md-center">
+				<?php if ($_product->getSku() == 'international-e-simcard') {  ?>
+					<div class="col-md-12 mb-5">
+						<h6 class="mt-5 mb-5">eSIM Explained</h6>
+						<p>
+							An eSIM is a digital SIM card that works just like a normal sim card except that you don’t need a physical sim card to use it. Simply scan a QR code and the eSIM will be uploaded into your <a href="https://www.worldsim.com/international-esim-card">compatible eSIM handset</a>. Activation can be completed in under 5 mins. No more sim swapping required! If your phone does support eSIM most likely you will be able to keep your existing number active aswell as use your WorldSIM eSIM at the same time. Most handsets support this. Unlike most data only eSIMS on the market, the WorldSIM eSIM offers both voice and data roaming services in over 135 countries at super competitive rates. Data is delivered at 4G speeds.
+						</p>
+					</div>
+				<?php } ?>
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="callView w-100 pull-left mt-3">
+							<div class="textbar">
+								<h6><?php echo $_product->getData('overview_subheading'); ?></h6>								
+									<?php echo $_product->getData('overview_description'); ?>
+							</div>
+							
+						</div>
+					</div>
+					<div class="col-md-6">
+						<?php if ($_product->getSku() == 'spring-covid-19-rapid-test-kit') {  ?>
+										<br />
+										<iframe width="480" height="315" src="https://www.youtube-nocookie.com/embed/TNvfpHERmeU?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+										<br />
+							<?php } elseif ($_product->getSku() == 'mp-bio-covid-19-rapid-ncov-antigen-test-kit') {  ?>
+										<br />
+										<iframe width="480" height="315" src="https://www.youtube.com/embed/y_wK2HjEyo4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+										<br />
+							<?php } elseif ($_product->getSku() == 'spring-covid-19-rapid-test-kit') {  ?>
+										<br />
+										<iframe width="480" height="315" src="https://www.youtube.com/embed/TNvfpHERmeU" frameborder="0" allow="accelerometer; autoplay; 	clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+										<br />
+							<?php } else { //show overview image selected from the product image gallery in backend 
+									?>
+									<img class="lozad" data-src="" alt="" src="/media/catalog/product<?php echo $_product->getData('overview_image'); ?>" data-loaded="true">
+									<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container esim-mobile-overview">
+			<h2 class="heading text-center mt-3 mb-4">Overview</h2>
+			<div class="row min-height-overview-content align-items-md-center">
+				<?php if ($_product->getSku() == 'international-e-simcard') {  ?>
+					<div class="col-md-12 mb-5">
+						<h6 class="mt-5 mb-2">eSIM Explained</h6>
+						<p>
+							An eSIM is a digital SIM card that works just like a normal sim card except that you don’t need a physical sim card to use it. <a href="#" id="example-esim-1-show" class="showLink" onclick="showHide('example-esim-1');return false;">See more</a>
+						</p>
+						<p class="moretext" id="example-esim-1" style="display: none;">
+
+							Simply scan a QR code and the eSIM will be uploaded into your <a href="#">compatible eSIM handset</a>. Activation can be completed in under 5 mins. No more sim swapping required! If your phone does support eSIM most likely you will be able to keep your existing number active aswell as use your WorldSIM eSIM at the same time. Most handsets support this. Unlike most data only eSIMS on the market, the WorldSIM eSIM offers both voice and data roaming services in over 135 countries at super competitive rates. Data is delivered at 4G speeds.<a href="#" id="example-esim-1-hide" class="hideLink" onclick="showHide('example-esim-1');return false;">Hide</a>
+						</p>
+					</div>
+				<?php } ?>
+				<div class="col-md-6 ">
+					<div class="callView w-100 pull-left mt-3">
+
+						<div class="textbar">
+							<h6><?php echo $_product->getData('overview_subheading'); ?></h6>
+							<div class = "esim-image-set">
+								<?php if ($_product->getSku() == 'spring-covid-19-rapid-test-kit') {  ?>
+									<br />
+									<iframe width="480" height="315" src="https://www.youtube-nocookie.com/embed/TNvfpHERmeU?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+									<br />
+								<?php } elseif ($_product->getSku() == 'mp-bio-covid-19-rapid-ncov-antigen-test-kit') {  ?>
+									<br />
+									<iframe width="480" height="315" src="https://www.youtube.com/embed/y_wK2HjEyo4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									<br />
+								<?php } elseif ($_product->getSku() == 'spring-covid-19-rapid-test-kit') {  ?>
+									<br />
+									<iframe width="480" height="315" src="https://www.youtube.com/embed/TNvfpHERmeU" frameborder="0" allow="accelerometer; autoplay; 	clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									<br />
+								<?php } else { //show overview image selected from the product image gallery in backend 
+								?>
+								<img class="lozad" data-src="" alt="" src="/media/catalog/product<?php echo $_product->getData('overview_image'); ?>" data-loaded="true">
+								<?php } ?>
+							</div>
+							<div class="esim-content-set">
+								<?php echo $_product->getData('overview_description'); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+<?php } else { ?>
+	<div class="container">
+		<?php if ($_product->getOverviewSubheading() != "") : ?>
+			<h6 class="text-center"><?php echo $_product->getOverviewSubheading(); ?></h6>
+		<?php endif; ?>
+		<?php echo $_product->getOverviewDescription(); ?>
+	</div>
+<?php } ?>
+
+<?php if ($_product->getSku() == 'international-e-simcard') {  ?>
+	<style type="text/css">
+		.esim-desktop-overview .min-height-overview-content p {
+			font-size: 16px !important;
+		}
+	</style>
+<?php } ?>
+<script type="text/javascript">
+	function showHide(shID) {
+
+    if (document.getElementById(shID)) {
+
+        if (document.getElementById(shID+'-show').style.display != 'none') {
+            document.getElementById(shID+'-show').style.display = 'none';
+            document.getElementById(shID).style.display = 'block';
+        } else {
+            document.getElementById(shID+'-show').style.display = 'inline';
+            document.getElementById(shID).style.display = 'none';
+        }
+    }
+}
+</script>

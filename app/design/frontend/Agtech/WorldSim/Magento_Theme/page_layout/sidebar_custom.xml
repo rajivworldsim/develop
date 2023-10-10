@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+      <update handle="empty"/>
+     <referenceContainer name="page.wrapper">
+     </referenceContainer>
+<referenceContainer name="div.sidebar.additional">
+			<block class="Magento\Framework\View\Element\Template" name="newproduct_sidebar" template="Magento_Catalog::product/new_product.phtml" before="-"> 
+			</block>
+			
+			
+			
+</referenceContainer>
+</layout>

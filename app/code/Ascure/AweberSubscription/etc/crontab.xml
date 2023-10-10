@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * This XML file defines the cron configurations for the refresh token of Aweber API.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="ascure_awebersubscription_refresh_token" instance="Ascure\AweberSubscription\Cron\RefreshToken" method="execute">
+            <schedule>* */2 * * *</schedule>
+        </job>
+    </group>
+</config>

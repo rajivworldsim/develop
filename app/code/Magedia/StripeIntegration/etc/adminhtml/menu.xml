@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+
+        <add id="Magedia_StripeIntegration::menu" title="Magedia" translate="title" module="Magedia_StripeIntegration" sortOrder="17" resource="Magedia_StripeIntegration::menu"/>
+        <add id="Magedia_StripeIntegration::topup_managment" title="Topups"
+             module="Magedia_StripeIntegration"
+             resource="Magedia_StripeIntegration::topup_managment" sortOrder="20" translate="title"
+             parent="Magedia_StripeIntegration::menu" />
+        <add id="Magedia_StripeIntegration::manage_topups" title="Manage Topups" translate="title"
+             module="Magedia_StripeIntegration" sortOrder="10" resource="Magedia_StripeIntegration::manage_topups"
+             parent="Magedia_StripeIntegration::topup_managment" action="topup/topup/index" />
+    </menu>
+</config>

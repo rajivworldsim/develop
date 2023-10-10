@@ -1,0 +1,22 @@
+<?php
+
+use Mirasvit\CacheWarmer\Block\Adminhtml\Info\Info;
+
+?>
+
+<div class="mst-cache-warmer__info sysload">
+        <div class="column line-chart sysload-chart">
+            <h4><?= Info::SERVER_LOAD_LABEL ?></h4>
+
+            <div class="column__content">
+                <canvas id="<?= Info::SERVER_LOAD_ID ?>"></canvas>
+            </div>
+        </div>
+</div>
+
+<script type="text/x-magento-init"><?= \Mirasvit\Core\Service\SerializeService::encode([
+        '#' . Info::SERVER_LOAD_ID => [
+            'Mirasvit_CacheWarmer/js/component/chart' => $block->getChartConfigData(Info::CHART_TYPE_LINE, Info::SERVER_LOAD_ID),
+        ],
+    ]); ?></script>
+

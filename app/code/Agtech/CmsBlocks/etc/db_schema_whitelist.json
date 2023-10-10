@@ -1,0 +1,74 @@
+{
+    "json_convert_ajax": {
+        "column": {
+            "entity_id": true,
+            "json_name": true,
+            "content": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "worldsim_uksim_rates_from_new": {
+        "column": {
+            "entity_id": true,
+            "id": true,
+            "country": true,
+            "operator": true,
+            "outgoing": true,
+            "outgoing_bleg": true,
+            "sms": true,
+            "sms_bleg": true,
+            "data": true,
+            "eu_bleg_discount": true,
+            "recommended_profile": true,
+            "incoming": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "worldsim_uksim_sms_to_new": {
+        "column": {
+            "entity_id": true,
+            "id": true,
+            "country": true,
+            "rate": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "worldsim_google_reviews": {
+        "column": {
+            "entity_id": true,
+            "id": true,
+            "grating": true,
+            "grating_percent": true,
+            "gcontent": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "worldsim_virtual_number_rates": {
+        "column": {
+            "entity_id": true,
+            "id": true,
+            "type": true,
+            "country_code": true,
+            "country_name": true,
+            "month1": true,
+            "month3": true,
+            "month6": true,
+            "month12": true,
+            "saving3": true,
+            "saving6": true,
+            "saving12": true,
+            "active": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

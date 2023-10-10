@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="mst_cache_warmer_page" resource="default" engine="innodb" comment="mst_cache_warmer_page">
+    <column xsi:type="int" name="page_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Page Id"/>
+    <column xsi:type="text" name="uri" nullable="true" comment="URI" onCreate="migrateDataFrom(uri)"/>
+    <column xsi:type="varchar" name="cache_id" nullable="true" length="255" comment="Cache Id"/>
+    <column xsi:type="varchar" name="page_type" nullable="true" length="255" comment="Page Type"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="true" identity="false" comment="Product ID"/>
+    <column xsi:type="int" name="category_id" padding="11" unsigned="false" nullable="true" identity="false" comment="Category ID"/>
+    <column xsi:type="text" name="vary_data" nullable="true" comment="Vary Data"/>
+    <column xsi:type="int" name="popularity" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Popularity"/>
+    <column xsi:type="int" name="attempts" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="attempts"/>
+    <column xsi:type="varchar" name="warm_rule_version" nullable="true" comment="warm_rule_version" length="255"/>
+    <column xsi:type="varchar" name="warm_rule_ids" nullable="true" comment="warm_rule_ids" length="255"/>
+    <column xsi:type="int" name="store_id" padding="11" unsigned="false" nullable="true" identity="false" comment="store_id"/>
+    <column xsi:type="varchar" name="vary_data_hash" nullable="false" comment="vary_data_hash" length="255"/>
+    <column xsi:type="text" name="user_agent" nullable="true" comment="user_agent"/>
+    <column xsi:type="varchar" name="status" nullable="true" comment="status" length="255"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" comment="created_at"/>
+    <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="true" comment="updated_at"/>
+    <column xsi:type="timestamp" name="cached_at" on_update="false" nullable="true" comment="cached_at"/>
+    <column xsi:type="timestamp" name="flushed_at" on_update="false" nullable="true" comment="flushed_at"/>
+    <column xsi:type="varchar" name="uri_hash" nullable="false" length="255" comment="uri_hash"/>
+    <column xsi:type="text" name="cookie" nullable="false" comment="cookie"/>
+    <column xsi:type="int" name="main_rule_id" padding="11" unsigned="false" nullable="true" identity="false" comment="Main Rule Id"/>
+    <column xsi:type="int" name="source_id" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="source_id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="page_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_PAGE_CACHE_ID" indexType="btree">
+      <column name="cache_id"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_URI_HASH_VARY_DATA_HASH" indexType="btree">
+      <column name="uri_hash"/>
+      <column name="vary_data_hash"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_WARM_RULE_IDS" indexType="btree">
+      <column name="warm_rule_ids"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_WARM_RULE_IDS_STATUS" indexType="btree" disabled="true">
+      <column name="warm_rule_ids"/>
+      <column name="status"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_MAIN_RULE_ID_STATUS" indexType="btree">
+      <column name="main_rule_id"/>
+      <column name="status"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_WARM_RULE_VERSION" indexType="btree">
+      <column name="warm_rule_version"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_job" resource="default" engine="innodb" comment="mst_cache_warmer_job">
+    <column xsi:type="int" name="job_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Job Id"/>
+    <column xsi:type="int" name="priority" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Job Priority"/>
+    <column xsi:type="text" name="filter_serialized" nullable="true" comment="Page Filter" onCreate="migrateDataFrom(filter_serialized)"/>
+    <column xsi:type="text" name="info_serialized" nullable="true" comment="Info"/>
+    <column xsi:type="timestamp" name="started_at" on_update="false" nullable="true" comment="Started At"/>
+    <column xsi:type="timestamp" name="finished_at" on_update="false" nullable="true" comment="Finished At"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+    <column xsi:type="text" name="status" nullable="true" comment="status"/>
+    <column xsi:type="text" name="trace_serialized" nullable="true" comment="trace_serialized"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="job_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_JOB_JOB_ID" indexType="btree">
+      <column name="job_id"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_report" resource="default" engine="innodb" comment="mst_cache_warmer_report">
+    <column xsi:type="int" name="report_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Report Id"/>
+    <column xsi:type="decimal" name="response_time" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Response Time"/>
+    <column xsi:type="decimal" name="response_time_hit" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Hit Response Time"/>
+    <column xsi:type="decimal" name="response_time_miss" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Miss Response Time"/>
+    <column xsi:type="int" name="hit" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Hit"/>
+    <column xsi:type="int" name="miss" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Miss"/>
+    <column xsi:type="text" name="url" nullable="true" comment="Url"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" comment="Created At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="report_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_REPORT_REPORT_ID" indexType="btree">
+      <column name="report_id"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_report_aggregated" resource="default" engine="innodb" comment="mst_cache_warmer_report_aggregated">
+    <column xsi:type="int" name="report_aggreg_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Report Id"/>
+    <column xsi:type="decimal" name="response_time" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Response Time"/>
+    <column xsi:type="decimal" name="response_time_hit" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Hit Response Time"/>
+    <column xsi:type="decimal" name="response_time_miss" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Miss Response Time"/>
+    <column xsi:type="int" name="hit" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Hit"/>
+    <column xsi:type="int" name="miss" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Miss"/>
+    <column xsi:type="int" name="visit_count" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Visit count"/>
+    <column xsi:type="timestamp" name="period" on_update="false" nullable="true" comment="Hour period"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="report_aggreg_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_REPORT_AGGREGATED_REPORT_AGGREG_ID" indexType="btree">
+      <column name="report_aggreg_id"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_log" resource="default" engine="innodb" comment="mst_cache_warmer_log">
+    <column xsi:type="int" name="log_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Report Id"/>
+    <column xsi:type="decimal" name="response_time" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Response Time"/>
+    <column xsi:type="int" name="is_hit" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Hit"/>
+    <column xsi:type="text" name="uri" nullable="true" comment="Url"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" comment="Created At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="log_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_LOG_LOG_ID" indexType="btree">
+      <column name="log_id"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_LOG_CREATED_AT" indexType="btree">
+      <column name="created_at"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_page_type" resource="default" engine="innodb" comment="mst_cache_warmer_page_type">
+    <column xsi:type="int" name="page_type_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Page type Id"/>
+    <column xsi:type="varchar" name="page_type" nullable="true" length="255" comment="Page type"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="page_type_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_PAGE_TYPE_PAGE_TYPE_ID" indexType="btree">
+      <column name="page_type_id"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_PAGE_TYPE_PAGE_TYPE" indexType="btree">
+      <column name="page_type"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_warm_rule" resource="default" engine="innodb" comment="mst_cache_warmer_warm_rule">
+    <column xsi:type="int" name="warm_rule_id" padding="11" unsigned="false" nullable="false" identity="true" comment="warm_rule_id"/>
+    <column xsi:type="varchar" name="name" nullable="false" length="255" comment="name"/>
+    <column xsi:type="int" name="is_active" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="is_active"/>
+    <column xsi:type="int" name="priority" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="priority"/>
+    <column xsi:type="text" name="conditions_serialized" nullable="true" comment="conditions_serialized"/>
+    <column xsi:type="text" name="headers_serialized" nullable="true" comment="headers_serialized"/>
+    <column xsi:type="text" name="vary_data_serialized" nullable="true" comment="vary_data_serialized"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="warm_rule_id"/>
+    </constraint>
+  </table>
+  <table name="mst_cache_warmer_trace" resource="default" engine="innodb" comment="mst_cache_warmer_trace">
+    <column xsi:type="int" name="trace_id" padding="11" unsigned="false" nullable="false" identity="true" comment="trace_id"/>
+    <column xsi:type="varchar" name="entity_type" nullable="false" length="255" comment="entity_type"/>
+    <column xsi:type="varchar" name="entity_id" nullable="false" length="255" comment="entity_id"/>
+    <column xsi:type="text" name="trace" nullable="true" comment="trace"/>
+    <column xsi:type="timestamp" name="started_at" on_update="false" nullable="true" comment="started_at"/>
+    <column xsi:type="timestamp" name="finished_at" on_update="false" nullable="true" comment="finished_at"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="created_at"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="trace_id"/>
+    </constraint>
+    <index referenceId="MST_CACHE_WARMER_TRACE_ENTITY_TYPE" indexType="btree">
+      <column name="entity_type"/>
+    </index>
+    <index referenceId="MST_CACHE_WARMER_TRACE_ENTITY_ID" indexType="btree">
+      <column name="entity_id"/>
+    </index>
+  </table>
+  <table name="mst_cache_warmer_source" resource="default" engine="innodb" comment="mst_cache_warmer_source">
+    <column xsi:type="int" name="source_id" padding="11" unsigned="false" nullable="false" identity="true" comment="source_id"/>
+    <column xsi:type="text" name="source_name" nullable="false" comment="source_name"/>
+    <column xsi:type="int" name="source_type" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="source_type"/>
+    <column xsi:type="text" name="path" nullable="true" comment="path"/>
+    <column xsi:type="text" name="customer_groups" nullable="false" comment="customer_groups"/>
+    <column xsi:type="int" name="is_active" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="is_active"/>
+    <column xsi:type="datetime" name="last_sync_at" on_update="false" nullable="true" comment="last_sync_at"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="source_id"/>
+    </constraint>
+  </table>
+</schema>

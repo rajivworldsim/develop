@@ -1,0 +1,23 @@
+{
+    "name": "ascure/magento-2-aweber-subscription",
+    "description": "Integrate Aweber with Magento 2",
+    "type": "magento2-module",
+    "license": "GPL-3.0",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Anurag Jain",
+            "email": "anurag.jain@ascuretech.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ascure\\AweberSubscription\\": ""
+        }
+    }
+}

@@ -1,0 +1,78 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Currency switcher
+ *
+ * @var \Magento\Directory\Block\Currency $block
+ */
+
+?>
+<?php $currentUrl = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]); ?>
+
+<?php if ($block->getCurrencyCount() > 1) : ?>
+    <?php $currencies = $block->getCurrencies(); ?>
+    <?php $currentCurrencyCode = $block->getCurrentCurrencyCode(); ?>
+    <?php $id = $block->getIdModifier() ? '-' . $block->getIdModifier() : '' ?>
+    <div class="switcher currency switcher-currency" id="switcher-currency<?= $block->escapeHtmlAttr($id) ?>">
+        <strong class="label switcher-label"><span><?= $block->escapeHtml(__('Currency')) ?></span></strong>
+        <div class="actions dropdown options switcher-options">
+            <div class="action toggle switcher-trigger"
+                 id="switcher-currency-trigger<?= $block->escapeHtmlAttr($id) ?>"
+                 data-mage-init='{"dropdown":{}}'
+                 data-toggle="dropdown"
+                 data-trigger-keypress-button="true">
+		<strong id="selected_currency" data-value="<?=$block->getCurrentCurrencyCode()?>" class="language-<?= $block->escapeHtml($block->getCurrentCurrencyCode()) ?>">
+                <?php $flagImage = 'images/'.$block->getCurrentCurrencyCode().'.png'; ?>
+                <img src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>" class="<?php echo $block->getCurrentCurrencyCode(); ?>">
+                <span><?= $block->escapeHtml($currentCurrencyCode) ?></span>
+            </strong>
+            </div>
+            <ul class="dropdown switcher-dropdown" data-target="dropdown">
+                <?php foreach ($currencies as $_code => $_name) : ?>
+                    <?php if ($_code != $currentCurrencyCode) : ?>
+                        <li class="currency-<?= $block->escapeHtmlAttr($_code) ?> switcher-option site-currency" data-value="<?=$_code?>">
+                            <a href="#" data-post='<?= /* @noEscape */ $block->getSwitchCurrencyPostData($_code) ?>'><img src="<?php echo $block->getViewFileUrl('images/sprite.png'); ?>" class="<?php echo $block->escapeHtml($_code); ?>"> &nbsp; <?= $block->escapeHtml($_code) ?></a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+    require([
+        'jquery'
+    ], function ($) {
+        $("#selected_currency").ready((elem)=>{
+            let currencyCode = $("#selected_currency")[0].dataset.value;
+            $.ajax({
+                url: "<?= $block->getUrl('magedia_currencyswitcher/switch/index')?>",
+                type: 'POST',
+                dataType: 'json',
+                data: { currentCurrencyCode:  currencyCode }
+            }).done(function (response) {
+                if(response.reload==true){
+                    location.reload();
+                }
+            });
+        });
+        //$('.site-currency').on('click',(elem)=>{
+        //    elem.preventDefault();
+        //    let currencyCode = elem.currentTarget.dataset.value;
+        //    $.ajax({
+        //        url: "<?= $block->getUrl('magedia_currencyswitcher/switch/index')?>",
+        //        type: 'POST',
+        //        dataType: 'json',
+        //        data: { currencyCode:  currencyCode }
+        //    }).done(function (response) {
+        //        if(response.status==true){
+        //            location.reload();
+        //        }
+        //    });
+        //});
+    });
+</script>

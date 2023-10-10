@@ -1,0 +1,141 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_Blog
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\Blog\Block\Widget\Posts;
+
+/** @var Posts $block */
+$posts = $block->getCollection();
+?>
+<div class="post-list-container mpcss mt-5 container" id="mpblog-list-container" style="background: #fffff;">
+	<div class="container text-center">
+	<h3 class="heading heading-blog-title"><?= $block->escapeHtml($block->getTitle()) ?></h3>
+	<p class="blog-title-bottom mt-3">Discover unique destinations, read about the best travel apps and smart money saving tips</p>
+	</div>
+    <div class="owl-carousel mt-4" id="post-carousel">
+        <?php foreach ($posts as $post) : ?>
+		<?php if($post->getShortDescription()!=''){ ?>
+            <div class="post-list-item">
+                <div class="post-item-wraper">
+				
+                        <div class="post-image blog-post-home">
+                            <a href="<?= $block->escapeUrl($post->getUrl()); ?>">
+						<?php if ($post->getImage()) : ?>
+							<img style="height: 220px"
+                                     src="<?= $block->escapeUrl($block->resizeImage($post->getImage(), '400x')) ?>"
+                                     alt="<?= $block->escapeHtml($post->getName()); ?>"/> 
+							<?php else :
+								preg_match_all('/<img[^>]+>/i',$post->getShortDescription(), $result);
+								echo $result[0][0]; 
+							endif;
+						?>
+							<span class="blog-name"><?php echo $block->escapeHtml($post->getName()); ?></span>
+                         </a> 
+                        </div>
+                   
+                </div>
+            </div>
+			<?php } ?>
+        <?php endforeach; ?>
+    </div>
+	<p class="text-center  mt-4"><a href="/blog" class="ws-readmore">READ OUR BLOG </a></p>
+</div>
+<style>
+.blog-post-home img{
+	height:290px;
+	transition: all 0.3s ease-in-out 0s;
+}
+.blog-name{
+	padding: 10px;
+    background-color: rgba(0,0,0,.7);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 40%;
+    left: 0;
+    overflow: hidden;
+    font-size: 16px;
+    color: #fff;
+	text-align:center;
+}
+.post-item-wraper {
+    padding: 0 !important;
+}
+.post-list-item:hover img {
+    transform: scale(1.1);
+}
+.post-image.blog-post-home {
+    overflow: hidden;
+}
+.post-item-wraper {
+    border: 0px;
+}
+.post-item-wraper:hover {
+    border:0px;
+    box-shadow: none;
+}
+#mpblog-list-container {
+    /*background: #efefef;*/
+    padding: 30px 0 60px;
+}
+.heading-blog-title{
+    font-size: 40px;
+}
+div#mpblog-list-container a.ws-readmore {
+    border-radius: 48px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    padding: 15px 64px;
+    margin-top: 20px;
+    display: inline-block;
+}
+.blog-title-bottom {
+    color: #666;
+    font-size: 20px;
+}
+@media (max-width: 766px){
+.heading-blog-title{
+    font-size: 22px;
+}
+}
+@media (max-width: 980px){
+.heading-blog-title {
+    font-size: 35px;
+}
+}
+</style>
+<script>
+  require(['jquery', 'mageplaza/core/owl.carousel'], function($) { 
+$("#post-carousel").owlCarousel({
+	responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:5
+        }
+    }
+});
+});
+</script>

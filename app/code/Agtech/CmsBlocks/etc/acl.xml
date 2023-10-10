@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+   <acl>
+       <resources>
+           <resource id="Magento_Backend::admin">
+               <resource id="Agtech_CmsBlocks::cmsblocks" title="JsonData" sortOrder="51">
+                   <resource id="Agtech_CmsBlocks::uksim_calling_from_new" title="Manage JsonData" sortOrder="10"/>
+                   <resource id="Agtech_CmsBlocks::uksim_sms_to_new" title="Manage Sms To New" sortOrder="10"/>
+                   <resource id="Agtech_CmsBlocks::worldsim_virtual_number_rates" title="Manage Virtual Rate" sortOrder="10"/>
+                   <resource id="Agtech_CmsBlocks::google_reviews" title="Manage Google Reviews" sortOrder="10"/>
+               </resource>
+           </resource>
+       </resources>
+   </acl>
+</config>

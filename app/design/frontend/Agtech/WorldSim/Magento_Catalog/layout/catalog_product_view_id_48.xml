@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<referenceContainer name="page.wrapper"> 
+			<container name="custom-overview" htmlTag="div" htmlClass="overviewSim w-100 pull-left mb-0 mt-3" after="sim-card-section">
+				<block class="Magento\Catalog\Block\Product\View" name="custom.overview" before="-" template="Magento_Catalog::product/view/custom-overview.phtml" />
+			</container>
+			
+			
+			<container name="international-tariff" htmlTag="div" htmlClass="sim-card-section simSection w-100 pull-left" before="whats_included">
+				<block class="Magento\Catalog\Block\Product\View" name="international.tariff" before="-" template="Magento_Catalog::product/view/international_calling_tab.phtml" />
+			</container>
+			
+			<referenceBlock name="international.tariff">
+	            <arguments>
+	               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+	            </arguments>
+	        </referenceBlock>
+			
+			
+			<container name="whats_included" htmlTag="div" htmlClass="product-detail-include w-100 pull-left mb-2" after="international.tariff">
+				<block class="Magento\Catalog\Block\Product\View" name="whats.included" before="-" template="Magento_Catalog::product/view/whats_included.phtml" />
+			</container>
+			<container name="features" htmlTag="div" htmlClass="featuresSim inlude-feature w-100 mt-4 mb-0 pull-left" htmlId="features" after="content.slider">
+                <block class="Magento\Catalog\Block\Product\View" name="features.bottom" before="-" template="Magento_Catalog::product/view/features.phtml" />
+            </container>
+			
+			<container name="content_upsell" htmlTag="div" htmlClass="upsell-product container" after="content_slider_two">
+				
+			</container>
+			<block class="Magento\Framework\View\Element\Template" name="googlereview" template="Agtech_CmsBlocks::google_reviews.phtml"/>
+			<referenceBlock name="googlereview">
+	            <arguments>
+	               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+	            </arguments>
+	        </referenceBlock>
+			<block class="Magento\Cms\Block\Block" name="blog_slider_bottom">
+			<arguments>
+				<argument name="block_id" xsi:type="string">blog_slider_bottom</argument>
+			</arguments>
+			</block>
+		</referenceContainer>
+		<move element="product.info.upsell" destination="content_upsell" after="content_slider_two"/>
+		<referenceBlock name="product.info.price" remove="true"/>
+		<referenceBlock name="product.info" remove="true"/>
+		<referenceBlock name="catalog.product.related" remove="true"/>
+		<referenceBlock name="technical.specification1" remove="true"/>
+
+		
+    </body>
+</page>

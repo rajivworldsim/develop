@@ -1,0 +1,230 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php
+ini_set('memory_limit','-1');
+$IncrementID = $this->getOrderId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$order_Model_obj = $objectManager->create('Magento\Sales\Model\Order'); 
+$orderInfo = $order_Model_obj->loadByIncrementId($IncrementID);
+$orderId = $orderInfo ->getId();
+$orderRepository = $objectManager->create('Magento\Sales\Api\OrderRepositoryInterface')->get($orderId);
+
+$orderIncrementId = $orderRepository->getIncrementId();
+$order_api_interface = $objectManager->create('Magento\Sales\Api\Data\OrderInterface')->load($orderId);
+
+$order_Model = $objectManager->create('Magento\Sales\Model\Order')->load($orderId);
+$localeCurrency = $objectManager->create('Magento\Framework\Locale\CurrencyInterface');
+
+$orderItems = $order_Model->getAllItems();
+
+$crm_ord_numb = $order_Model->getErpid() ?? $orderIncrementId;
+
+$crm_order_status="200001";
+$BundleTopUp_found_in_order = 0;
+?>
+<hr class="w-100 pull-left mt-5">
+    <div class="meassageBox text-center w-100 text-center">
+        <div class="container col-md-12 ">
+            <?php if(strpos($crm_ord_numb,'ORD-') !== false){ ?>
+				<strong style="font-size: 24px;">Order No: <?php echo $crm_ord_numb; ?></strong><br>
+				<?php if($crm_order_status!="200001"){ ?>
+					<p class="text-center h6" style="background: #FFB6C1; line-height: 25px; padding: 10px;">
+						<br/>Unfortunately we have been unable to process your order on this occasion.<br/>
+						<br/><strong>Authorisation Required:</strong><br/><br/>
+						Your card may have been charged but we have not been able to verify your address details in order to process your purchase. Please contact our order processing team at Orders@worldsim.com for further information with the status of your order. If you have any immediate queries, please contact us on +44 (0)208 819 2557 or on press@worldsim.com.<br/>
+						<br/><br/>
+					</p>
+				<?php } ?>
+			<?php } else {  ?>
+				<strong style="font-size: 15px;">Reference No: <?php echo $orderIncrementId; ?></strong><br>
+				<p class=" " style=" line-height: 25px; padding: 10px 10px 0;">
+					Thank you for your order from WorldSIM, we are currently processing this.
+					If you have any questions about your order please contact Customer Service with your reference number. <?php echo $IncrementID; ?></p>
+			<?php } ?>
+            Thank you for your purchase, we will send you an email confirmation for you records, you can also print out the below.
+			<?php if($BundleTopUp_found_in_order==1){ ?>
+				<br/>
+				<p class="text-center" style="background: #6FBC00;">
+					<a href="https://accounts.worldsim.com/did/myaccount.aspx?page=Bundle" target="_blank" style="font-size: 16px !important;color: #fff;">Important, next step, please click here to select bundle activation date. You have to activate your bundle in order to use it.</a>
+				</p>
+			<?php } ?>
+        </div>
+    </div>
+	<hr class="w-100 pull-left my-5">
+	 <div class="billText  w-100 pull-left mt-3">
+        <div class="row">                    
+            <div class="col-md-6 text-center">
+                <h2 class="mb-3 mt-4 text-center">Get assistance</h2>
+                <p>If you have any questions about your purchase or do not receive your order by the date expected then please contact us stating  <br>
+                 <?php echo 'Reference Number: '.$IncrementID; ?>
+				</p>
+                <a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx" class="mt-3 ws-readmore btn btn-primary">
+				Contact Us
+				</a>
+            </div>
+            <div class="col-md-6">
+                <div class="grayBox">
+                    <h2 class="text-center">Items ordered</h2>
+                    <table>
+                        <tbody>
+						<tr class="success-item-title">
+                            <th>Item </th>
+                            <th>Qty </th>
+                            <th>Price </th>
+                        </tr>
+						<?php $_orderCurrencySymbol =  $localeCurrency->getCurrency($order_api_interface->getOrderCurrencyCode())->getSymbol(); ?>
+						<?php  foreach ($orderItems as $_item){ ?>
+                        <tr class="items-info-sus">
+                            <td><?php echo $_item->getName(); ?></td>
+                            <td><?php echo round($_item->getQtyOrdered()); ?></td>
+                            <td><?php echo $_orderCurrencySymbol.round($_item->getQtyOrdered()*$_item->getPrice(),2); ?></td>
+                        </tr>
+						<?php }  ?>
+                    </tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<hr class="w-100 pull-left mt-5">
+    <div class="billingInfo w-100 pull-left mt-4">                           
+        <div class="row d-flex align-items-stretch">
+            <div class="col-md-6">
+                <div class="blueBox">
+                    <h2 class="text-center">Billing Details</h2>
+					<?php 
+		
+					$date_dem = strtotime($order_Model->getCreatedAt());
+					$order_date_get =  date('d/m/Y', $date_dem);
+					$billing_first_name = $order_api_interface->getBillingAddress()->getFirstName(); 
+					$billing_last_name = $order_api_interface->getBillingAddress()->getLastName(); 
+					$billingAddress_name = $billing_first_name.' '. $billing_last_name;
+					$billingAddress_street = $order_api_interface->getBillingAddress()->getStreet(); 
+					$billingAddress_city = $order_api_interface->getBillingAddress()->getCity(); 
+					$billingAddress_postcode = $order_api_interface->getBillingAddress()->getPostcode(); 
+					$billingAddress_country = $order_api_interface->getBillingAddress()->getCountryId(); 
+					
+					$_subTotal = $order_Model->getSubtotal();
+					$_toalAmount = $order_Model->getGrandTotal();
+					$_discountAmount = $order_Model->getDiscountAmount();
+					$_shippingAmount = $order_Model->getShippingAmount();
+					?>
+                    <table>
+                        <tbody><tr>
+                            <td><strong> Order Date:</strong><br><?php echo $order_date_get; ?></td>
+                            <td style="vertical-align:middle;"><div class="bigText"><?php echo $billingAddress_name; ?></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong> Subtotal:</strong><?php echo $_orderCurrencySymbol.round($_subTotal,2); ?></td>
+                            <td><div class="bigText"><?php echo $billingAddress_street[0]; ?></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong> Discount:</strong><?php echo $_orderCurrencySymbol.round
+							($_discountAmount,2); ?></td>
+                            <td><div class="bigText"><?php echo $billingAddress_city; ?></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong> Delivery:</strong><?php echo $_orderCurrencySymbol.round($_shippingAmount,2); ?></td>
+                            <td><div class="bigText"><?php echo $billingAddress_postcode; ?></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong> Total:</strong><?php echo $_orderCurrencySymbol.round($_toalAmount,2); ?></td>
+                            <td><div class="bigText"><?php echo $billingAddress_country; ?></div></td>
+                        </tr>
+                    </tbody></table>
+                </div>
+            </div>
+			<?php if($order_api_interface->getShippingAddress()){ ?>
+				<div class="col-md-6 ">
+					<div class="blueBox">
+						<h2 class="text-center">Shipping Address</h2>
+						<?php 
+						$shippingAddress = $order_api_interface->getShippingAddress()->getData(); 
+						$shipping_first_name = $order_api_interface->getShippingAddress()->getFirstName(); 
+					$shipping_last_name = $order_api_interface->getShippingAddress()->getLastName(); 
+					$shippingAddress_name = $shipping_first_name.' '. $shipping_last_name;
+					$shippingAddress_street = $order_api_interface->getShippingAddress()->getStreet(); 
+					$shippingAddress_city = $order_api_interface->getShippingAddress()->getCity(); 
+					$shippingAddress_region = $order_api_interface->getShippingAddress()->getRegion(); 
+					$shippingAddress_postcode = $order_api_interface->getShippingAddress()->getPostcode(); 
+					$shippingAddress_country = $order_api_interface->getShippingAddress()->getCountryId(); 
+						?>
+						<table>
+							<tbody><tr>
+								<td><strong> <?php echo $shippingAddress_name; ?></strong><br>
+									<?php echo $shippingAddress_street[0]; ?>
+								</td>
+							</tr>
+							<tr>
+								<td><strong> <?php echo $shippingAddress_city; ?> <?php echo $shippingAddress_region; ?> </strong><br>
+									<?php echo $shippingAddress_postcode; ?>
+								</td>
+							</tr>                                      
+							<tr>                                              
+								<td><?php echo $shippingAddress_country; ?></td>
+							</tr>
+						</tbody></table>
+					</div>
+				</div>
+			<?php } ?>
+        </div>
+    </div>
+	<div class="clearfix"></div>
+    <hr class="w-100 pull-left mt-5">
+    <p class="text-center mt-3"> <a href="<?php echo $this->getUrl(''); ?>" class="mt-3 ws-readmore btn btn-primary text-white">GO TO HOME PAGE</a></p>
+</div>
+</section>
+
+<style>
+h2.text-center {
+        font-size: 30px;
+    color: #2084c7;
+}
+h1.page-title {
+    margin: 0;
+}
+tr.success-item-title {
+    background-color: #2084c7;
+    color: #fff;
+}
+tr.success-item-title th,.items-info-sus{
+    text-align: center;
+}
+tr.success-item-title th{
+	padding:5px;
+}
+.grayBox {
+    background-color: #efefef;
+    padding: 15px;
+}
+.blueBox {
+    background-color: #dbf1ff;
+    height: 100%;
+    padding: 5px 20px;
+}
+.blueBox table {
+    background-color: #fff;
+}
+.blueBox h2 {
+    padding: 10px 0 5px;
+}
+hr{
+	border-color:#ccc;
+}
+.billText .col-md-6 ,.billingInfo .col-md-6 {
+    margin-top: 20px;
+}
+.page.messages{
+	display:none;
+}
+</style>
+
+<script>
+	fbq('track', 'Purchase', {currency: "<?php echo $order_api_interface->getOrderCurrencyCode(); ?>", value:<?php echo $_toalAmount; ?>});
+</script>

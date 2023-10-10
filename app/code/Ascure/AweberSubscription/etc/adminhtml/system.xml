@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * This XML file defines the configuration settings for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- Tab for Ascure configuration -->
+        <tab id="ascure" translate="label" sortOrder="999" class="ascure-config-tab-class">
+            <label>Ascure</label>
+        </tab>
+        <section id="ascure_awebersubscription" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Aweber Subscription</label>
+            <tab>ascure</tab>
+            <resource>Ascure_AweberSubscription::configuration</resource>
+            
+            <!-- General Settings -->
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>General</label>
+                
+                <!-- Enable Module -->
+                <field id="enabled" translate="label comment" type="select" sortOrder="15" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Select Yes to enable this module.]]></comment>
+                </field>
+                
+                <!-- User Client ID -->
+                <field id="client_id" translate="label comment" type="text" sortOrder="45" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Client ID of developer Aweber APP:</label>
+                    <comment>
+                        <![CDATA[Refer to this <a href="https://labs.aweber.com/apps" target="_blank">link</a> to get the Client ID of developer Aweber APP]]>
+                    </comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- User Client Secret -->
+                <field id="client_secret" translate="label comment" type="text" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Client Secret of developer Aweber APP:</label>
+                    <comment>
+                        <![CDATA[Refer to this <a href="https://labs.aweber.com/apps" target="_blank">link</a> to get the Client Secret of developer Aweber APP]]>
+                    </comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Redirect URL -->
+                <field id="redirect_url" translate="label comment" type="text" sortOrder="55" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Redirect URL of Aweber APP:</label>
+                    <comment>
+                        <![CDATA[Refer to this <a href="https://labs.aweber.com/apps" target="_blank">link</a> to get the Redirect URL of Aweber APP]]>
+                    </comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Generate Credentials -->
+                <field id="button_id" translate="label" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Generate Credentials</label>
+                    <frontend_model>Ascure\AweberSubscription\Block\System\Config\Button</frontend_model>
+                    <comment>
+                        Click Generate to generate new credentials or click Refresh to refresh the token. A cron is scheduled every 2 hours for automatic token refresh.
+                    </comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Credentials Settings -->
+            <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Credentials</label>
+                <!-- Access Token -->
+                <field id="access_token" translate="label" type="text" sortOrder="25" showInDefault="1"
+                       showInWebsite="1" showInStore="1" >
+                    
+                    <frontend_model>Ascure\AweberSubscription\Block\System\Config\DisabledField</frontend_model>
+                    <label>Access Token</label>
+                    
+                </field>
+
+                <!-- Refresh Token -->
+                <field id="refresh_token" translate="label" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1" >
+                    <label>Refresh Token</label>
+                    <frontend_model>Ascure\AweberSubscription\Block\System\Config\DisabledField</frontend_model>
+                    
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

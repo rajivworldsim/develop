@@ -1,0 +1,232 @@
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey'); 
+$customerSessio = $block->getLayout()->createBlock('Agtech\CustomerSession\Block\Customerses');
+$customerSession = $customerSessio->CustomerSessionRe();
+$Logger_Agtech= $block->getLayout()->createBlock('Agtech\Loginlog\Block\Loginlogmod');
+if(isset($_GET['action'])=="databundlerenew") : //if Bundle Renew ?>
+
+    <?php
+    //Data Bundle Actual Names as per SKU
+    $dataBundleName['uk-3days'] = "WORLDSIM_UK_100_UNIT_3DAYS_USD";
+    $dataBundleName['uk-7days'] = "WORLDSIM_UK_200_UNIT_7DAYS_USD";
+    $dataBundleName['uk-14days'] = "WORLDSIM_UK_500_UNIT_14DAYS_USD";
+    $dataBundleName['uk-30days'] = "WORLDSIM_UK_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['us-3days'] = "WORLDSIM_US_100_UNIT_3DAYS_USD";
+    $dataBundleName['us-7days'] = "WORLDSIM_US_200_UNIT_7DAYS_USD";
+    $dataBundleName['us-14days'] = "WORLDSIM_US_500_UNIT_14DAYS_USD";
+    $dataBundleName['us-30days'] = "WORLDSIM_US_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['canada-3days'] = "WORLDSIM_CANADA_100_UNIT_3DAYS_USD";
+    $dataBundleName['canada-7days'] = "WORLDSIM_CANADA_200_UNIT_7DAYS_USD";
+    $dataBundleName['canada-14days'] = "WORLDSIM_CANADA_500_UNIT_14DAYS_USD";
+    $dataBundleName['canada-30days'] = "WORLDSIM_CANADA_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['australia-3days'] = "WORLDSIM_AUSTRALIA_100_UNIT_3DAYS_USD";
+    $dataBundleName['australia-7days'] = "WORLDSIM_AUSTRALIA_200_UNIT_7DAYS_USD";
+    $dataBundleName['australia-14days'] = "WORLDSIM_AUSTRALIA_500_UNIT_14DAYS_USD";
+    $dataBundleName['australia-30days'] = "WORLDSIM_AUSTRALIA_1000_UNIT_30DAYS_USD";
+    
+    
+    $dataBundleName['eu-3days'] = "WORLDSIM_EU_100_UNIT_3DAYS_USD";
+    $dataBundleName['eu-7days'] = "WORLDSIM_EU_200_UNIT_7DAYS_USD";
+    $dataBundleName['eu-14days'] = "WORLDSIM_EU_500_UNIT_14DAYS_USD";
+    $dataBundleName['eu-30days'] = "WORLDSIM_EU_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['row-3days'] = "WORLDSIM_ROW_100_UNIT_3DAYS_USD";
+    $dataBundleName['row-7days'] = "WORLDSIM_ROW_200_UNIT_7DAYS_USD";
+    $dataBundleName['row-14days'] = "WORLDSIM_ROW_500_UNIT_14DAYS_USD";
+    $dataBundleName['row-30days'] = "WORLDSIM_ROW_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['asia-3days'] = "WORLDSIM_ASIA_100_UNIT_3DAYS_USD";
+    $dataBundleName['asia-7days'] = "WORLDSIM_ASIA_200_UNIT_7DAYS_USD";
+    $dataBundleName['asia-14days'] = "WORLDSIM_ASIA_500_UNIT_14DAYS_USD";
+    $dataBundleName['asia-30days'] = "WORLDSIM_ASIA_1000_UNIT_30DAYS_USD";
+    
+    $dataBundleName['brazil-30days'] = "WORLDSIM_BRAZIL_1000_UNIT_30DAYS_USD";
+    ?>
+
+    <?php
+        $MSISDN            = $_GET['msisdn'];
+        $pinpuk            = $_GET['pin'];
+        $bundleName        = $_GET['bundle'];
+        
+        $databundle_autotopup = "No";
+        $selected_sku        = array_search($bundleName, $dataBundleName);
+        $selected_loc_type   = explode('-', $selected_sku);
+	$sku_bundle_type     = $selected_loc_type[0];
+        $sku_bundle_loc      = $selected_loc_type[1];
+        
+        $product = $objectManager->create('Magento\Catalog\Model\Product')->load(118); //product id 118 for Data Bundle TopUp Product
+        $bundle_selected_option_id=""; //bundle option id
+        $bundle_selected_optionType_id=""; // bundle option Type id
+        
+        foreach ($product->getOptions() as $o) {
+            //echo $o->getTitle();
+            if(strtolower($o->getTitle())=="bundle"){
+                $values = $o->getValues();
+                foreach ($values as $v) {
+                    $bundle_data = $v->getData();
+                    if($bundle_data["sku"]==$selected_sku){
+                        $bundle_selected_option_id = $bundle_data["option_id"];
+                        $bundle_selected_optionType_id = $bundle_data["option_type_id"];
+                        //break;
+                    }
+                }
+            } else if(strtolower($o->getTitle())=="auto renew"){
+                $values = $o->getValues();
+                foreach ($values as $v) {
+                    $autotopup_data = $v->getData();
+                    if($autotopup_data["title"]==$databundle_autotopup){
+                        $autotopup_selected_option_id = $autotopup_data["option_id"];
+                        $autotopup_selected_optionType_id = $autotopup_data["option_type_id"];
+                        //break;
+                    }
+                }
+            }    
+        }
+        
+        
+        $addtoCartformKey= $FormKey->getFormKey();
+        $addtoCartURL = "https://www.worldsim.com/checkout/cart/add/?product=118&qty=1&options[$bundle_selected_option_id]=$bundle_selected_optionType_id&options[$autotopup_selected_option_id]=$autotopup_selected_optionType_id&options[135]=$MSISDN&options[134]=$pinpuk&options[132]=Yes&form_key=$addtoCartformKey";
+        //echo $addtoCartURL;
+        header("Location: $addtoCartURL");
+        exit;
+    ?>
+
+<?php //get customer data from CRM ?>
+<?php elseif(!empty($_GET['customer_id']) || !empty($_GET['Email'])) : //if customer login ?>
+
+    <?php
+        //echo "<pre>";
+        //print_r($_GET);
+        //exit;
+		
+	
+
+	
+	$Logger_Agtech->messageLog('Customer ID: '.$_GET['customer_id'].' #### Email:-'.$_GET['Email']);
+	//Mage::log('Customer ID: '.$_GET['customer_id'].'####'.$_GET['Email'], null, 'crm_customer_login.log');
+    ?>
+
+    <?php ////////////////////Start CRM CUSTOMER SESSION/////////////////////////// ?>
+    <?php
+        $CrmcusId          = $_GET['customer_id'];
+        $CrmcusFirstName   = $_GET['FirstName'];
+        $CrmcusLastName    = $_GET['LastName'];
+        $CrmcusEmail       = $_GET['Email'];
+        $CrmcusCountry     = $_GET['Country'];
+        $CrmcusPostCode    = $_GET['PostalCode'];
+        $CrmcusAddress1     = $_GET['Address1'];
+        $CrmcusAddress2     = $_GET['Address2'];
+        $CrmcusCity        = $_GET['City'];
+        $CrmcusPhone       = $_GET['Phone'];
+        $msisdn            = $_GET['MSISDN'];
+        $mobcusid          = $_GET['Customer'];
+        $mobpin            = $_GET['Pin'];
+        $mobpuk            = $_GET['Puk'];
+        $isCheckoutPage    = '';
+
+        if(isset($_GET['page'])!=''){
+            $pageRef = $_GET['page'];
+        }else{
+            $pageRef = null;
+        }
+        
+        
+        
+        
+        $customerSession->setCrmcusId($CrmcusId);
+        $customerSession->setCrmcusFirstName($CrmcusFirstName);
+        $customerSession->setCrmcusLastName($CrmcusLastName);
+        $customerSession->setCrmcusEmail($CrmcusEmail);
+        $customerSession->setCrmcusCountry($CrmcusCountry);
+        $customerSession->setCrmcusPostCode($CrmcusPostCode);
+        $customerSession->setCrmcusAddress1($CrmcusAddress1);
+        $customerSession->setCrmcusAddress2($CrmcusAddress2);
+        $customerSession->setCrmcusCity($CrmcusCity);
+        $customerSession->setCrmcusPhone($CrmcusPhone);
+        $customerSession->setCrmcusMsisdn($msisdn);
+        $customerSession->setCrmcusMobcusid($mobcusid);
+        $customerSession->setCrmcusMobpin($mobpin);
+        $customerSession->setCrmcusMobpuk($mobpuk);
+        
+        $customerSession->setCrmcusCheckoutPage($pageRef);
+        
+		
+		
+        if($pageRef=="MagentoCheckout" || $pageRef=="TopUp"){
+            $checkoutUrl = $this->getUrl('fastcheck');
+            header('Location: '.$checkoutUrl);
+            exit;
+	} elseif($pageRef=="AutoTopUp"){ //add AutoTopUp
+            // init params
+	    // $productId = 16; //TopUp
+	    // $qty = 1;
+	    
+	    // $option_credit = 14;
+	    // $option_mob_cus_id = 15;
+	    // $option_pin_puk = 20;
+	    // $option_autotopup = 21;
+	    // $option_autotopup_if_amount = 19;
+	    // $option_autotopup_amount = 22;
+	    
+	    // $option_credit_val = Mage::getSingleton("core/session")->getOptionCreditVal();//default 182
+	    // $option_mob_cus_id_val = Mage::getSingleton("core/session")->getOptionMobCusIdVal();
+	    // $option_pin_puk_val = Mage::getSingleton("core/session")->getOptionPinPukVal();
+	    // $option_autotopup_val = Mage::getSingleton("core/session")->getOptionAutotopupVal();//default 187
+	    // $option_autotopup_if_amount_val = Mage::getSingleton("core/session")->getOptionAutotopupIfAmountVal();//default 189
+	    // $option_autotopup_amount_val = Mage::getSingleton("core/session")->getOptionAutotopupAmountVal();//default 192
+	    
+	    // Mage::getSingleton("core/session")->unsetOptionCreditVal();
+	    // Mage::getSingleton("core/session")->unsetOptionMobCusIdVal();
+	    // Mage::getSingleton("core/session")->unsetOptionPinPukVal();
+	    // Mage::getSingleton("core/session")->unsetOptionAutotopupVal();
+	    // Mage::getSingleton("core/session")->unsetOptionAutotopupIfAmountVal();
+	    // Mage::getSingleton("core/session")->unsetOptionAutotopupAmountVal();
+	    // Mage::getSingleton("core/session")->unsetOptionPromocodeVal();
+	    
+	    // if not Mobile/Customer Id params, send to homepage
+	    if ($option_mob_cus_id_val=="") {
+	      // header('Location: ' . Mage::getUrl(''));
+	      exit;
+	    } else if($option_credit_val==""){
+		$option_credit_val=80;
+	    } else if($option_autotopup_val==""){
+		$option_autotopup_val=125;
+	    } else if($option_autotopup_if_amount_val==""){
+		$option_autotopup_if_amount_val=120;
+	    } else if($option_autotopup_amount_val==""){
+		$option_autotopup_amount_val=128;
+	    }
+	    
+	    
+	    $formKey=$FormKey->getFormKey();
+	    
+	    $add_cart_url = "https://www.worldsim.com/checkout/cart/add/";//add TopUp Now
+	    $url = $add_cart_url."?product=".$productId."&qty=".$qty."&options[".$option_credit."]=".$option_credit_val."&options[".$option_mob_cus_id."]=".$option_mob_cus_id_val."&options[".$option_pin_puk."]=".$option_pin_puk_val."&options[".$option_autotopup."]=".$option_autotopup_val."&options[".$option_autotopup_if_amount."]=".$option_autotopup_if_amount_val."&options[".$option_autotopup_amount."]=".$option_autotopup_amount_val."&form_key=".$formKey;
+	    //echo $url;exit;
+	    header('Location: '.$url);
+	    exit;    
+        } elseif($pageRef=="ticket"){
+            header('Location: https://accounts.worldsim.com/did/myaccount.aspx?page=ticket');
+            exit;
+        } else {
+            header('Location: https://accounts.worldsim.com/did/myaccount.aspx');
+            exit;
+        }
+        
+    
+    ?>
+
+<?php else: //redirect customer to login page ?>
+
+    <?php
+        //header('Location: '.$newURL);
+        header('Location: https://accounts.worldsim.com/Customer/login.aspx');
+        exit;
+    
+    ?>    
+
+<?php endif; ?>

@@ -1,0 +1,391 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$currency = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$currencySymbol = $currency->getCurrencySymbol();
+
+$cartHelper =  $agtechobjBlock->getCarthelperObj();
+$product_model = $agtechobjBlock->getproductModel()->load(327);
+$customOptions = $agtechobjBlock->getproductOptionModel()->getProductOptionCollection($product_model);
+  $convRate= $rates_currency;
+ 
+?>
+<div class="qatar-banner">
+    <div class="banner-headings">
+        <h1 class="h1-q">Visiting Qatar?</h1>
+        <h2 class="h2-q">Get your local Qatar <strong>Fan SIM Card</strong> before you arrive.<br/> Save time and cut out the hassle!</h2>
+    </div>
+</div>
+
+
+<section class="w-100 pull-left">
+
+    <div class="container text-center">
+        <div class="qatar-sim">
+            <img src="<?php echo $block->getViewFileUrl('images/qatar/qatar-sim-card-min.png'); ?>">
+        </div>
+        <h4 class="h4-q">Stay connected to your home<br/>with a local Qatar sim card!</h4>
+        <div class="qatar-bundle row">
+            <div class="bundle-features col-md-6">
+                <ul>
+                    <li class="icon-data"><strong>2 GB</strong> Data<li>
+                    <li class="icon-home"><strong>25 mins</strong> Local<li>
+                    <li class="icon-intenational"><strong>15 mins</strong> International**<li>
+                    <li class="icon-calendar"><strong>7 days</strong> Validity<li>
+                </ul>
+            </div>
+            <div class="bundle-action col-md-6">
+                <p><?php echo strtoupper($currencyCode).' '.$convRate*10 ?> </p>
+                <form class="" data-role="tocart-form" action="<?php echo  $cartHelper->getAddUrl($product_model); ?>" method="post">
+                <?php echo $block->getBlockHtml('formkey');
+                foreach($customOptions as $option){
+                        $values = $option->getValues();
+                        if($option->getId()==453){?>
+                            <select name="options[453]" id="select_453" class=" required product-custom-option admin__control-select d-none" title="" data-selector="options[117]" aria-required="true">
+                            <?php foreach($values as $value_sev){  
+                                if ($value_sev->getId()==1184){         ?>
+                            <option  value="<?php echo $value_sev->getId(); ?>"> <?php echo $value_sev->getTitle(); ?></option>
+                        <?php  }
+                        } ?>
+                        </select>
+                        <?php }
+                    }
+                    ?>
+                    <div class="btn">
+                        <button type="submit" title="Add to Cart" id="add-qatar-sim" class="two-prd-btn">
+                            <span>BUY SIM NOW</span>
+                        </button>
+                    </div>  
+                </form>
+                <div style="font-size: 14px; margin-top: 10px;">
+                    <input type="checkbox" id="terms-check" style=" width: 20px; display: inline-block; vertical-align: middle;">  I accept the <a href="javascript:void(0);" data-rel="popup" id="myBtn">terms and conditions</a>
+                </div>
+                 
+                
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 style="float: left">Qatar SIM Terms and Conditions</h5>
+                        <h5><a href="javascript:void(0);" id="modalClose" style="color: #ffffff;">X</a></h5>
+                    </div>
+                    <div class="modal-body">
+                    <p>
+                        <iframe src="<?php echo $this->getUrl(); ?>media/pdf/qatar-tc.pdf" style="width: 100%; height: 450px;" frameBorder="0"></iframe>
+                    </p>
+                    
+                    </div>
+                  </div>                    
+                </div>
+                
+                
+                
+            </div>
+            <div class="clear"></div>
+        </div>
+        <p class="bulk-orders">For bulk orders over 20 sims please contact <a href="mailto:sales@worldsim.com">sales@worldSIM.com</a> </p>
+        
+        
+        <h5 class="h4-q" style="margin-bottom: 0px;">FAQs</h5>
+        <p class="faq-subheading">Have questions? We are here to help.</p>
+        
+        <div class="faqPage card-body">                                    
+            <ul class="accordion">
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">How long is my sim card valid for?</a>
+                    <div class="inner" >
+                        <p>Your sim is initially valid 30 days, post 30 days the sim validity can be further extended</p> 
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">How long is my bundle valid for?</a>
+                    <div class="inner" >
+                        <p>Your bundle is valid for 7 days, post 7 days the sim can be recharged locally from Ooredoo website or from any authorised store Ooredoo</p>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">Will the sim card work in my phone? </a>
+                    <div class="inner" >
+                        <p>Need to ensure that you have an unlocked 3G/4G/5G handset which is not locked by the operator and have minimum 3G capabilities.</p>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">How Can I recharge my Qatar local SIM, if I run out of balance?</a>
+                    <div class="inner" >
+                        <p>Yes you can; simply select your desired product from the available range and recharge from Ooredoo website: or from Ooredoo App or from any authorised store Ooredoo</p>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">How can I check balance of My fan sim?</a>
+                    <div class="inner" >
+                        <p>Just dial *129# and you will get a notification message about the available balance.</p>
+                    </div>
+                </li>
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">What number do i get with my sim card</a>
+                    <div class="inner" >
+                        <p>You would get an Local Qatar +974 number once the sim is activated.</p> 
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">How do I activate my sim card?</a>
+                    <div class="inner" >
+                        <p>Kindly go to my account page and upload the front and back of your passport, this is legal requirement of Qatar to activate an sim, once your documents are uploaded the sim will be activated within 24-48 hours and you shall receive an confirmation email from WorldSIM which will mention your mobile number.</p>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="toggleAcc" href="javascript:void(0);">Which countries are included in my bundle plan? </a>
+                    <div class="inner" >
+                        <p>You can make 25 minutes of local calls and 15 minutes of calls to 120 global destinations.</p>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        
+    </div>
+</section>
+
+
+<style type="text/css">
+    .breadcrumb {
+        display: none;
+    }
+    .qatar-banner{
+        background-image: url('<?php echo $block->getViewFileUrl('images/qatar/banner-qatar-fan-sim-min.jpg'); ?>');
+        background-position: center;
+        text-align: center;
+        height: 550px;
+    }
+    .banner-headings{
+        position: relative;
+        top:23%;
+    }
+    .h1-q{
+        font-size: 42px;
+        color: #ffffff;
+        padding: 10px;
+    }   
+    .h2-q{
+        font-size: 28px;
+        color: #ffffff;
+    }
+    .qatar-sim{
+        text-align: center;
+        margin-top: -90px;
+    }
+    .h4-q{
+        font-size: 32px;
+        color: #2084c7;
+        margin: 35px 0px;
+        font-weight: 500;
+        line-height: 44px;
+    }
+    .qatar-bundle{
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        width: 700px;
+        margin: 0 auto;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+    .bundle-action{
+        padding-top: 50px;
+    }
+    .bundle-features ul li{
+        font-size: 22px;
+        list-style: none;
+        padding: 7px;
+        padding-left: 50px;
+        text-align: left;
+    }
+    .bundle-features ul li.icon-data{
+        background-image: url('<?php echo $block->getViewFileUrl('images/qatar/data-icon.png'); ?>');
+        background-repeat: no-repeat;
+        background-size: 30px;
+        background-position: 5px;
+    }
+    .bundle-features ul li.icon-home{
+        background-image: url('<?php echo $block->getViewFileUrl('images/qatar/home-icon.png'); ?>');
+        background-repeat: no-repeat;
+        background-size: 30px;
+        background-position: 5px;
+    }
+    .bundle-features ul li.icon-intenational{
+        background-image: url('<?php echo $block->getViewFileUrl('images/qatar/international-icon.png'); ?>');
+        background-repeat: no-repeat;
+        background-size: 30px;
+        background-position: 5px;
+    }
+    .bundle-features ul li.icon-calendar{
+        background-image: url('<?php echo $block->getViewFileUrl('images/qatar/calendar-icon.png'); ?>');
+        background-repeat: no-repeat;
+        background-size: 30px;
+        background-position: 5px;
+    }
+    .clear{
+        clear: both;
+    }
+    .two-prd-btn{
+        font-weight: 600;
+        color: #ffffff !important;
+        font-size: 20px;        
+    }
+    .bundle-action p{
+        font-size: 32px;
+        font-weight: 600;
+    }
+    .bulk-orders{
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+    .faq-subheading{
+        font-size: 24px;
+        color: #696969;
+    }
+    .faqPage{
+        text-align: left;
+    }
+    .faqPage .accordion li.arrowMine .toggleAcc {
+    background: url(<?php echo $block->getViewFileUrl('images/faq_mins.gif'); ?>)97% 24px no-repeat;
+}
+.faqPage .toggleAcc {
+    font-size: 18px;
+    color: #000;
+    display: block;
+    border-bottom: 1px solid #e7e7e7;
+    padding: 17px 38px;
+    background: url(<?php echo $block->getViewFileUrl('images/faq_plus.gif'); ?>)97% 24px no-repeat;
+}
+
+.faqPage .accordion .inner {
+    margin: 20px 0;
+}
+.faqPage .accordion li p {
+    font-size: 16px;
+    padding: 0 24px;
+    line-height: 28px;
+}
+.inner {
+    padding-left: 1em;
+    overflow: hidden;
+    display: none;
+}
+.faqPage .accordion {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.faqPage .accordion li {
+    list-style: none;
+}
+    
+    @media(max-width:766px){
+        .banner-headings{
+            top: 18px !important;
+        }
+        .qatar-bundle{
+            width: 100% !important;
+        }
+        bundle-action{
+            padding-top: 5px !important;
+        }
+    }
+</style>
+
+<!--Modal CSS-->
+<style type="text/css">
+   
+/* Modal Header */
+.modal-header {
+  padding: 2px 12px;
+  background-color: #696969;
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {padding: 2px 16px;}
+
+.modal-body p{line-height: 35px;}
+
+    /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 22% auto; /* 15% from the top and centered */
+  border: 1px solid #fff;
+  max-width: 600px; /* Could be more or less, depending on screen size */
+}
+
+</style>
+
+<script type="text/javascript">
+     require(['jquery'], function ($) {
+    $('#add-qatar-sim').click(function() {
+        if ($('#terms-check').is(':checked')) {
+            //window.location.href=$('#add-qatar-sim').attr("href");
+            //return false;
+        } else {
+            alert("Please accept terms and conditions");
+            return false;
+        }
+    });
+    
+    
+    //introduce popup for terms and conditions
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    var closebtn = document.getElementById("modalClose");
+    
+    // When the user clicks on the add to cart button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on the X, close the modal
+    closebtn.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+$(document).ready(function() {
+    $('.toggleAcc').click(function() { 
+        var $this = $(this);
+        $('li').removeClass('arrowMine')                      
+        if ($(this).next().hasClass('showAcc')) {
+            $(this).next().removeClass('showAcc');
+            $(this).next().slideUp(350);
+        } else {
+            $(this).parent().parent().find('li .inner').removeClass('showAcc');
+            $(this).parent().parent().find('li .inner').slideUp(350);
+            $(this).next().toggleClass('showAcc');
+            $(this).next().slideToggle(350);
+            $(this).parent('li').toggleClass('arrowMine') 
+        }
+    });
+});
+
+	 });
+</script>

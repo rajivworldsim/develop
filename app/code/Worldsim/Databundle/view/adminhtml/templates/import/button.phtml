@@ -1,0 +1,5 @@
+<form action="<?php echo $block->getFormActionUrl(); ?>" method="post" enctype="multipart/form-data">
+	<?php echo $block->getBlockHtml('formkey'); ?>
+	<input type="file" name="importcsv"/>
+	<input type="submit" value="Import Csv">
+</form>

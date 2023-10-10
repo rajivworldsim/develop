@@ -1,0 +1,207 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/**  @var $block \Magento\Checkout\Block\Cart\Grid */
+?>
+<?php $mergedCells = ($this->helper(Magento\Tax\Helper\Data::class)->displayCartBothPrices() ? 2 : 1); ?>
+<?= $block->getChildHtml('form_before') ?>
+
+<form action="<?= $block->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>"
+          method="post"
+          id="form-validate"
+          data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
+              {"validationURL" : "<?= $block->escapeUrl($block->getUrl('checkout/cart/updateItemQty')) ?>",
+              "updateCartActionContainer": "#update_cart_action_container"}
+          }'
+          class="form form-cart">
+    <?= $block->getBlockHtml('formkey') ?>
+    <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="cart-products-toolbar cart-products-toolbar-top toolbar"
+                 data-attribute="cart-products-toolbar-top"><?= $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+        <table id="shopping-cart-table"
+               class="cart items data table"
+               data-mage-init='{"shoppingCart":{"emptyCartButton": ".action.clear",
+               "updateCartActionContainer": "#update_cart_action_container"}}'>
+            <caption class="table-caption"><?= $block->escapeHtml(__('Shopping Cart Items')) ?></caption>
+            <thead class="desktop-view-cart">
+                <tr>
+                    
+                    <th class="col item" scope="col"><span><?= $block->escapeHtml(__('Product')) ?></span></th>
+                    <th class="col type" scope="col"><span><?= $block->escapeHtml(__('Type')) ?></span></th>
+                    <th class="col price" scope="col"><span><?= $block->escapeHtml(__('Price')) ?></span></th>
+                    <th class="col qty" scope="col"><span><?= $block->escapeHtml(__('Qty')) ?></span></th>
+                    <th class="col subtotal" scope="col"><span><?= $block->escapeHtml(__('Subtotal')) ?></span></th>
+                    <th class="col remove" scope="col"><span><?= $block->escapeHtml(__('Remove')) ?></span></th>
+                </tr>
+            </thead>
+            <?php foreach ($block->getItems() as $_item): ?>
+                <?= $block->getItemHtml($_item) ?>
+            <?php endforeach ?>
+        </table>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="cart-products-toolbar cart-products-toolbar-bottom toolbar"
+                 data-attribute="cart-products-toolbar-bottom"><?= $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+    </div>
+    <div class="cart main actions">
+        <?php if ($block->getContinueShoppingUrl()): ?>
+            <a class="action continue"
+               href="<?= $block->escapeUrl($block->getContinueShoppingUrl()) ?>"
+               title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
+                <span><?= $block->escapeHtml(__('Continue Shopping')) ?></span>
+            </a>
+        <?php endif; ?>
+        <button type="submit"
+                name="update_cart_action"
+                data-cart-item-update=""
+                value="update_qty"
+                title="<?= $block->escapeHtml(__('Update Shopping Cart')) ?>"
+                class="action update">
+            <span><?= $block->escapeHtml(__('Update Shopping Cart')) ?></span>
+        </button>
+        <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update=""/>
+    </div>
+</form>
+<?= $block->getChildHtml('checkout.cart.order.actions') ?>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
+
+
+<script>
+        require([
+                'jquery',
+                'Magento_Checkout/js/action/get-totals',
+                'Magento_Customer/js/customer-data',
+                'Magento_Checkout/js/model/quote',
+                'Magento_Catalog/js/price-utils',
+                'Magento_Theme/js/view/messages',
+                'validation'
+            ],
+            function($,getTotalsAction,customerData,quote,priceUtils, messages){
+                $(function () {
+
+                    if (screen.width <= 768) {
+                        $('.desktop-view-cart').remove();
+                    } else {
+                        $('.mobile-view-cart').remove();
+                    }
+
+                    var timer;
+                    $('.min.qty-change').on('click',function (event) {
+                        // Check timer
+                        if (timer) {
+                            clearTimeout(timer);
+                        }
+                        var item = $(this).next();
+                        if(item.val() < 2)
+                        {
+                            return true;
+                        }
+                        var qty = parseInt(item.val())-1;
+                        updateView(item,qty);
+                        // validate again
+                        var checker = $.validator.validateElement($('.input-text.qty'));
+                        if (!checker) {
+                            return false;
+                        }
+                        var itemId = item.attr('name');
+                        itemId = itemId.replace ( /[^\d.]/g, '' );
+                        var cartData = {'item_id':itemId,'item_qty':qty};
+                        timer = setTimeout(function(){
+                            updateQuote();
+                        }, 500);
+                    });
+                    $('.plus.qty-change').on('click',function () {
+                        // Check timer
+                        if (timer) {
+                            clearTimeout(timer);
+                        }
+                        var item = $(this).prev();
+                        var qty = parseInt(item.val())+1;
+                        updateView(item,qty);
+                        // validate again
+                        var checker = $.validator.validateElement($('.input-text.qty'));
+                        if (!checker) {
+                            return false;
+                        }
+                        var itemId = item.attr('name');
+                        itemId = itemId.replace ( /[^\d.]/g, '' );
+                        var cartData = {'item_id':itemId,'item_qty':qty};
+                        timer = setTimeout(function(){
+                            updateQuote();
+                        }, 500);
+                    });
+                    $('.input-text.qty').on('change', function() {
+                        // validate
+                        var checker = $.validator.validateElement($(this));
+                        if (!checker) {
+                            return false;
+                        }
+                        var item = $(this);
+                        var qty = Math.abs(parseInt(item.val()));
+                        item.val(qty);
+                        updateView(item,qty);
+                        var itemId = item.attr('name');
+                        itemId = itemId.replace ( /[^\d.]/g, '' );
+                        var cartData = {'item_id':itemId,'item_qty':qty};
+                        updateQuote();
+                    });
+                    function updateView(item,qty){
+                        item.val(qty);
+                        var subtotalCol = item.closest('.col.qty').next();
+                        var priceCol = item.closest('.col.qty').prev();
+                        var price = priceCol.find('.cart-price .price').text();
+                        price = price.replace ( /[^\d.]/g, '' );
+                        //This one is added to format price
+                        price = price.replace ( /[^\d]/g, '' );
+                        price = parseInt(price)/100;
+                        price = getFormattedPrice(price*qty );
+                        priceCol.find('.m-price-qty').text(qty+' x');
+                        priceCol.find('.m-price-subtotal').text(price);
+                        subtotalCol.find('.price').text(price);
+                        //Remove all Cookies Messages
+                        messages().cookieMessages = "";
+                    }
+                    function getFormattedPrice(price){
+                        return priceUtils.formatPrice(price, quote.getPriceFormat());
+                    }
+                    var currentRequest = null;
+                    function updateQuote() {
+                        var siteUrl = "<?= $block->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>";
+                        var form = $('form#form-validate');
+                        $.ajax({
+                            url: siteUrl,
+                            type: "POST",
+                            data: form.serialize(),
+                            showLoader: true,
+                            success: function (res) {
+                                var parsedResponse = $.parseHTML(res);
+                                var result = $(parsedResponse).find("#form-validate");
+                                var sections = ['cart'];
+
+                                // $("#form-validate").replaceWith(result);
+
+                                // The mini cart reloading
+                                customerData.reload(sections, true);
+
+                                // The totals summary block reloading
+                                var deferred = $.Deferred();
+                                getTotalsAction([], deferred);
+                            },
+                            error: function (xhr, status, error) {
+                                var err = eval("(" + xhr.responseText + ")");
+                                console.log(err.Message);
+                            }
+                        });
+                    }
+                });
+            });
+    </script>

@@ -1,0 +1,17 @@
+<?php
+
+$_product = $this->getProduct();
+
+?>
+
+		 <?php if ($_product->getSku()=='data-sim-card-new' ) {  ?>
+		 
+		 <div class="container">
+			<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('data_consumption_chart')->toHtml();?>
+		 </div>
+       
+            <?php } ?>
+
+
+
+			  

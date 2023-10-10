@@ -1,0 +1,42 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+
+$productCollection = $agtechobjBlock->getColletionReport(); 
+$collection = $productCollection->create('Magento\Sales\Model\ResourceModel\Report\Bestsellers\Collection'); 
+
+$collection->setPeriod('year');
+//$collection->setPeriod('month');
+//$collection->setPeriod('day');
+
+
+?>
+<div class="bestWorldListing best-selling w-100 pull-left mb-5">
+<h6 class="category-heading">BestSellers Products</h6>
+  <div class="owl-carousel  mt-4">
+  
+            <?php
+/* 			
+			foreach ($collection as $item) {
+    print_r($item->getData());
+}
+exit;  */
+              
+                foreach($collection as $item){
+                    ?>
+                    <div class="item text-center">
+					<?php /* $imageUrl = $helperImport->init($item, 'small_image')
+						->setImageFile($item->getSmallImage()) // image,small_image,thumbnail
+						->resize(380)
+						->getUrl();	 */	
+				?>
+					    <a href="<?php echo $item->getProductUrl(); ?>" title="<?php echo $item->getProductName(); ?>"> <img src="<?php //echo $imageUrl; ?>" alt="<?php echo $item->getProductName(); ?>" />
+				
+                            <p><?php echo $item->getProductName(); ?></p>
+                        </a>
+                    </div>
+                    <?php
+                    
+                } 
+            ?>
+        </div>
+</div>

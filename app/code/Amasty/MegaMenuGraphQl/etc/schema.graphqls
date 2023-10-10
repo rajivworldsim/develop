@@ -1,0 +1,90 @@
+type Query {
+    amMegaMenuTree: Menu @resolver(class: "Amasty\\MegaMenuGraphQl\\Model\\Resolver\\MenuTree") @cache(cacheIdentity: "Amasty\\MegaMenuGraphQl\\Model\\Resolver\\MenuTreeIdentity"),
+    amMegaMenuAll: Menu @resolver(class: "Amasty\\MegaMenuGraphQl\\Model\\Resolver\\Menu") @cache(cacheIdentity: "Amasty\\MegaMenuGraphQl\\Model\\Resolver\\MenuIdentity"),
+    amMegaMenuWidget (
+        id: Int @doc(description: "Widget ID")
+    ): MegaMenuWidget @resolver(class: "Amasty\\MegaMenuGraphQl\\Model\\Resolver\\Widget")
+}
+
+type Menu {
+    items: [MegaMenuItemInterface] @doc(description: "An array of menu items."),
+}
+
+interface MegaMenuItemInterface @typeResolver(class: "Amasty\\MegaMenuGraphQl\\Model\\MenuItemTypeResolver")
+{
+    name: String @doc(description: "Item name."),
+    id: String @doc(description: "Item id."),
+    uid: String @doc(description: "Item uid."),
+    parent_id: String @doc(description: "Parent Item id."),
+    parent_uid: String @doc(description: "Parent UId."),
+    url: String @doc(description: "Item url."),
+    width: Float @doc(description: "Submenu Width."),
+    column_count: Float @doc(description: "Number of Columns with Subcategories."),
+    content: String @doc(description: "Item content."),
+    has_active: Boolean @doc(description: "Item has active."),
+    is_active: Boolean @doc(description: "Item is active."),
+    is_category: Boolean @doc(description: "Item is category."),
+    is_parent_active: Boolean @doc(description: "Item has active parent."),
+    width_value: Float @doc(description: "Item width value."),
+    status: Int @doc(description: "Item status."),
+    label: String @doc(description: "Item label."),
+    label_text_color: String @doc(description: "Item text color."),
+    label_background_color: String @doc(description: "Item background color."),
+    icon: String @doc(description: "Icon."),
+    submenu_type: Int @doc(description: "Submenu Type."),
+    subcategories_position: Int @doc(description: "Subcategories Position."),
+    children: [MegaMenuItemInterface] @doc(description: "Children items."),
+    path: String @doc(description: "Path."),
+    level: Int @doc(description: "Level."),
+    desktop_font: String @doc(description: "Desktop Font."),
+    mobile_font: String @doc(description: "Mobile Font.")
+}
+
+type MenuCategoryItem implements MegaMenuItemInterface
+@doc(description: "Menu Category object")
+{
+}
+
+type MenuCustomItem implements MegaMenuItemInterface
+@doc(description: "Menu Custom Item object")
+{
+}
+
+type MegaMenuWidget {
+    title: String @doc(description: "Widget title."),
+    block_layout: String @doc(description: "Block Layout."),
+    slider_items_show: Int @doc(description: "Number of Visible Items."),
+    slider_width: Int @doc(description: "Slider Width(px)."),
+    slider_autoplay: Boolean @doc(description: "Slider Autoplay."),
+    slider_autoplay_speed: Int @doc(description: "Slider Autoplay Speed(ms)."),
+    display_options: Boolean @doc(description: "Show Product Options & 'Add to Cart' Button."),
+    show_pager: Boolean @doc(description: "Display Page Control."),
+    products_per_page: Int @doc(description: "Number of Products per Page."),
+    products_count: Int @doc(description: "Number of Products to Display."),
+    items: [ProductInterface] @doc(description: "An array of menu items.")
+}
+
+type StoreConfig @doc(description: "The type contains information about a store config.") {
+    ammegamenu_general_enabled: Boolean @doc(description: "Enabled."),
+    ammegamenu_general_sticky: Boolean @doc(description: "Enable Sticky Menu."),
+    ammegamenu_general_hamburger_enabled: Boolean @doc(description: "Enable Hamburger Menu For Categories."),
+    ammegamenu_general_mobile_template: String @doc(description: "Template for Mobile View."),
+    ammegamenu_general_show_icons: String @doc(description: "Show Mega Menu Icons on."),
+
+    ammegamenu_color_color_template: String @doc(description: "Color Scheme Template."),
+    ammegamenu_color_menu_background: String @doc(description: "Menu Background Color(DEPRECATED)."),
+    ammegamenu_color_main_menu_background: String @doc(description: "Main Menu Background Color."),
+    ammegamenu_color_main_menu_background_hover: String @doc(description: "Main Menu Background Hover."),
+    ammegamenu_color_menu_highlight: String @doc(description: "Active Menu Item Background Color."),
+    ammegamenu_color_menu_text: String @doc(description: "Menu Text Color(DEPRECATED)."),
+    ammegamenu_color_main_menu_text: String @doc(description: "Menu Text Color."),
+    ammegamenu_color_main_menu_text_hover: String @doc(description: "Menu Text Hover."),
+    ammegamenu_color_submenu_background: String @doc(description: "Submenu Background Color(DEPRECATED)."),
+    ammegamenu_color_submenu_background_color: String @doc(description: "Submenu Background Color."),
+    ammegamenu_color_submenu_background_image: String @doc(description: "Submenu Background Image."),
+    ammegamenu_color_submenu_text: String @doc(description: "Submenu Text Color."),
+    ammegamenu_color_submenu_text_hover: String @doc(description: "Submenu Text Hover."),
+    ammegamenu_color_category_hover_color: String @doc(description: "Menu Item Hover Color."),
+    ammegamenu_color_current_category_color: String @doc(description: "Menu Item Hover Color."),
+    ammegamenu_color_toggle_icon_color: String @doc(description: "Hamburger Button Color."),
+}

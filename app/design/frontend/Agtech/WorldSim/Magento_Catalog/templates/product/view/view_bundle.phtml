@@ -1,0 +1,66 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+
+$storeManager = $agtechobjBlock->getStoremangerInter();
+	$storeCode = $storeManager->getStore()->getCode();
+	$TopUp_link_with_store = $this->getUrl('')."top-up";
+?>
+
+<div id="messages_product_view" class="container" style="clear: both"></div>
+
+<div class="container mt-3 mb-5"> 
+    <h1 class="heading heading-title ml-0 ">Data Bundles </h1>
+    <h6 class="mt-3 subHeading">Add a data package to your SIM...</h6>
+
+</div>
+
+<section class="addtariff topUp w-100 pull-left mb-4">
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo $TopUp_link_with_store; ?>" >Add Credit</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Add Bundle</a>
+            </li>
+
+        </ul>  
+        <!-- Tab panes -->
+        <div class="tab-content text-center">
+			<!-- databundleblock_exclude_begin -->
+            <?php echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Magento_Catalog::product/view/data_bundle_tab_topup.phtml")->toHtml(); ?>
+			<!-- databundleblock_exclude_end -->
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+    $( "#mob_cus_id" ).keypress(function( event ) {
+        $('#include_sim').attr('checked', false);
+        $('#include_sim').attr('disabled', true);
+        $('.include_simcard').hide();
+    });
+
+    $('#include_sim').click(function(){
+        $('#mob_cus_id').toggle();
+        $('#include_simcard_text').toggle();
+        
+        if ($('#include_sim').is(':checked')) {
+            $('#databundle_topup_add_div').removeClass('col-md-3');
+            $('#databundle_topup_add_div').addClass('col-md-12');
+        } else {
+            $('#databundle_topup_add_div').removeClass('col-md-12');
+            $('#databundle_topup_add_div').addClass('col-md-3');
+        }
+    });
+
+    $('#mob_cus_id').focusout(function(e) {
+        var datamobcus = $("#mob_cus_id").val();
+        if(datamobcus==""){
+         $('#include_sim').attr('disabled', false);
+         $('.include_simcard').show();
+        }
+    });
+    });
+</script>

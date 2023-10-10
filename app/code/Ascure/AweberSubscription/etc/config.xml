@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * This XML file defines the configuration value for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ascure_awebersubscription>
+            <general>
+                <enabled>0</enabled>
+                <client_id></client_id>
+                <client_secret></client_secret>
+                <redirect_url></redirect_url>
+            </general>
+        </ascure_awebersubscription>
+    </default>
+</config>

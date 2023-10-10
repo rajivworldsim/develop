@@ -1,0 +1,97 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$currency = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currencyCode);
+$currencySymbol = $currency->getCurrencySymbol();
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+<?php if ($_product->isSaleable()) :?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <?php if ($block->shouldRenderQuantity()) :?>
+            <div class="fieldset-new">
+        <div class="field qty">
+            <label class="label" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
+            <div class="control spinner quantity-of-product">
+                <div class="input-group">
+                <input type="number" name="qty" id="creditQty" min="0"
+                       value="<?= $block->getProductDefaultQty() * 1 ?>"
+                       title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                       class="input-text input qty"
+                       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                       />
+                       <input type="hidden" id="final-price" name="product-price" value=<?php echo $_product->getPrice(); ?>>
+                       <input type="hidden" id="hiddenCreditPrice" value="" data-currency =<?php echo $currencySymbol; ?> >
+                       <div class="input-group-btn-vertical input-group-btn-vertical-tb ">
+                          <button class="btnnew number-up"  type="button">
+                            <i class="fa fa-angle-up"></i>
+                          </button>
+                          <button class="btnnew number-down" type="button">
+                            <i class="fa fa-angle-down"></i></button>
+                        </div>
+                 </div>
+            </div>
+        <div class="actions custom-over">
+            <!-- Custom Input Field -->
+            <div>
+                <input
+                    type="hidden"
+                    name="bonus"
+                    id="bonusValue"
+                    value=""
+                />
+            </div>
+            <!-- Custom Input Field -->
+            <button type="submit"
+                    title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                    class="action primary tocart"
+                    id="product-addtocart-button" disabled>
+                <span><?= $block->escapeHtml($buttonTitle) ?></span>
+            </button>
+            <?= $block->getChildHtml('', true) ?>
+        </div>
+        </div>
+    </div>
+        <?php endif; ?>
+        
+    </div>
+</div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+
+</script>
+ <script>
+  require(['jquery','Magento_Ui/js/modal/modal'], function ($) {
+$(document).ready(function(){
+
+    $(".number-up, .number-down, .qty").click(function(){
+
+        var productId = $('input[name = item]').val()
+        var totalCost = $('#product-price-'+productId).data('price-amount');
+        var currencySymbol = $("#hiddenCreditPrice").data('currency');
+        var creditQty = $('#creditQty').val();
+        console.log(currencySymbol);
+        
+        var updatedCost = parseFloat(totalCost*creditQty).toFixed(2);
+        console.log(totalCost);
+        console.log(creditQty);
+        $(".price").first().text( currencySymbol +" "+ updatedCost );
+    });
+
+}); 
+  }); 
+
+</script> 

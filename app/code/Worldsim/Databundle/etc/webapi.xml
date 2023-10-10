@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+	<route url="/V1/worldsim-databundle/go_api_response" method="POST">
+		<service class="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Worldsim_Databundle::Go_API_Response_save"/>
+		</resources>
+	</route>
+	<route url="/V1/worldsim-databundle/go_api_response/search" method="GET">
+		<service class="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="Worldsim_Databundle::Go_API_Response_view"/>
+		</resources>
+	</route>
+	<route url="/V1/worldsim-databundle/go_api_response/:goApiResponseId" method="GET">
+		<service class="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" method="get"/>
+		<resources>
+			<resource ref="Worldsim_Databundle::Go_API_Response_view"/>
+		</resources>
+	</route>
+	<route url="/V1/worldsim-databundle/go_api_response/:goApiResponseId" method="PUT">
+		<service class="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Worldsim_Databundle::Go_API_Response_update"/>
+		</resources>
+	</route>
+	<route url="/V1/worldsim-databundle/go_api_response/:goApiResponseId" method="DELETE">
+		<service class="Worldsim\Databundle\Api\GoAPIResponseRepositoryInterface" method="deleteById"/>
+		<resources>
+			<resource ref="Worldsim_Databundle::Go_API_Response_delete"/>
+		</resources>
+	</route>
+</routes>

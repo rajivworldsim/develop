@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="agtech_extension_login_value" type="Agtech\Checkauto\Plugin\LayoutProcessor" sortOrder="100"/>
+    </type>
+	  <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="agtech-custom-field-save-info"
+type="Agtech\Checkauto\Plugin\ShippingInformationManagement" sortOrder="1"/>
+    </type>
+	  <type name="Magento\Shipping\Model\Shipping">
+        <plugin disabled="false" name="Agtech_ShippingHide_Plugin_Magento_Shipping_Model_Shipping" sortOrder="100" type="Agtech\Checkauto\Plugin\Magento\Shipping\Model\ShowShipping" />
+    </type>
+</config>

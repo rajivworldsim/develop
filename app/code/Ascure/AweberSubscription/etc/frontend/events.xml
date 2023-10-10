@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * This XML file defines the after checkout event for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="ascure_awebersubscription_after_checkout_success" instance="Ascure\AweberSubscription\Observer\AfterCheckoutSuccessObserver" />
+    </event>
+</config>

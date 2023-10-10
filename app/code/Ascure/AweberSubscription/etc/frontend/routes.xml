@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * This XML file defines the frontend route for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+	<router id="standard">
+		<route frontName="ascure_awebersubscription" id="ascure_awebersubscription">
+			<module  name="Ascure_AweberSubscription"/>
+		</route>
+	</router>
+</config>

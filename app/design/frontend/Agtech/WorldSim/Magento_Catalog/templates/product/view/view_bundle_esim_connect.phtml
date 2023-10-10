@@ -1,0 +1,64 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+
+$storeManager = $agtechobjBlock->getStoremangerInter();
+	$storeCode = $storeManager->getStore()->getCode();
+	$TopUp_link_with_store = $this->getUrl('')."top-up";
+?>
+
+<div id="messages_product_view" class="container" style="clear: both"></div>
+
+<section class="bundleBanner mb-0 w-100 pull-left text-center" style="margin-bottom:-25px !important; padding: 20px 0;">
+    <div class="container">
+        <div class="contentBlock" style="margin-bottom: 25px;">
+           <!-- <h1>Get an International <span>Data Bundle</span> for your WorldSIM SIM card!</h1> 
+            <p>Lower your data roaming rates with an international data plan in over 195 countries</p>-->
+		    <img src="<?php echo $block->getViewFileUrl('images/bundle-data/flight-icon-bundle-page-worldsim.png'); ?>" alt="Travel Logo" style="width: 80px;">
+			<h1 style="font-size: 30px;">Stay connected, <span>at affordable rates, </span> wherever you travel to.</h1> 
+            <!--<p>Get connected in an instant with our super competitive esim data plans for 195 countries or simply add a data bundle to your WorldSIM card</p>-->
+			<p style="padding:0; font-weight: 400;">Instant connectivity with our eSIM data plans in <strong>over 195 countries</strong></p>
+			<p style="padding:0; font-size: 17px; font-weight: 400;">4.5/5 <img src="<?php echo $block->getViewFileUrl('images/bundle-data/worldsim-rating-stars.png'); ?>" style="height: 20px;vertical-align: text-bottom;padding-right: 6px;"> Trusted by over 5 million travellers since 2007</p>
+        </div>
+    </div>
+</section>
+<section class="addtariff topUp w-100 pull-left mb-4">
+    <div class="container">
+          <!-- Tab panes -->
+        <div class="tab-content text-center">
+			<!-- databundleblock_exclude_begin -->
+            <?php echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Magento_Catalog::product/view/data_bundle_tab_esim_connect.phtml")->toHtml(); ?>
+			<!-- databundleblock_exclude_end -->
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+    $( "#mob_cus_id" ).keypress(function( event ) {
+        $('#include_sim').attr('checked', false);
+        $('#include_sim').attr('disabled', true);
+        $('.include_simcard').hide();
+    });
+
+    $('#include_sim').click(function(){
+        $('#mob_cus_id').toggle();
+        $('#include_simcard_text').toggle();
+        
+        if ($('#include_sim').is(':checked')) {
+            $('#databundle_topup_add_div').removeClass('col-md-3');
+            $('#databundle_topup_add_div').addClass('col-md-12');
+        } else {
+            $('#databundle_topup_add_div').removeClass('col-md-12');
+            $('#databundle_topup_add_div').addClass('col-md-3');
+        }
+    });
+
+    $('#mob_cus_id').focusout(function(e) {
+        var datamobcus = $("#mob_cus_id").val();
+        if(datamobcus==""){
+         $('#include_sim').attr('disabled', false);
+         $('.include_simcard').show();
+        }
+    });
+    });
+</script>

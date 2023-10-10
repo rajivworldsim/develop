@@ -1,0 +1,155 @@
+<?php
+$agtechobjBlock = $block->getLayout()->createBlock('Agtech\ProductObject\Block\Objproductconv');
+
+$helperImport = $agtechobjBlock->getHelperimagep();
+$storeManager = $agtechobjBlock->getStoremangerInter();
+$current_currency_rate = $storeManager->getStore()->getCurrentCurrencyRate();
+$currency_code = $storeManager->getStore()->getCurrentCurrencyCode();
+$currency_model = $agtechobjBlock->getcurrencyFactoryModel()->create()->load($currency_code);
+$currencySymbol = $currency_model->getCurrencySymbol();
+$abstractProductBlock = $block->getLayout()->createBlock('\Magento\Catalog\Block\Product\AbstractProduct');
+$productCollectionFactory = $agtechobjBlock->getCollectionFactoryResource();
+$collection = $productCollectionFactory->create();
+$collection->addAttributeToSelect('*');
+$collection->addAttributeToSort('created_at','desc');
+$collection->addMinimalPrice()
+                    ->addFinalPrice()
+                    ->addTaxPercents()
+                    ->addAttributeToSelect('*')
+                    ->addAttributeToSelect('special_from_date')
+                    ->addAttributeToSelect('special_to_date')
+                    ->addAttributeToFilter('special_price', ['neq' => ''])
+                    ->addAttributeToFilter('special_price',['gt'=>0], 'left')
+					->addAttributeToFilter(
+					'special_from_date',['or' => [ 0 => ['date' => true, 
+														'to' => date('Y-m-d',time()).' 23:59:59'],
+												  1 => ['is' => new \Zend_Db_Expr(
+													 'null'
+												 )],]], 'left')
+					->addAttributeToFilter(
+						'special_to_date',  ['or' => [ 0 => ['date' => true,
+														   'from' => date('Y-m-d',time()).' 00:00:00'],
+													 1 => ['is' => new \Zend_Db_Expr(
+														 'null'
+													 )],]], 'left'
+					)
+                    ->addAttributeToFilter('is_saleable', 1, 'left');
+				$collection->setPageSize(54);  // selecting only 5 products
+				$upperLimit = 54;
+/*   foreach ($collection as $product) {
+    print_r($product->getData());     
+    echo "<br>";
+}   */
+
+$collection_SimCards = $productCollectionFactory->create();
+$collection_SimCards->addAttributeToSelect('*');
+$collection_SimCards->addCategoriesFilter(['in' => '5']);
+$collection_SimCards->addAttributeToFilter('is_saleable', 1, 'left');
+
+  
+?>
+<div class="products wrapper grid products-grid">
+<ol class="products list items product-items">
+            <?php
+			
+			//============Show SIM Cards Products 1st==============//
+			
+			foreach($collection_SimCards as $product){
+                    $_product = $product->getData();
+                    if(!$_product){
+                        continue;
+                    }
+                    ?>
+					 <li class="item product product-item position-relative">
+						<div class="product-item-info" >
+								<?php if($product->getWorldsimChoice()): ?>
+									<a href="<?php echo $this->getUrl('').$product->getUrlKey(); ?>" class="worldBtn"> </a>
+								<?php endif; ?> 
+									<?php $imageUrl = $helperImport->init($product, 'small_image')
+						->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
+						->resize(270)->getUrl();		?>
+								<a href="<?php echo $product->getProductUrl(); ?>" class="product photo product-item-photo">
+								<span class="product-image-container" style="width: 300px;">
+								<span class="product-image-wrapper" style="padding-bottom: 120%;">
+									<img class="product-image-photo" src="<?php echo $imageUrl; ?>" alt="<?php echo $product['name']; ?>" />
+								</span>
+								</span>
+								</a>
+								<div class="product details">
+									<strong class="product name product-item-name"><a href="<?php echo $product->getProductUrl(); ?>" class="product-item-link"> <?php echo $product['name']; ?></a></strong>
+									<div class="clearfix"></div>
+									<div class="price-box">
+										<p class="price w-100 pull-left">
+											<span class="price-label"></span>
+											<span class="price" id="product-price"><?php echo $currencySymbol.number_format($product->getPrice()*$current_currency_rate, 2, '.', ''); ?> </span>
+										</p>
+									</div>
+
+									<?php if($product->isSaleable()): ?>
+										<a href="<?php echo $product->getProductUrl(); ?>" class="btn btn-warning">Find Out More</a>
+									<?php else: ?>
+										<a href="javascript:void(0)" class="btn btn-warning outofstock"><?php echo $this->__('Out of stock') ?></a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</li>
+                    <?php
+                } 
+			
+			//============SALE CATEGORY==============//
+                $x = 1;
+                foreach($collection as $product){
+                    $_product = $product->getData();
+                    if(!$_product){
+                        continue;
+                    }
+                    if($x <= $upperLimit)  { ?>
+                  
+					
+					
+					 <li class="item product product-item position-relative">
+						<div class="product-item-info" >
+								<?php if($product->getWorldsimChoice()): ?>
+									<a href="<?php echo $this->getUrl('').$product->getUrlKey(); ?>" class="worldBtn"> </a>
+								<?php endif; ?> 
+									<?php $imageUrl = $helperImport->init($product, 'small_image')
+						->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
+						->resize(270)->getUrl();		?>
+								<a href="<?php echo $product->getProductUrl(); ?>" class="product photo product-item-photo">
+								<span class="product-image-container" style="width: 300px;">
+								<span class="product-image-wrapper" style="padding-bottom: 120%;">
+									<img class="product-image-photo" src="<?php echo $imageUrl; ?>" alt="<?php echo $product['name']; ?>" />
+								</span>
+								</span>
+								</a>
+								<div class="product details">
+									<strong class="product name product-item-name"><a href="<?php echo $product->getProductUrl(); ?>" class="product-item-link"> <?php echo $product['name']; ?></a></strong>
+									<div class="clearfix"></div>
+									<div class="price-box">
+										<p class="card-text">
+											<span class="price-label"></span>
+											<span class="price" id="old-price"><?php echo $currencySymbol.number_format($product->getPrice()*$current_currency_rate, 2, '.', ''); ?> </span>
+										</p>
+										<p class="price w-100 pull-left">
+											<span class="price-label"></span>
+											<span class="price" id="product-price"><?php echo $currencySymbol.number_format($product->getSpecialPrice()*$current_currency_rate, 2, '.', ''); ?> </span>
+										</p>
+									</div>
+
+									<?php if($product->isSaleable()): ?>
+										<a href="<?php echo $product->getProductUrl(); ?>" class="btn btn-warning">Find Out More</a>
+									<?php else: ?>
+										<a href="javascript:void(0)" class="btn btn-warning outofstock"><?php echo $this->__('Out of stock') ?></a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</li>
+	
+	
+                    <?php
+                    }
+                    $x++;
+                } 
+            ?>
+</ol>
+</div>

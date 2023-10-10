@@ -1,0 +1,18 @@
+<?php
+$_product = $this->getProduct();
+?>
+<?php if($_product->getData('technical_specs_left')){ ?>
+<div class="container">
+<h2 class="heading text-white text-center mb-5"><?php echo $_product->getName(); ?> Technical Specifications</h2>
+<div class="technical-section-inner">
+<div class="row">
+<div class="col-md-6">
+<?php echo $_product->getData('technical_specs_left'); ?>
+</div>
+<div class="col-md-6">
+<?php echo $_product->getData('technical_specs_right'); ?>
+</div>
+</div>
+</div>
+</div>
+<?php } ?>

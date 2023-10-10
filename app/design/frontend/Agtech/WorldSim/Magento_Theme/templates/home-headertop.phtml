@@ -1,0 +1,31 @@
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+$customerID = $customerSession->getCrmcusId();
+?>
+<div class="headerTop">
+<div class="container">
+<div class="row ">
+
+<!-- <div class="col-md-4 col-2">
+</div> -->
+
+<div class="col-md-12 col-12 ml-auto">
+<ul class="topLinks ">
+<li><a href="/sale">SALES</a></li>
+<li><a href="/delivery-charges-returns-refunds" title="FREE Worldwide Delivery"><span class="d-none d-sm-block">*FREE</span> Worldwide Delivery</a></li>
+
+<li>
+<?php if($customerID){ ?>
+<a href="https://accounts.worldsim.com/customer/login.aspx" title="Login">Logout</a>
+<?php }else{ ?>
+<a href="https://accounts.worldsim.com/customer/login.aspx" title="Login">Login</a>
+<?php } ?>
+</li>
+<li><a href="/faqs" title="Get Help">Get Help</a></li>
+<li><a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx" title="Contact Us">Contact Us</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,41 @@
+<?php
+    $file_name_with_path = $this->getUrl('')."media/tariff/uksim_calling_from.json";
+    $calling_from =  file_get_contents($file_name_with_path);
+    $calling_from =  json_decode($calling_from);
+    $free_incoming_countries = array();
+    foreach ($calling_from as $calling_from_countries => $operator_rates){
+        foreach($operator_rates as $key =>$value){
+            $data_from = $operator_rates[$key]->data;
+            if($data_from>0){
+                $free_incoming_countries[] = $calling_from_countries;
+            }
+        }
+    }
+    $free_incoming_countries = array_unique($free_incoming_countries);
+    $total_countries = sizeof($free_incoming_countries);
+    $countries_in_column = round($total_countries/4);
+    //echo 'total = '.$total_countries.'<br/><br/>'.$countries_in_column.'<br/><br/>';
+?>
+
+
+<section class="freeComingPage mt-2 w-100 pull-left mb-4">
+    <div class="container">
+        <h1 class="category-listing-view-heading mb-3">Data Coverage Countries List</h1>
+        <div class="row">
+            <?php
+            $counter=0;
+            foreach($free_incoming_countries as $fi){
+                if($counter==0 || $counter==$countries_in_column){?>
+                    <div class="col-sm-3  pr-0">
+                        <ul>
+                <?php } ?>
+                            <li><?php echo $fi; ?></li>
+                <?php if($counter==$countries_in_column-1){?>
+                        <?php $counter=-1; ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            <?php $counter++; } ?>
+        </div>
+    </div>
+</section>

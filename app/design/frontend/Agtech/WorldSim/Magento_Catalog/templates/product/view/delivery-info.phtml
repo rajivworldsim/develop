@@ -1,0 +1,318 @@
+<?php
+ $url = 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+$rates_currency = $storeManager->getStore()->getCurrentCurrencyRate();
+$currency = $objectManager->create('Magento\Directory\Model\CurrencyFactory')->create()->load($currencyCode);
+$currencySymbol = $currency->getCurrencySymbol();
+
+
+  $convRate= $rates_currency;
+  
+?>
+
+<?php
+  
+  //$currencySymbol.number_format((float)$out_cheap, 2, '.', '');
+  
+  //$uk_shipping_Standard=round(2*$convRate);
+  //$uk_shipping_Standard=number_format((float)$uk_shipping_Standard, 2, '.', '');
+  
+  $uk_shipping_Recorded=round(4*$convRate);//3.50
+  $uk_shipping_Recorded=number_format((float)$uk_shipping_Recorded, 2, '.', '');
+  
+  $uk_shipping_Nextday=round(7*$convRate);//6.50
+  $uk_shipping_Nextday=number_format((float)$uk_shipping_Nextday, 2, '.', '');
+  
+  $uk_shipping_Free=0.00;
+  $uk_shipping_Free=number_format((float)$uk_shipping_Free, 2, '.', '');
+  
+  $eu_shipping_Standard=round(20*$convRate);//6.50
+  $eu_shipping_Standard=number_format((float)$eu_shipping_Standard, 2, '.', '');
+  
+  //$eu_shipping_Nextday=round(12*$convRate);//11.50
+  //$eu_shipping_Nextday=number_format((float)$eu_shipping_Nextday, 2, '.', '');
+  
+  $eu_shipping_Free=0.00;
+  $eu_shipping_Free=number_format((float)$eu_shipping_Free, 2, '.', '');
+  
+  $us_shipping_Standard=round(7*$convRate);
+  $us_shipping_Standard=number_format((float)$us_shipping_Standard, 2, '.', '');
+  
+  $us_shipping_Recorded=round(9*$convRate);
+  $us_shipping_Recorded=number_format((float)$us_shipping_Recorded, 2, '.', '');
+  
+  $us_shipping_Nextday=round(14*$convRate);//13.50
+  $us_shipping_Nextday=number_format((float)$us_shipping_Nextday, 2, '.', '');
+  
+  $us_shipping_Free=0.00;
+  $us_shipping_Free=number_format((float)$us_shipping_Free, 2, '.', '');
+  
+  $row_shipping_Standard=round(25*$convRate);//8.50
+  $row_shipping_Standard=number_format((float)$row_shipping_Standard, 2, '.', '');
+  
+  //$row_shipping_Recorded=round(19*$convRate);//18.50
+  //$row_shipping_Recorded=number_format((float)$row_shipping_Recorded, 2, '.', '');
+  
+  $row_shipping_Free=0.00;
+  $row_shipping_Free=number_format((float)$row_shipping_Free, 2, '.', '');
+ 
+ 
+  //$free_shipping_threshold_base = Mage::getStoreConfig('carriers/matrixrate/free_shipping_threshold');
+  //$free_shipping_threshold = round($free_shipping_threshold_base*$convRate);
+  
+  $free_shipping_threshold=round(100*$convRate);//8.50
+  $free_shipping_threshold=number_format((float)$free_shipping_threshold, 2, '.', '');
+  
+?>
+<?php if(strpos($url,'/delivery-charges') == false){ ?>
+<a href="javascript:;" class="according showarrow">Delivery Info <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span></a>
+<?php } ?>   
+<?php if(strpos($url,'/delivery-charges') !== false){ ?>    
+<h1 class="category-listing-view-heading">Delivery Charges</h1>
+<div class="cartBox">
+  <div class="rightsimCard">
+    <div class="simaccording">
+<?php } ?>    
+    <div class="delivery-content" <?php if(strpos($url,'/delivery-charges') !== false || strpos($url,'/cart') !== false){ ?> style="display: block" <?php } else { ?> style="display: none" <?php } ?>>
+        <p><strong>Our Worldwide Delivery Charges are as follows:</strong> </p>
+        <ul class="nav nav-tabs">
+            <?php if($currencyCode=="INR"): ?>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#india">India</a>
+            </li>
+            <?php endif; ?>
+            <li class="nav-item">
+                <a class="nav-link <?php if($currencyCode=="GBP"): ?>active<?php endif; ?>" data-toggle="tab" href="#united_kingdom">United Kingdom</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php if($currencyCode=="EUR"): ?>active<?php endif; ?>" data-toggle="tab" href="#europe">Europe</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php if($currencyCode=="USD"): ?>active<?php endif; ?>" data-toggle="tab" href="#united_states">United States</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#rest_of_the_world">Rest of the World</a>
+            </li>
+        </ul>
+    
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <?php if($currencyCode=="INR"): ?>    
+            <div class="tab-pane container active" id="india">
+                <div class="d-flex justify-content-center">
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Type</h2>
+                        <ul>
+                            <li>Express</li>
+                            <li>Priority Next Day</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content blue-bc-tab ">
+                        <h2>Delivery time</h2>
+                        <ul>
+                            <li>2-3 working days</li>
+                            <li>1-2 working days</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Price</h2>
+                        <ul>
+                            <li><?php echo $currencySymbol." 0.00"; ?></li>
+                            <li><?php echo $currencySymbol." 50.00"; ?></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="tab-pane container <?php if($currencyCode=="INR"): ?>fade<?php else: ?>active<?php endif; ?>" id="united_kingdom"> 
+                <div class="d-flex justify-content-center">
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Type</h2>
+                        <ul>
+                            <li>Recorded</li>
+                            <li>Next Day</li>
+                            <li>Free Shipping</li> 
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content blue-bc-tab ">
+                        <h2>Delivery time</h2>
+                        <ul>
+                            <li>3-5 working days</li>
+                            <li>1 working day</li>
+                            <li>3-5 working days</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Price</h2>
+                        <ul>
+                            <li><?php echo $currencySymbol.$uk_shipping_Recorded ?></li>
+                            <li><?php echo $currencySymbol.$uk_shipping_Nextday ?></li>
+                            <li><?php echo $currencySymbol.$uk_shipping_Free ?></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-center"><strong>Orders above <?php echo $currencySymbol.$free_shipping_threshold; ?> are eligible for Free Shipping.</strong></p>
+            </div>
+            <div class="tab-pane container fade" id="europe">
+                <div class="d-flex justify-content-center">
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Type</h2>
+                        <ul>
+                            <li>Standard</li>
+                            <li>Free Shipping</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content blue-bc-tab ">
+                        <h2>Delivery time</h2>
+                        <ul>
+                            <li>1-3 working days</li>
+                            <li>3-5 working days</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Price</h2>
+                        <ul>
+                            <li><?php echo $currencySymbol.$eu_shipping_Standard ?></li>
+                            <li><?php echo $currencySymbol.$eu_shipping_Free ?></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-center"><strong>Orders above <?php echo $currencySymbol.$free_shipping_threshold; ?> are eligible for Free Shipping.</strong></p>
+            </div>
+            <div class="tab-pane container fade" id="united_states">
+                <div class="d-flex justify-content-center">
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Type</h2>
+                        <ul>
+                            <li>Standard First Class</li>
+                            <li>Tracked Delivery</li>
+                            <li>Express Delivery</li>
+                            <li>Free Shipping</li> 
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content blue-bc-tab ">
+                        <h2>Delivery time</h2>
+                        <ul>
+                            <li>3-5 working days</li>
+                            <li>2-4 working days</li>
+                            <li>1-2 working days</li>
+                            <li>2-4 working days</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Price</h2>
+                        <ul>
+                            <li><?php echo $currencySymbol.$us_shipping_Standard ?></li>
+                            <li><?php echo $currencySymbol.$us_shipping_Recorded ?></li>
+                            <li><?php echo $currencySymbol.$us_shipping_Nextday ?></li>
+                            <li><?php echo $currencySymbol.$us_shipping_Free ?></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-center"><strong>Orders above <?php echo $currencySymbol.$free_shipping_threshold; ?> are eligible for Free Shipping.</strong></p>
+            </div>
+            <div class="tab-pane container fade" id="rest_of_the_world">
+                <div class="d-flex justify-content-center">
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Type</h2>
+                        <ul>
+                            <li>Standard</li>
+                            <li>Free Shipping</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content blue-bc-tab ">
+                        <h2>Delivery time</h2>
+                        <ul>
+                            <li>1-3 working days</li>
+                            <li>5-7 working days</li>
+                        </ul>
+                    </div>
+                    <div class=" tab-payment-pane-content ">
+                        <h2>Price</h2>
+                        <ul>
+                            <li><?php echo $currencySymbol.$row_shipping_Standard ?></li>
+                            <li><?php echo $currencySymbol.$row_shipping_Free ?></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-center"><strong>Orders above <?php echo $currencySymbol.$free_shipping_threshold; ?> are eligible for Free Shipping.</strong></p>
+            </div>
+        </div>
+    </div>
+<?php if(strpos($url,'/delivery-charges') !== false){ ?>    
+</div>  
+</div>
+</div>
+<?php } ?>    
+
+<?php if(strpos($url,'/delivery-charges') !== false){ ?>    
+<div class="note-text-small mt-3">
+  <p>Due to security measures we cannot currently deliver to Lebanon.</p>
+  <p>Any additional charges for customs clearance must be borne by you. We have no control over these
+    charges and can't predict what they may be. <br> Customs policies vary widely from country to
+    country, so you should contact your local customs office for further information. Additionally,
+    please note that when ordering from WorldSIM.com, you're considered the importer of record and
+    must comply with all laws and regulations of the country in which you're receiving the goods.<br>
+    Customs offices in some countries require the importer of record to provide a particular form of identification before releasing a parcel. As the importer of record, you may be required to provide the recipient's identification number such as a Unique Identification Number, CPF, or Tax ID.
+  </p>
+</div>
+
+<div class="note-text-small-nr">
+  <p><strong>RETURNS AND REFUNDS</strong></p>
+  <p>Peace of Mind Returns If you change your mind about your purchase, you can return it to us hassle free within 14 days
+    as long as the packaging in unopened and the product has not been used. In order to return an
+    unwanted product please contact us using the contact form at the bottom of our <a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx">contact
+    us page,</a> before you send the product back you must receive a return order number from us
+    and the correct address to send it to. Tell us the reason you are returning the item, your order
+    number and the product you wish to return. The return postage will be your own responsibility,
+    we recommended sending the goods back with tracked or signed for postage as we will not be held
+    responsible if it is lost in the post. As long as the item you are returning is in the same
+    condition that we sent it to you, we will issue you a full refund, minus any postage costs.
+  </p>
+  <p><strong>Returning Faulty Goods</strong></p>
+  <p> 
+    In the case of receiving faulty products, we are happy to issue you a refund or an exchange. Shopping online with WorldSIM gives you the same consumer rights under the Sale of Goods Act as you have when buying in a store. Initially you will have to pay for the postage return and once we have deemed the product as faulty after testing it, we will either exchange or refund you the cost of the product, the initial delivery charge and the return postage. PLEASE NOTE: We will only refund the lowest possible tracked postage cost, if you choose to return the product using a one day delivery we will only refund you the cost of standard tracked postage. You must take reasonable care to ensure products are not lost or damaged in the meantime or in transit. <br>
+    In order to return a faulty item please contact us first, using the contact form at the bottom of our <a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx">contact us</a> page, tell us the reason you are returning the item, your order number and the product you wish to return. We will then five you an order returns number and tell you where to send the goods to be returned. All our products are covered with a 6 months warranty.
+  </p>
+</div>
+
+<div class="container">
+
+  <div class="row text-center mb-4 mt-5">
+    <div class="col-md-4">
+        <div class="socialBlog">
+            <div class="imgBlog">
+                <a href="<?php echo $this->getUrl(''); ?>travel-essentials">
+                    <img src="<?php echo $block->getViewFileUrl('images/cartIcon.jpg'); ?>">
+                </a>
+                <div class="title mt-2"><a href="<?php echo $this->getUrl(''); ?>travel-essentials">Continue Shopping</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="socialBlog">
+            <div class="imgBlog">
+                <a href="<?php echo $this->getUrl(''); ?>faqs">
+                    <img src="<?php echo $block->getViewFileUrl('images/faqIcon.jpg'); ?>">
+                </a>
+                <div class="title mt-2"><a href="<?php echo $this->getUrl(''); ?>faqs">FAQs</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="socialBlog">
+            <div class="imgBlog">
+                <a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx">
+                    <img src="<?php echo $block->getViewFileUrl('images/contactIcon.jpg'); ?>">
+                </a>
+                <div class="title mt-2"><a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx">Contact Us</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<?php } ?>

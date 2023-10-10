@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Agtech_CmsBlocks::cmsblocks" title="JsonData" module="Agtech_CmsBlocks" sortOrder="51" resource="Agtech_CmsBlocks::cmsblocks"/>
+        <add id="Agtech_CmsBlocks::uksim_calling_from_new" title="Manage JsonData" module="Agtech_CmsBlocks" sortOrder="10" action="agtech_cmsblocks/jsondata/index" resource="Agtech_CmsBlocks::uksim_calling_from_new" parent="Agtech_CmsBlocks::cmsblocks"/>
+        <add id="Agtech_CmsBlocks::uksim_sms_to_new" title="Manage Uksim Sms To New" module="Agtech_CmsBlocks" sortOrder="10" action="agtech_cmsblocks/smstonew/index" resource="Agtech_CmsBlocks::uksim_sms_to_new" parent="Agtech_CmsBlocks::cmsblocks"/>
+        <add id="Agtech_CmsBlocks::worldsim_virtual_number_rates" title="Manage Virtual Rates" module="Agtech_CmsBlocks" sortOrder="10" action="agtech_cmsblocks/virtualrates/index" resource="Agtech_CmsBlocks::worldsim_virtual_number_rates" parent="Agtech_CmsBlocks::cmsblocks"/>
+        <add id="Agtech_CmsBlocks::google_reviews" title="Manage Google Review" module="Agtech_CmsBlocks" sortOrder="10" action="agtech_cmsblocks/googlereviews/index" resource="Agtech_CmsBlocks::google_reviews" parent="Agtech_CmsBlocks::cmsblocks"/>
+    </menu>
+</config>

@@ -1,0 +1,96 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+
+<?php if ($description = $block->getCurrentCategory()->getDescription()):?>
+    <div class="category-description shordescription">
+      
+<?php if($block->getCurrentCategory()->getId() == 12 ) {?> 
+
+<div> <div> <p><strong>Choosing what MiFi device is right for you</strong></p> <p>We have a wide selection of portable hotspots; 3G, 4G, 4G+ (4G+ gives the fastest download speeds), some of our MiFi devices also double up as powerbanks, some connect more than 10 devices. Click on any of our mobile hotspots for more information, or read <a title="What portable WiFi is right for you" href="<?php echo $this->getUrl(''); ?>blog/which-portable-wifi-hotspot">How to understand which portable hotspot is best for your needs. </a>.</p> <p><img src="<?php echo $block->getViewFileUrl('images/portable_wifi_router_perks.jpg'); ?>" alt="Portable WiFi Devices" /></p> </div> </div> 
+
+<?php $descriptionHtml = $this->helper(Magento\Catalog\Helper\Output::class)->categoryAttribute(
+            $block->getCurrentCategory(),
+            $description,
+            'description'
+        );?>
+        <?php if (stripos($description, 'data-appearance') === false):?>
+            <div data-content-type="row" data-appearance="contained" data-element="main">
+                <div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-element="inner"
+                     style="justify-content: flex-start; display: flex; flex-direction: column;
+                     background-position: left top; background-size: cover; background-repeat: no-repeat;
+                     background-attachment: scroll; border-style: none; border-width: 1px; border-radius: 0px;
+                     margin: 0px 0px 10px; padding: 10px;">
+                    <div data-content-type="html" data-appearance="default" data-element="main"
+                         style="border-style: none; border-width: 1px; border-radius: 0px; margin: 0px; padding: 0px;">
+                        <?= /* @noEscape */$descriptionHtml; ?>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <?= /* @noEscape */$descriptionHtml; ?>
+        <?php endif; ?>
+<?php }elseif ($block->getCurrentCategory()->getId() == 5 ){?>
+ <div> <div> <p><strong>Which global SIM is right for you?</strong></p> <p>The international SIM is for phones as it offers voice, SMS and data, use this SIM if you are looking to use it in your handset.  The UK SIM is very similar but gives the added bonus of cheap international calls from the UK so this is best if you are planning on visiting the UK or if you live in the UK.  If you want a SIM for tablets and portable WiFi routers the data SIM is best.  If you need more information about what SIM to choose you can read <a title="Which SIMis right for travel" href="<?php echo $this->getUrl(''); ?>blog/which-sim-for-travel" target="_blank">which SIM is right for your needs</a>.</p> <p><img src="<?php echo $block->getViewFileUrl('images/global_sim_cards_bottom_banner_v1.png'); ?>" alt="Global SIM Cards" />
+ 
+ </p> </div> </div> 
+<?php $descriptionHtml = $this->helper(Magento\Catalog\Helper\Output::class)->categoryAttribute(
+            $block->getCurrentCategory(),
+            $description,
+            'description'
+        );?>
+        <?php if (stripos($description, 'data-appearance') === false):?>
+            <div data-content-type="row" data-appearance="contained" data-element="main">
+                <div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-element="inner"
+                     style="justify-content: flex-start; display: flex; flex-direction: column;
+                     background-position: left top; background-size: cover; background-repeat: no-repeat;
+                     background-attachment: scroll; border-style: none; border-width: 1px; border-radius: 0px;
+                     margin: 0px 0px 10px; padding: 10px;">
+                    <div data-content-type="html" data-appearance="default" data-element="main"
+                         style="border-style: none; border-width: 1px; border-radius: 0px; margin: 0px; padding: 0px;">
+                        <?= /* @noEscape */$descriptionHtml; ?>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <?= /* @noEscape */$descriptionHtml; ?>
+        <?php endif; ?>
+<?php }else{ ?>
+  <?php $descriptionHtml = $this->helper(Magento\Catalog\Helper\Output::class)->categoryAttribute(
+            $block->getCurrentCategory(),
+            $description,
+            'description'
+        );?>
+        <?php if (stripos($description, 'data-appearance') === false):?>
+            <div data-content-type="row" data-appearance="contained" data-element="main">
+                <div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-element="inner"
+                     style="justify-content: flex-start; display: flex; flex-direction: column;
+                     background-position: left top; background-size: cover; background-repeat: no-repeat;
+                     background-attachment: scroll; border-style: none; border-width: 1px; border-radius: 0px;
+                     margin: 0px 0px 10px; padding: 10px;">
+                    <div data-content-type="html" data-appearance="default" data-element="main"
+                         style="border-style: none; border-width: 1px; border-radius: 0px; margin: 0px; padding: 0px;">
+                        <?= /* @noEscape */$descriptionHtml; ?>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <?= /* @noEscape */$descriptionHtml; ?>
+        <?php endif; ?>
+
+	<?php } ?>
+    </div>
+<?php endif; ?>
+

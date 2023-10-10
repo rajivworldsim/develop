@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="Worldsim::top_level" title="Worldsim" module="Worldsim_Databundle" sortOrder="9995" resource="Magento_Backend::content"/>
+		<add id="Worldsim_Databundle::worldsim_databundle_rate_sheet_data_bundle" title="Rate Sheet Data-Bundle" module="Worldsim_Databundle" sortOrder="9996" resource="Magento_Backend::content" parent="Worldsim::top_level" action="worldsim_databundle/ratesheetdatabundle/index"/>
+		<add id="Worldsim_Databundle::worldsim_databundle_go_api_response" title="Go API Response" module="Worldsim_Databundle" sortOrder="9997" resource="Magento_Backend::content" parent="Worldsim::top_level" action="worldsim_databundle/goapiresponse/index"/>
+	</menu>
+</config>

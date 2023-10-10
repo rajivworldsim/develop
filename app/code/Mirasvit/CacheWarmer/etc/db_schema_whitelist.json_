@@ -1,0 +1,171 @@
+{
+    "mst_cache_warmer_page": {
+        "column": {
+            "page_id": true,
+            "uri": true,
+            "cache_id": true,
+            "page_type": true,
+            "product_id": true,
+            "category_id": true,
+            "vary_data": true,
+            "popularity": true,
+            "attempts": true,
+            "warm_rule_version": true,
+            "warm_rule_ids": true,
+            "store_id": true,
+            "vary_data_hash": true,
+            "user_agent": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true,
+            "cached_at": true,
+            "flushed_at": true,
+            "uri_hash": true,
+            "cookie": true,
+            "main_rule_id": true,
+            "source_id": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_PAGE_CACHE_ID": true,
+            "MST_CACHE_WARMER_PAGE_URI_HASH_VARY_DATA_HASH": true,
+            "MST_CACHE_WARMER_PAGE_WARM_RULE_IDS": true,
+            "MST_CACHE_WARMER_PAGE_WARM_RULE_IDS_STATUS": true,
+            "MST_CACHE_WARMER_PAGE_MAIN_RULE_ID_STATUS": true,
+            "MST_CACHE_WARMER_PAGE_WARM_RULE_VERSION": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_job": {
+        "column": {
+            "job_id": true,
+            "priority": true,
+            "filter_serialized": true,
+            "info_serialized": true,
+            "started_at": true,
+            "finished_at": true,
+            "created_at": true,
+            "updated_at": true,
+            "status": true,
+            "trace_serialized": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_JOB_JOB_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_report": {
+        "column": {
+            "report_id": true,
+            "response_time": true,
+            "response_time_hit": true,
+            "response_time_miss": true,
+            "hit": true,
+            "miss": true,
+            "url": true,
+            "created_at": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_REPORT_REPORT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_report_aggregated": {
+        "column": {
+            "report_aggreg_id": true,
+            "response_time": true,
+            "response_time_hit": true,
+            "response_time_miss": true,
+            "hit": true,
+            "miss": true,
+            "visit_count": true,
+            "period": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_REPORT_AGGREGATED_REPORT_AGGREG_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_log": {
+        "column": {
+            "log_id": true,
+            "response_time": true,
+            "is_hit": true,
+            "uri": true,
+            "created_at": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_LOG_LOG_ID": true,
+            "MST_CACHE_WARMER_LOG_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_page_type": {
+        "column": {
+            "page_type_id": true,
+            "page_type": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_PAGE_TYPE_PAGE_TYPE_ID": true,
+            "MST_CACHE_WARMER_PAGE_TYPE_PAGE_TYPE": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_warm_rule": {
+        "column": {
+            "warm_rule_id": true,
+            "name": true,
+            "is_active": true,
+            "priority": true,
+            "conditions_serialized": true,
+            "headers_serialized": true,
+            "vary_data_serialized": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_trace": {
+        "column": {
+            "trace_id": true,
+            "entity_type": true,
+            "entity_id": true,
+            "trace": true,
+            "started_at": true,
+            "finished_at": true,
+            "created_at": true
+        },
+        "index": {
+            "MST_CACHE_WARMER_TRACE_ENTITY_TYPE": true,
+            "MST_CACHE_WARMER_TRACE_ENTITY_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mst_cache_warmer_source": {
+        "column": {
+            "source_id": true,
+            "source_name": true,
+            "source_type": true,
+            "path": true,
+            "customer_groups": true,
+            "is_active": true,
+            "last_sync_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

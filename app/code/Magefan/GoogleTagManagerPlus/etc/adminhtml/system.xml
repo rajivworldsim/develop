@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="mfgoogletagmanager">
+            <group id="general">
+                <field id="version_plus" translate="label comment" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Magefan\GoogleTagManagerPlus\Block\Adminhtml\Config\Form\Info</frontend_model>
+                </field>
+            </group>
+            <group id="ads" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Ads - Conversion Tracking (GTM Plus)</label>
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <group id="purchase" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <attribute type="expanded">1</attribute>
+                    <label>Purchase</label>
+                        <field id="conversion_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Conversion ID</label>
+                            <comment><![CDATA[
+                            <a href="https://support.google.com/tagmanager/answer/6105160" target="_blank" rel="nofollow noopener" title="Where to find Google Ads Conversion ID">Where to find Conversion ID?</a>
+                            ]]>
+                            </comment>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                        <field id="conversion_label" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Conversion Label</label>
+                            <comment><![CDATA[
+                            <a href="https://support.google.com/tagmanager/answer/6105160" target="_blank" rel="nofollow noopener" title="Where to find Google Ads Conversion Label">Where to find Conversion Label?</a>
+                            ]]>
+                            </comment>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </group>
+            </group>
+            <group id="remarketing" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Ads - Remarketing (GTM Plus)</label>
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="conversion_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Conversion ID</label>
+                    <comment><![CDATA[
+                            <a href="https://support.google.com/tagmanager/answer/6106960" target="_blank" rel="nofollow noopener" title="Where to find Google Dynamic Remarketing Conversion ID">Where to find Conversion ID?</a>
+                            ]]>
+                    </comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="conversion_label" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Conversion Label</label>
+                    <comment><![CDATA[
+                            <a href="https://support.google.com/tagmanager/answer/6106960" target="_blank" rel="nofollow noopener" title="Where to find Google Dynamic Remarketing Conversion Label">Where to find Conversion Label?</a>
+                            ]]>
+                    </comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,52 @@
+<?php
+    $file_name_with_path = $this->getUrl('')."media/tariff/uksim_calling_from_new.json";
+    $calling_from =  file_get_contents($file_name_with_path);
+    $calling_from =  json_decode($calling_from);
+?>
+<section class="freeComingPage mt-5 w-100 pull-left mb-4">
+    <div class="container">
+        <h1 class="category-listing-view-heading mb-3">Roaming Partners</h1>
+        <p>To get the lowest rates make sure you manually select the relevant operator for the country you are travelling in.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Operator</th>
+                    <!--<th>Region</th>
+                    <th>Profile</th>-->
+                    <th>Free incoming</th>
+                    <th>Data Available</th>
+                    <th>Recommended</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php  foreach ($calling_from as $calling_from_countries => $operator_rates){ ?>
+                    <?php foreach($operator_rates as $key =>$value){
+                                $data_from = $operator_rates[$key]->data;
+                                $incoming_from = $operator_rates[$key]->incoming;
+                                $outgoing_from = $operator_rates[$key]->outgoing;
+                                if($incoming_from<=0){
+                                    $incoming = '<i class="fa fa-check" aria-hidden="true"></i>';
+                                }else{
+                                    $incoming = '&nbsp;';
+                                }
+                                if($data_from<=0){
+                                    $data_available = '&nbsp;';
+                                }else{
+                                    $data_available = '<i class="fa fa-check" aria-hidden="true"></i>';
+                                }
+                                echo '<tr class="">';
+                                echo '<td data-title="Country">'.$calling_from_countries.'</td>';
+                                echo '<td data-title="Operator">'.$operator_rates[$key]->operator.'</td>';
+                                //echo '<td data-title="Region">Asia &amp; Australasia</td>';
+                                //echo '<td data-title="Profile">SMART-TALK</td>';
+                                echo '<td data-title="Free incoming" class="text-center">'.$incoming.'</td>';
+                                echo '<td data-title="Data Available" class="text-center">'.$data_available.'</td>';
+                                echo '<td data-title="Recommended" class="text-center greenBg"><i class="fa fa-check" aria-hidden="true"></i></td>';
+                                echo '</tr>';
+                            } ?>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</section>

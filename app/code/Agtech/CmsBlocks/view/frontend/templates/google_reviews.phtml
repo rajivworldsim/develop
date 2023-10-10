@@ -1,0 +1,29 @@
+<?php
+$viewModel = $block->getData('viewModel');
+$googleReviews = $viewModel->getGoogleReviews();
+$overallRating =  null;
+$overallRatingPercent =  null;
+$googleReviewContent    =  null;
+foreach ($googleReviews as $googleReview) {
+    $overallRating = $googleReview->getGrating();
+    $overallRatingPercent = $googleReview->getGratingPercent();
+    $googleReviewContent = $googleReview->getGcontent();
+}
+?>
+
+<section id="testimonials" class="regular-slider mt-0 mb-0 w-100 container">
+    <h2 class="heading text-center">What people are saying about WorldSIM</h2>
+    <p class="text-center mt-2">Read about what people think about us, our service and our products</p>
+    <div class="text-center ratingblock">
+        <img class="lozad" src="<?php echo $block->getViewFileUrl('images/googleReviews.jpg');?>" />
+        <span class="ratingText" id="google_overall_rating"><?php echo $overallRating; ?>/5</span>
+        <div class="starRading" id="google_overall_rating_stars"><span class="stars-container stars-<?php echo $overallRatingPercent; ?>">★★★★★</span></div>
+    </div>
+    <div class="autoslider mt-4">
+        <div class="owl-carousel mt-4" id="google-places">
+                <?php echo $googleReviewContent ?>
+        </div>  
+    </div>
+</section>
+
+

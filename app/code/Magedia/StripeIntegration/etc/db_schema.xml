@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package GeoIP Data for Magento 2 (System)
+*/-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="magedia_stripe_subscriptions">
+        <column xsi:type="smallint" name="entity_id" identity="true" nullable="false" unsigned="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="customer_email" nullable="true" comment="CustomerEmail"/>
+        <column xsi:type="varchar" name="order_increment_id" nullable="true" comment="Order Increment ID"/>
+        <column xsi:type="int" name="amount" nullable="true" comment="Order Total Amount"/>
+        <column xsi:type="varchar" name="currency" nullable="true" comment="Amount Currency"/>
+        <column xsi:type="varchar" name="stripe_payment_method" nullable="true" comment="Stripe Payment Method"/>
+        <column xsi:type="varchar" name="stripe_customer_id" nullable="true" comment="Stripe Customer Id"/>
+        <column xsi:type="varchar" name="stripe_payment_intent" nullable="true" comment="Stripe Payment Intent"/>
+        <column xsi:type="int" name="usually_payment" nullable="true" comment="Stripe Recurring Payment"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="magedia_stripe_products">
+        <column xsi:type="smallint" name="entity_id" identity="true" nullable="false" unsigned="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="stripe_product_id" nullable="true" comment="Stripe Product ID"/>
+        <column xsi:type="varchar" name="stripe_true_id" nullable="true" comment="Stripe True Product ID"/>
+        <column xsi:type="varchar" name="price" nullable="true" comment="Stripe Product Price ID"/>
+        <column xsi:type="varchar" name="currency" nullable="true" comment="Stripe Product Currency"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="magedia_stripe_users">
+        <column xsi:type="smallint" name="entity_id" identity="true" nullable="false" unsigned="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="customer_email" nullable="true" comment="CustomerEmail"/>
+        <column xsi:type="varchar" name="stripe_customer_id" nullable="true" comment="Stripe Customer ID"/>
+        <column xsi:type="varchar" name="session" nullable="true" comment="Session"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

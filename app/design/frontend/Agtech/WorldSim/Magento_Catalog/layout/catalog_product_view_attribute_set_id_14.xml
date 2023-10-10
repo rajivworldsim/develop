@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+    	<attribute name="class" value="hide-price-section"/>
+		<referenceContainer name="page.wrapper"> 
+			<!-- <container name="sim-card-section" htmlTag="div" htmlClass="sim-card-section-nav mid-nav w-100" before="page-footer">
+				<block class="Magento\Framework\View\Element\Template" name="sim-card-section-tabs" before="-" template="Magento_Catalog::product/view/sim-card-section-tabs.phtml" />
+			</container> -->
+			<container name="price-selector-custom" htmlTag="div" htmlClass="addtariff w-100 pull-left mb-4" after="sim-card-section">
+				<block class="Magento\Framework\View\Element\Template" name="price.selector" before="-" template="Magento_Catalog::product/view/price-select-in-14.phtml" />
+			</container>
+			
+			<container name="custom-overview" htmlTag="div" htmlClass="overviewSim w-100 pull-left mb-0 mt-3" after="sim-card-section">
+				<block class="Magento\Catalog\Block\Product\View" name="custom.overview" before="-" template="Magento_Catalog::product/view/custom-overview.phtml" />
+			</container>
+			
+			<container name="national-tariff" htmlTag="div" htmlClass="nationalTariff roam w-100 pull-left mt-5 mb-5" after="custom.overview">
+				<block class="Magento\Catalog\Block\Product\View" name="national.tariff" before="-" template="Magento_Catalog::product/view/national_tariff.phtml" />
+			</container>
+			
+			<container name="international-tariff" htmlTag="div" htmlClass="sim-card-section simSection w-100 pull-left" after="national.tariff">
+				<block class="Magento\Catalog\Block\Product\View" name="international.tariff" before="-" template="Magento_Catalog::product/view/international_calling_tab.phtml" />
+			</container>
+			<referenceBlock name="international.tariff">
+	            <arguments>
+	               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+	            </arguments>
+	        </referenceBlock>
+			<container name="international-tariff-after-button" htmlTag="div" htmlClass="roam container d-none d-lg-block" after="international-tariff">
+				<block class="Magento\Catalog\Block\Product\View" name="international.tariff.after-button" before="-" template="Magento_Catalog::product/view/international_calling_tab_after_button.phtml" />
+			</container>
+			
+			<container name="whats_included" htmlTag="div" htmlClass="product-detail-include w-100 pull-left mb-2" after="international.tariff">
+				<block class="Magento\Catalog\Block\Product\View" name="whats.included" before="-" template="Magento_Catalog::product/view/whats_included.phtml" />
+			</container>
+			
+			<container name="features" htmlTag="div" htmlClass="featuresSim inlude-feature w-100 mt-4 mb-0 pull-left" htmlId="features" after="content.slider">
+                <block class="Magento\Catalog\Block\Product\View" name="features.bottom" before="-" template="Magento_Catalog::product/view/features.phtml" />
+            </container>
+			
+			<container name="consumption_block" htmlTag="div" htmlClass="simCardslider consum w-100 pull-left mb-5 mt-5" after="features">
+				<block class="Magento\Catalog\Block\Product\View" name="consumption" before="-" template="Magento_Catalog::product/view/data-consumption.phtml" />
+			</container>
+			
+			<container name="content_slider" htmlTag="div" htmlClass="simCardslider roam-number w-100 pull-left mt-5" after="whats.included">
+				<block class="Magento\Catalog\Block\Product\View" name="content.slider" before="-" template="Magento_Catalog::product/view/content_slider_one.phtml" />
+			</container>
+			
+			<container name="content_faq" htmlTag="div" htmlClass="overviewSim w-100 pull-left mb-2 mt-5" after="features.bottom">
+				<block class="Magento\Catalog\Block\Product\View" name="content.faq" before="-" template="Magento_Catalog::product/view/faq.phtml" /> 
+			</container>
+			
+			<container name="content_slider_two" htmlTag="div" htmlClass="simCardslider outer-slider-disk w-100 pull-left mb-5 mt-5" after="content.faq">
+				<block class="Magento\Catalog\Block\Product\View" name="content.slider.two" before="-" template="Magento_Catalog::product/view/content_slider_two.phtml" />
+			</container>
+			
+			<container name="content_upsell" htmlTag="div" htmlClass="upsell-product container" after="content_slider_two">
+				
+			</container>
+			
+			<block class="Magento\Framework\View\Element\Template" name="googlereview" template="Agtech_CmsBlocks::google_reviews.phtml"/>
+			<referenceBlock name="googlereview">
+	            <arguments>
+	               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+	            </arguments>
+	        </referenceBlock>
+			<block class="Magento\Cms\Block\Block" name="blog_slider_bottom">
+				<arguments>
+					<argument name="block_id" xsi:type="string">blog_slider_bottom</argument>
+				</arguments>
+			
+			</block>
+		</referenceContainer>
+		<move element="product.info.upsell" destination="content_upsell" after="content_slider_two"/>
+	
+		
+    </body>
+</page>

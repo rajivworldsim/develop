@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * This XML file defines a template in footer to apply addition js for the Ascure AweberSubscription module.
+ *
+ * @category    Ascure
+ * @package     Ascure_AweberSubscription
+ * @author      www.ascuretech.com
+ * @copyright   Copyright (c) www.ascuretech.com. All rights reserved.
+ * @license     https://www.ascuretech.com/license.html
+*/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="footer">
+            <block class="Magento\Framework\View\Element\Template" name="aweber_footer" template="Ascure_AweberSubscription::aweber_footer.phtml" ifconfig="ascure_awebersubscription/general/enabled"/>
+        </referenceBlock>
+    </body>
+</page>

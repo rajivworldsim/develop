@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="worldsim_uksim_rates_from_new" resource="default" engine="innodb" comment="Worldsim Uksim Rates From New">
+        <column xsi:type="int" identity="true" name="entity_id" padding="10" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="id" padding="10"  nullable="false" comment="Id"/>
+        <column xsi:type="varchar" name="country" nullable="false" length="255" comment="Country"/>
+        <column xsi:type="varchar" name="operator" nullable="true" length="255" comment="Operator"/>
+        <column xsi:type="decimal" name="incoming" default="0" precision="20" scale="4" comment="Incoming"/>
+        <column xsi:type="decimal" name="outgoing" default="0" precision="20" scale="4" comment="outgoing"/>
+        <column xsi:type="decimal" name="outgoing_bleg" default="0" precision="20" scale="4"  nullable="true" comment="Outgoing Bleg"/>
+        <column xsi:type="decimal" name="sms" default="0" precision="20" scale="4"  nullable="true" comment="SMS"/>
+        <column xsi:type="decimal" name="sms_bleg" default="0" precision="20" scale="4" nullable="true" comment="Sms Bleg"/>
+        <column xsi:type="decimal" name="data" default="0" precision="20" scale="4" nullable="true" comment="Data"/>
+        <column xsi:type="decimal" name="eu_bleg_discount" nullable="true" precision="20" scale="4" comment="Eu Bleg Discount"/>
+        <column xsi:type="varchar" name="recommended_profile" nullable="true" length="255" comment="Recommended Profile"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="worldsim_uksim_rates_to_new" resource="default" engine="innodb" comment="Worldsim Uksim Rates To New">
+        <column xsi:type="int" identity="true" name="entity_id" padding="10" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="id" padding="10"  nullable="false" comment="Id"/>
+        <column xsi:type="varchar" name="country" nullable="false" length="255" comment="Country"/>
+        <column xsi:type="decimal" name="rate" default="0" precision="20" scale="4" comment="Rate"/>
+        <column xsi:type="decimal" name="eu_bleg_discount" nullable="true" precision="20" scale="4" comment="Eu Bleg Discount"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="worldsim_virtual_number_rates" resource="default" engine="innodb" comment="Worldsim Virtual Rates">
+        <column xsi:type="int" identity="true" name="entity_id" padding="10" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="id" padding="10"  nullable="false" comment="Id"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255" comment="Type"/>
+        <column xsi:type="varchar" name="country_code" nullable="true" length="255" comment="Country Code"/>
+        <column xsi:type="varchar" name="country_name" nullable="true" length="255" comment="Country Name"/>
+        <column xsi:type="decimal" name="month1" default="0" precision="20" scale="4" nullable="true" comment="Month1"/>
+        <column xsi:type="decimal" name="month3" default="0" precision="20" scale="4" nullable="true" comment="Month3"/>
+        <column xsi:type="decimal" name="month6" default="0" precision="20" scale="4"  nullable="true" comment="Month6"/>
+        <column xsi:type="decimal" name="month12" default="0" precision="20" scale="4"  nullable="true" comment="Month12"/>
+        <column xsi:type="decimal" name="saving3" default="0" precision="20" scale="4" nullable="true" comment="Saving3"/>
+        <column xsi:type="decimal" name="saving6" default="0" precision="20" scale="4" nullable="true" comment="Saving6"/>
+        <column xsi:type="decimal" name="saving12" nullable="true" precision="20" scale="4" comment="Saving12"/>
+        <column xsi:type="int" name="active" padding="10"  nullable="false" comment="Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="worldsim_uksim_sms_to_new" resource="default" engine="innodb" comment="Worldsim Uksim Rates To New">
+        <column xsi:type="int" identity="true" name="entity_id" padding="10" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="id" padding="10"  nullable="false" comment="Id"/>
+        <column xsi:type="varchar" name="country" nullable="false" length="255" comment="Country"/>
+        <column xsi:type="decimal" name="rate" default="0" precision="20" scale="4" comment="Rate"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+     <table name="worldsim_google_reviews" resource="default" engine="innodb" comment="Worldsim Google review">
+        <column xsi:type="int" identity="true" name="entity_id" padding="10" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="id" padding="10"  nullable="false" comment="Id"/>
+        <column xsi:type="decimal" name="grating" default="0" precision="20" scale="2" comment="Grating"/>
+        <column xsi:type="decimal" name="grating_percent" default="0" precision="20" scale="2" comment="Grating Percent"/>
+        <column xsi:type="text" name="gcontent" nullable="false" comment="GContent"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

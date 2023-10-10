@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        'use strict';
+
+        $(document).ready(function () {
+            $("#mc-embedded-subscribe").click(function (event) {
+                event.preventDefault();
+                subscribeToAweber();
+            });
+        });
+
+        function subscribeToAweber() {
+            var name = $("#subscriber_name").val();
+            var email = $("#newsletter").val();
+            var country = $("#mce-country").val();
+
+            // Email validation regex pattern
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Check if email is blank or not in the correct format
+            if (!email || !emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                return; // Stop further execution
+            }
+
+            $.ajax({
+                url: '/ascure_awebersubscription/aweber/getsubscriber',
+                type: 'GET',
+                dataType: 'json',
+                data: { name: name, email: email, country: country },
+                showLoader: true,
+                success: function (response) {
+                    if (response.success) {
+                        alert('Success: ' + response.message);
+                        // You can add more logic here if needed
+                    } else {
+                        alert('Authentication failed: ' + response.message);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('An error occurred: ' + textStatus);
+                }
+            });
+        }
+    });
+
+    </script>

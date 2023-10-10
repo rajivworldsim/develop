@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="empty"/>
+    <referenceContainer name="page.wrapper">
+        <container name="header.container" as="header_container" label="Page Header Container" htmlTag="header" htmlClass="page-header" before="main.content"/>
+        <container name="page.top" as="page_top" label="After Page Header" after="header.container"/>
+        <container name="footer-container" as="footer" before="before.body.end" label="Page Footer Container" htmlTag="footer" htmlClass="page-footer"/>
+    </referenceContainer>
+	<referenceContainer name="page.wrapper">
+		<block class="Magento\Cms\Block\Block" name="reduce_roaming">
+			<arguments>
+				<argument name="block_id" xsi:type="string">reduce_roaming</argument>
+			</arguments>
+		</block>
+		<block class="Magento\Framework\View\Element\Template" name="tarrif" template="Agtech_CmsBlocks::tariff_widget.phtml"/> 
+	 	<referenceBlock name="tarrif">
+            <arguments>
+               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+            </arguments>
+        </referenceBlock>
+		<block class="Magento\Cms\Block\Block" name="brand_logo">
+			<arguments>
+				<argument name="block_id" xsi:type="string">brand_logo</argument>
+			</arguments>
+		</block>
+		<block class="Magento\Cms\Block\Block" name="bestseller_products">
+			<arguments>
+				<argument name="block_id" xsi:type="string">bestseller_products</argument>
+			</arguments>
+		</block>
+		<block class="Magento\Framework\View\Element\Template" name="googlereview" template="Agtech_CmsBlocks::google_reviews.phtml"/>
+		<referenceBlock name="googlereview">
+            <arguments>
+               <argument name="viewModel" xsi:type="object">Agtech\CmsBlocks\ViewModel\TarrifWidget</argument>
+            </arguments>
+        </referenceBlock>
+		<block class="Magento\Cms\Block\Block" name="blog_slider_bottom">
+			<arguments>
+				<argument name="block_id" xsi:type="string">blog_slider_bottom</argument>
+			</arguments>
+		</block>
+	</referenceContainer>	
+	<referenceContainer name="main.content" htmlTag="main" htmlClass="page-main-full-width" />
+
+</layout>

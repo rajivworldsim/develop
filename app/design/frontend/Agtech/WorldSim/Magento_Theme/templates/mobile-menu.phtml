@@ -1,0 +1,219 @@
+<?php 
+$baseUrl = $block->getBaseUrl();
+$isMobile = false;
+// Check if viewport width is below 768 pixels
+if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i', $_SERVER['HTTP_USER_AGENT'])) {
+    $isMobile = true;
+}
+?>
+<?php echo $block->getChildHtml('currency_mobile'); ?>
+<nav class="d-flex custom-menu-mobile  justify-content-end">
+    <a href="javascript:;" class="showMenu d-block d-lg-none"><span></span></a>
+    <div class="navication">
+        <div class="mobiletitle d-block d-lg-none">
+            <div class="Mobilelogo d-flex justify-content-between align-items-center">
+                <a href="<?php echo $baseUrl; ?>sale" title="Sale">SALES</a>
+                <a class="mobile-topup" href="<?php echo $baseUrl; ?>top-up" class="top-up" title="Top Up">Top Up/Bundles</a>
+                <a href="javascript:;" class="closeNav"><img src="<?php echo $this->getViewFileUrl('images/crossIcon.svg'); ?>" width="20" height="20"></a>
+            </div>
+        </div>
+        <?php if ($isMobile): ?>
+            <?php echo $block->getChildHtml('topSearchMobile'); ?>
+        <?php endif; ?>
+        <ul>
+            <li><a href="javascript:;" title="International eSIM">eSIM</a>
+                <div class="navDropdown">
+                    <ul>
+                        <li><a href="<?php echo $baseUrl; ?>international-esim-card" title="International eSIM">eSIM Pro (Voice SMS Data)</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>data-esim" title="eSIM Data Bundles">eSIM Connect (Data Only)</a></li>
+                    </ul> 
+                </div>
+            </li>
+            <li><a href="javascript:;" title="SIM Cards">SIM Cards </a>
+                <div class="navDropdown">
+                    <ul>
+                        <li><a href="<?php echo $baseUrl; ?>international-sim-card" title="International SIM card">International SIM card</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>data-sim-card" title="Data Roaming SIM card">Data Roaming SIM card</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>virtual-phone-number" title="Virtual Numbers">Virtual Numbers</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>uk-sim-card" title="UK SIM card">UK SIM card</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>qatar-visitor-sim-card" title="Qatar Visiotor SIM card">Qatar SIM card</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>usa-sim-card" title="USA SIM card">USA SIM card</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>international-esim-card" title="International eSIM">E-SIM</a></li>
+                    </ul> 
+                </div>
+            </li>
+            
+            <li><a href="javascript:;" title="Portable WiFi">Portable WiFi </a>
+                <div class="navDropdown">
+                    
+                    <ul>
+                        <li><a href="<?php echo $baseUrl; ?>portable-wifi" title="All Portable WiFi">All Portable WiFi</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>portable-wifi/huawei" title="Huawei">Huawei</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>portable-wifi/zte" title="ZTE">ZTE</a></li> 
+                    </ul> 
+                </div>
+            </li>
+            
+            <!--<li><a href="<?php echo $baseUrl; ?>"  title="PPE Gear">PPE Gear </a>
+                <div class="navDropdown">
+                 
+                    <ul>
+                       <li><a href="<?php echo $baseUrl; ?>ppe-gear/face-masks" title="Face Masks">Face Masks</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>ppe-gear/face-shields-goggles" title="Face Shields &amp; Goggles">Face Shields &amp; Goggles</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>ppe-gear/health-technology" title="Health Technology">Health Technology</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>ppe-gear/covid-test-kits" title="COVID Test Kits">COVID Test Kits</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>ppe-gear/safety-gloves" title="Gloves, Aprons &amp; Gowns">Gloves, Aprons &amp; Gowns</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>ppe-gear/sanitizers-cleaners" title="Sanitizers, Cleaners and Disinfectants">Sanitizers and Disinfectants</a></li>
+                    </ul> 
+                </div>
+            </li>
+            <li><a href="<?php echo $baseUrl; ?>data-bundles" title="Mobiles">Bundles</a></li>
+            <li class="hidden-sm"><a href="<?php echo $baseUrl; ?>top-up" title="Top Up/Recharge">Top Up</a></li>-->
+            <li class="first-nav"><a href="javascript:;" title="Travel Essentials">Travel Essentials </a>
+                <!--dropdown start here-->
+                <div class="navDropdown">
+                    <div class="row">
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+                                 <a href="<?php echo $baseUrl; ?>international-sim-cards" title="International SIM Cards">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" class="img1" alt="International SIM Cards" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>international-sim-cards" title="International SIM Cards">International SIM Cards</a></div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>portable-wifi" title="Portable WiFi">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" class="img2" alt="Portable WiFi" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>portable-wifi" title="Portable WiFi">Portable WiFi</a></div>
+
+                            </div>
+                        </div> 
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>dual-sim-phones" title="Phones & Tablets">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" alt="Phones & Tablets" class="img3" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>dual-sim-phones" title="Phones & Tablets">Phones &amp; Tablets</a></div>
+
+                            </div>
+                        </div>   
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>latest-products" title="New">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" alt="New" class="img4" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>latest-products" title="New">New</a></div>
+
+                            </div>
+                        </div>  
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>smart-watches" title="Smart Watches">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" alt="Smart Watches" class="img5" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>smart-watches" title="Smart Watches">Smart Watches</a></div>
+
+                            </div>
+                        </div>                                                
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>travel-accessories" title="Travel Accessories">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" class="img6" alt="Travel Accessories" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>travel-accessories" title="International SIM Cards">Travel Accessories</a></div>
+
+                            </div>
+                        </div> 
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>ppe-gear" title="PPE Gears">
+                                    <img src="https://www.worldsim.com/media/catalog/product/b/l/blue_ffp2_head_loop_1.jpg" alt="PPE Gears" style="object-fit:unset;" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>ppe-gear" title="PPE Gears">PPE Gears </a></div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-12">
+                            <div class="dorpDownList">
+
+                                <a href="<?php echo $baseUrl; ?>sale" title="WorldSIM Sale">
+                                    <img src="<?php echo $this->getViewFileUrl('images/sprite.png'); ?>" alt="Sale" class="img8" width="120" height="120" />
+                                </a>
+                                <div class="title"><a href="<?php echo $baseUrl; ?>sale" title="Sale">Sale</a></div>
+
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <!--dropdown start here-->
+            </li>
+            <li><a href="javascript:;" title="Business">Partner with Us</a>
+                <div class="navDropdown">                                    
+                    <ul>
+                        <!--<li><a href="<?php echo $baseUrl; ?>international-sim-card" title="Roaming Solutions">Roaming Solutions</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>data-sim-card" title="Data Roaming Solutions">Data Roaming Solutions</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>business-travel-gadgets" title="Business Travel Gadgets">Business Travel Gadgets</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>m2m" title="Nokia">WorldSIM M2M SIM</a></li>
+                        <li><a href="<?php echo $baseUrl; ?>strongest-signal-sim" title="Motorola">Strongest Signal SIM</a></li>-->
+                        <li><a href="<?php echo $baseUrl; ?>partnership-opportunities" title="Partnership Opportunities">Partnership Opportunities</a></li>
+                        <li><a href="https://accounts.worldsim.com/agent/login.aspx" title="Agent Login">Agent Login</a></li>
+                        <li><a href="https://accounts.worldsim.com/agent/register.aspx" title="Agent Register">AgentRegister</a></li>
+                    </ul> 
+                </div>
+            </li>
+            <li class="hidden-sm"><a href="<?php echo $baseUrl; ?>top-up" title="Top Up/Bundles">Top Up/Bundles</a></li>
+        </ul>
+        <div class="d-md-none mobileLogin">
+            <ul>
+                
+                <li><a href="https://accounts.worldsim.com/DID/MyAccount.aspx" ><img src="<?php echo $this->getViewFileUrl('images/loginIcon.jpg'); ?>" alt="Login" class="mr-2" width="24">My Account</a>
+                   
+                <li><a href="<?php echo $baseUrl; ?>faqs" title="Get Help"><img src="<?php echo $this->getViewFileUrl('images/get-help-icon.jpg'); ?>" alt="Get Help" class="mr-2" width="24">Get Help</a></li>
+                <li><a href="https://accounts.worldsim.com/support/ticket_nc_new.aspx" title="Contact Us"><img src="<?php echo $this->getViewFileUrl('images/contact-icon.jpg'); ?>" alt="Contact Us" class="mr-2" width="24">Contact Us</a></li>
+                <li><a href="<?php echo $baseUrl; ?>live-chat" title="Get Help"><img src="<?php echo $this->getViewFileUrl('images/get-help-icon.jpg'); ?>" alt="Chat with us" class="mr-2" width="24">Live Chat</a></li>
+            </ul>
+        </div>
+         
+    </div>
+</nav>
+
+<style type="text/css">
+    .mobile-topup{
+        color: #fff !important;
+        padding: 5px 10px;
+        background-color: #6fbc00;
+        border-radius: 5px 5px;
+    }
+    
+    header#ammenu-header-container{
+        position: fixed;
+        z-index: 1030;
+        background-color: #fff;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+    
+    .reduce-box .hicon:hover{
+        color: white;
+        padding: 4px;
+        box-shadow: 0 5px 15px #afe0f5;
+    }
+    
+    @media (max-width: 767px){
+		.catalog-product-view .page-title {
+			margin-top: 30px !important;
+		}	
+	}
+    
+</style>

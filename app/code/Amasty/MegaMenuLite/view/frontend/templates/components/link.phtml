@@ -1,0 +1,61 @@
+<?php
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package Mega Menu Core Base for Magento 2
+*/
+?>
+<?php
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$item = $block->getData('item');
+$isIconsAvailable = $block->getData('isIconsAvailable');
+?>
+
+<a if="item.isVisible"
+   class="ammenu-link"
+   style="font-weight: <?= $escaper->escapeHtmlAttr($item['desktop_font'] ?? '') ?>; <?php if($item['name'] == 'Top Up'){?> margin-right: 30px; <?php } ?>"
+   data-bind="
+        event: item.isInteractive ? {
+            mouseenter: onMouseenter,
+            keypress: onMouseenter,
+            mouseleave: onMouseleave
+        } : false,
+        style: {
+            'color': item.color() ? item.color() : '',
+            'background': item.backgroundColor() ? item.backgroundColor() : ''
+        },
+        attr: {
+            href: item.url ? item.url : 'javascript:void(0)',
+            tabindex: item.isInteractive ? '0' : '-1',
+            role: !item.isInteractive ? 'heading' : false
+        },
+        css: {
+            '-current': item.current,
+            '-disabled': !item.isInteractive
+        }">
+    <?php if ($isIconsAvailable): ?>
+        <?= /* @noEscape */ $block->getChildBlock('ammenu.top.menu.icon')->setData('item', $item)->toHtml() ?>
+    <?php endif; ?>
+
+    <p class="ammenu-text-block">
+        <span class="ammenu-text" <?php if($item['name'] == 'Top Up'){?> style="background-color:#6fbc00; color: #fff; padding: 5px 10px; border-radius: 5px;" <?php } ?>><?= $escaper->escapeHtml($item['name']) ?></span>
+        <?php if (isset($item['label'])): ?>
+            <span class="ammenu-label"
+                  style="
+                      background: <?= $escaper->escapeHtmlAttr($item['label']['label_background_color'] ?? '') ?>;
+                      color: <?= $escaper->escapeHtmlAttr($item['label']['label_text_color'] ?? '') ?>;">
+                <?= $escaper->escapeHtml($item['label']['label'] ?? '') ?>
+            </span>
+        <?php endif; ?>
+   </p>
+</a>
+
+<style type="text/css">
+.ammenu-nav-sections.-topmenu .ammenu-main-container,.ammenu-header-container .header.content .minicart-wrapper {
+    padding: 10px 0px 16px;
+}
+</style>

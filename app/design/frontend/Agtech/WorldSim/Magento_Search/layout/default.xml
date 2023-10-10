@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="top.search" remove="true"/>
+		<referenceContainer name="sidebar.additional">
+			<block class="Magento\Framework\View\Element\Template" name="newproduct_sidebar" template="Magento_Catalog::product/new_product.phtml" before="-"> 
+			</block>
+			<block class="Magento\Cms\Block\Block" name="category_blog">
+			<arguments>
+				<argument name="block_id" xsi:type="string">category_blog</argument>
+			</arguments>
+			</block>
+		
+		</referenceContainer>
+    </body>
+</page>

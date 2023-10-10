@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+	<event name="sales_order_payment_save_before">
+      <observer name="check_data_order_place_before" instance="Agtech\Checkauto\Observer\OrderPlacebefore"/>
+   	</event>
+
+    <event name="catalog_product_load_after">
+        <observer name="set_additional_options" instance="Agtech\Checkauto\Observer\SetAdditionalOptions"/>
+    </event>
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="save_check_data_order_place_before" instance="Agtech\Checkauto\Observer\SaveToOrder" />
+    </event>
+</config>

@@ -1,0 +1,32 @@
+<?php
+$_productCollection = $this->getProductCollection();
+$upperLimit = 10;
+?>
+
+<div class="homeWorldListing best-selling w-100 pull-left mb-5">
+        <h3 class="text-center mb-5 heading">WorldSIM's choice and best selling products</h3>
+        <div class="owl-carousel  mt-4">
+            <?php
+                $x = 1;
+                foreach($_productCollection as $product){
+                    $_product = $product->getData();
+                    if(!$_product){
+                        continue;
+                    }
+                    if($x <= $upperLimit)  { ?>
+                    <div class="item text-center">
+                        <a href="<?php echo $product->getProductUrl();//echo $this->getBaseUrl().$_product['url_path']; ?>" title="<?php echo $_product['name']; ?>"> <img src="<?php echo $this->getProductImageUrl($product); ?>" alt="<?php echo $_product['name']; ?>" />
+                            <p><?php echo $_product['name']; ?></p>
+                            <!--<p><?php //if($this->getProductsPrice()) {
+								//$_product = Mage::getModel('catalog/product')->load($_product->getId());
+								//echo $this->getPriceHtml($_product, true); 
+							//} ?></p>-->
+                        </a>
+                    </div>
+                    <?php
+                    }
+                    $x++;
+                } 
+            ?>
+        </div>
+    </div>

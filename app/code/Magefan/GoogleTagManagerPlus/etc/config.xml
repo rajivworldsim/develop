@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mfgoogletagmanager>
+            <general>
+                <mfmodule>GoogleTagManagerPlus</mfmodule>
+                <mftype>0</mftype>
+            </general>
+            <ads>
+                <enable>0</enable>
+                <purchase>
+                    <conversion_id/>
+                    <conversion_label/>
+                </purchase>
+            </ads>
+            <remarketing>
+                <enable>0</enable>
+                <conversion_id/>
+                <conversion_label/>
+            </remarketing>
+        </mfgoogletagmanager>
+    </default>
+</config>

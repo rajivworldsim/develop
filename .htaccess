@@ -1,0 +1,434 @@
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} (YaK) [NC]
+RewriteRule .* - [R=403,L]
+
+deny from 46.101.25.134 
+## EXPIRES CACHING ##
+<IfModule mod_expires.c>
+ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+	ExpiresByType image/jpg "access plus 1 year"
+	ExpiresByType image/jpeg "access plus 1 year"
+	ExpiresByType image/gif "access plus 1 year"
+	ExpiresByType image/png "access plus 1 year"
+	ExpiresByType text/css "access plus 1 month"
+	ExpiresByType application/pdf "access plus 1 month"
+	ExpiresByType text/x-javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+	ExpiresByType application/x-shockwave-flash "access plus 1 month"
+	ExpiresByType image/x-icon "access plus 1 year"
+	ExpiresDefault "access plus 2 days"
+</IfModule>
+## EXPIRES CACHING ##
+# Enable Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+  AddOutputFilterByType DEFLATE application/x-font
+  AddOutputFilterByType DEFLATE application/x-font-opentype
+  AddOutputFilterByType DEFLATE application/x-font-otf
+  AddOutputFilterByType DEFLATE application/x-font-truetype
+  AddOutputFilterByType DEFLATE application/x-font-ttf
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE font/opentype
+  AddOutputFilterByType DEFLATE font/otf
+  AddOutputFilterByType DEFLATE font/ttf
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/x-icon
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE text/plain
+</IfModule>
+<IfModule mod_gzip.c>
+  mod_gzip_on Yes
+  mod_gzip_dechunk Yes
+  mod_gzip_item_include file .(html?|txt|css|js|php|pl)$
+  mod_gzip_item_include handler ^cgi-script$
+  mod_gzip_item_include mime ^text/.*
+  mod_gzip_item_include mime ^application/x-javascript.*
+  mod_gzip_item_exclude mime ^image/.*
+  mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</IfModule>
+
+
+# ----------------------------------------------------------------------
+# CORS-enabled images (@crossorigin)
+# ----------------------------------------------------------------------
+# Send CORS headers if browsers request them; enabled by default for images.
+# developer.mozilla.org/en/CORS_Enabled_Image
+# blog.chromium.org/2011/07/using-cross-domain-images-in-webgl-and.html
+# hacks.mozilla.org/2011/11/using-cors-to-load-webgl-textures-from-cross-domain-images/
+# wiki.mozilla.org/Security/Reviews/crossoriginAttribute
+<IfModule mod_setenvif.c>
+  <IfModule mod_headers.c>
+    # mod_headers, y u no match by Content-Type?!
+    <FilesMatch "\.(gif|png|jpe?g|svg|svgz|ico|webp)$">
+      SetEnvIf Origin ":" IS_CORS
+      Header set Access-Control-Allow-Origin "*" env=IS_CORS
+    </FilesMatch>
+  </IfModule>
+</IfModule>
+# ----------------------------------------------------------------------
+# Webfont access
+# ----------------------------------------------------------------------
+# Allow access from all domains for webfonts.
+# Alternatively you could only whitelist your
+# subdomains like "subdomain.example.com".
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css|js)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
+
+
+# Leverage browser caching using mod_headers #
+<IfModule mod_headers.c>
+	<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+		Header set Expires "Wed, 15 Apr 2020 20:00:00 GMT"
+		Header set Cache-Control "public"
+	</FilesMatch>
+</IfModule>
+# End of Leverage browser caching using mod_headers #
+
+RewriteEngine on
+
+RewriteCond %{QUERY_STRING} ^currency=    
+RewriteRule ^ %{REQUEST_URI} [QSD,R=301,L,NE]
+
+RewriteCond %{QUERY_STRING} ^___store=    
+RewriteRule ^ %{REQUEST_URI} [QSD,R=301,L,NE]
+
+RewriteCond %{REQUEST_URI} !^/pub/
+RewriteCond %{REQUEST_URI} !^/setup/
+RewriteCond %{REQUEST_URI} !^/update/
+RewriteCond %{REQUEST_URI} !^/dev/
+RewriteRule .* /pub/$0 [L]
+DirectoryIndex index.php
+
+RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,NE,L]
+
+
+<IfModule mod_php5.c>
+
+############################################
+## adjust memory limit
+
+#    php_value memory_limit 64M
+    php_value memory_limit 256M
+    php_value max_execution_time 18000
+
+############################################
+## disable magic quotes for php request vars
+
+    php_flag magic_quotes_gpc off
+
+############################################
+## disable automatic session start
+## before autoload was initialized
+
+    php_flag session.auto_start off
+
+############################################
+## enable resulting html compression
+
+    #php_flag zlib.output_compression on
+
+###########################################
+# disable user agent verification to not break multiple image upload
+
+    php_flag suhosin.session.cryptua off
+
+###########################################
+# turn off compatibility with PHP4 when dealing with objects
+
+    php_flag zend.ze1_compatibility_mode Off
+
+</IfModule>
+
+<IfModule mod_security.c>
+###########################################
+# disable POST processing to not break multiple image upload
+
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
+
+<IfModule mod_deflate.c>
+
+############################################
+## enable apache served files compression
+## http://developer.yahoo.com/performance/rules.html#gzip
+
+    # Insert filter on all content
+    SetOutputFilter DEFLATE
+    # Insert filter on selected content types only
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript 
+
+    # Netscape 4.x has some problems...
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+
+    # Netscape 4.06-4.08 have some more problems
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+
+    # MSIE masquerades as Netscape, but it is fine
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+    # Don't compress images
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+
+    # Make sure proxies don't deliver the wrong content
+    Header append Vary User-Agent env=!dont-vary
+
+</IfModule>
+
+<IfModule mod_ssl.c>
+
+############################################
+## make HTTPS env vars available for CGI mode
+
+    SSLOptions StdEnvVars
+
+</IfModule>
+
+<IfModule mod_rewrite.c>
+
+############################################
+
+## Add default Expires header
+## http://developer.yahoo.com/performance/rules.html#expires
+
+    ExpiresDefault "access plus 1 year"
+
+</IfModule>
+
+############################################
+
+################################################
+##  301 Redirects
+##  sh_edited
+
+Redirect 301	/onestepcheckout/index	https://www.worldsim.com/fastcheck
+Redirect 301	/onestepcheckout    https://www.worldsim.com/fastcheck
+Redirect 301	/Default.aspx   https://www.worldsim.com/
+
+Redirect 301	/top-up.html   https://www.worldsim.com/top-up
+
+Redirect 301	/data-roaming-solutions   https://www.worldsim.com/data-sim-card
+Redirect 301	/business-roaming-solutions   https://www.worldsim.com/international-sim-card
+
+Redirect 301	/faqs/sim-faqs  https://www.worldsim.com/faqs
+Redirect 301	/faqs/product-faqs  https://www.worldsim.com/faqs
+Redirect 301	/faqs/general-faqs  https://www.worldsim.com/faqs
+
+Redirect 301	/android-phone/	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/dual-sim-android	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/android-tablet https://www.worldsim.com/dual-sim-phones
+
+Redirect 301	/vietnam-sim-card https://www.worldsim.com/international-sim-card
+Redirect 301	/south-african-sim-card https://www.worldsim.com/international-sim-card
+Redirect 301	/thailand-sim-card  https://www.worldsim.com/international-sim-card
+Redirect 301	/russia-sim-card    https://www.worldsim.com/international-sim-card
+Redirect 301	/malaysia-sim-card  https://www.worldsim.com/international-sim-card
+Redirect 301	/asia-sim-card  https://www.worldsim.com/international-sim-card
+Redirect 301	/international-calling-cards    https://www.worldsim.com/international-sim-card
+
+Redirect 301	/international-roaming-tariffs  "https://www.worldsim.com/international-sim-card#rates"
+Redirect 301	/uk-sim-tariffs  "https://www.worldsim.com/uk-sim-card#rates"
+
+Redirect 301    /customer/account https://accounts.worldsim.com/Customer/Login.aspx
+
+
+Redirect 301    /underwater-action-camera   https://www.worldsim.com/travel-essentials
+Redirect 301    /bluetooth-speaker  https://www.worldsim.com/travel-essentials
+Redirect 301    /oneplus-5-a5000-4g-dual-sim-android-phone  https://www.worldsim.com/dual-sim-phones
+Redirect 301	/360-degree-android-camera	https://www.worldsim.com/travel-essentials
+Redirect 301	/360-degree-camera	https://www.worldsim.com/travel-essentials
+Redirect 301	/360-degree-iphone-camera	https://www.worldsim.com/travel-essentials
+Redirect 301	/alcatel-one-touch-android-tablet	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/avenger-4g-dual-sim-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/bang-olufsen-a8-earphones	https://www.worldsim.com/travel-essentials
+Redirect 301	/bang-olufsen-beoplay-h3-anc-earphones	https://www.worldsim.com/travel-essentials
+Redirect 301	/bang-olufsen-beoplay-h3-earphones	https://www.worldsim.com/travel-essentials
+Redirect 301	/cat-s30-4g-dual-sim-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/dual-sim-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/dual-sim-phones-energy-400	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/e500-3g-dual-sim-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/e550-4g-dual-sim-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/gps-tracker	https://www.worldsim.com/travel-essentials
+Redirect 301	/iphone-dual-sim-adapter	https://www.worldsim.com/travel-essentials
+Redirect 301	/life-8-4g-dual-sim-android	https://www.worldsim.com/travel-essentials
+Redirect 301	/micro-sd-card-reader	https://www.worldsim.com/travel-essentials
+Redirect 301	/mi-smart-bracelet	https://www.worldsim.com/travel-essentials
+Redirect 301	/moto-g4-4g-dual-sim-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/nigma-smart-watch	https://www.worldsim.com/travel-essentials
+Redirect 301	/noise-cancelling-earphones	https://www.worldsim.com/travel-essentials
+Redirect 301	/noise-cancelling-headphones	https://www.worldsim.com/travel-essentials
+Redirect 301	/stk-life-5-dual-sim-phone-3g	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/storm-3-stk-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/sync-5z-stk-3g-dual-sim-android-phone	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/transporter-1-3g-dual-sim-android-phone	https://www.worldsim.com/travel-essentials
+Redirect 301	/virtual-reality-glasses	https://www.worldsim.com/travel-essentials
+Redirect 301	/wearable-camera	https://www.worldsim.com/travel-essentials
+Redirect 301	/wireless-keyboard	https://www.worldsim.com/travel-essentials
+Redirect 301	/wireless-phone-charger-android-ios	https://www.worldsim.com/travel-essentials
+Redirect 301	/xiaomi-a2-lite	https://www.worldsim.com/dual-sim-phones
+Redirect 301	/xiaomi-redmi-note-5-32gb	https://www.worldsim.com/dual-sim-phones
+
+#Redirect 301	/usa-sim-card	https://www.worldsim.com/international-sim-card
+Redirect 301	/europe-sim-card	https://www.worldsim.com/international-sim-card
+
+Redirect 301	/kn95-disposable-face-masks-10	https://www.worldsim.com/kn95-disposable-earloop-face-masks
+Redirect 301	/kn95-disposable-face-masks-5	https://www.worldsim.com/kn95-disposable-earloop-face-masks
+Redirect 301	/kn95-disposable-face-masks	https://www.worldsim.com/kn95-disposable-earloop-face-masks
+
+Redirect 301	/terms-of-use	https://www.worldsim.com/terms-of-service
+
+Redirect 301	/3g-international-dual-sim-android-phone    https://www.worldsim.com/dual-sim-phones
+Redirect 301	/moto-g5-4g-dual-sim-android-phone  https://www.worldsim.com/dual-sim-phones
+Redirect 301	/huawei-wifi-extender   https://www.worldsim.com/portable-wifi
+Redirect 301	/data-storage-usb-flash-drive https://www.worldsim.com/travel-essentials
+Redirect 301	/gaming-headset https://www.worldsim.com/travel-essentials
+Redirect 301	/fitness-watch  https://www.worldsim.com/dual-sim-phones
+#Redirect 301	/portable-bluetooth-speaker https://www.worldsim.com/travel-essentials
+Redirect 301	/m-phone-xl-dual-sim-phone  https://www.worldsim.com/dual-sim-phones
+Redirect 301	/data-storage-usb-flash-drive https://www.worldsim.com/travel-essentials
+Redirect 301	/life-7-4g-dual-sim-android https://www.worldsim.com/dual-sim-phones
+
+##11-May-2021 redirects
+Redirect 301 	/4k-14mp-action-camera	https://www.worldsim.com/cameras
+Redirect 301 	/4k-16mp-action-camera	https://www.worldsim.com/cameras
+Redirect 301 	/bluetooth/alcatel-3-dual-sim-phone-120	https://www.worldsim.com/dual-sim-phones?&product_features=62
+Redirect 301 	/bluetooth/wireless-earbuds-176	https://www.worldsim.com/travel-essentials
+Redirect 301 	/business-travel-gadgets/wireless-earbuds-176	https://www.worldsim.com/travel-essentials
+Redirect 301 	/business/business-travel-gadgets	https://www.worldsim.com/business-travel-gadgets
+Redirect 301 	"/data-sim-card/&#39;"	https://www.worldsim.com/data-sim-card/
+Redirect 301 	/dual-sim-phones/alcatel-3-dual-sim-phone-120	https://www.worldsim.com/dual-sim-phones?&product_features=62
+Redirect 301 	/iphone-slimline-dual-sim-adapter	https://www.worldsim.com/travel-essentials
+Redirect 301 	/krome-smart-watch	https://www.worldsim.com/smart-watches
+Redirect 301 	/neuvo-smart-watch	https://www.worldsim.com/smart-watches
+Redirect 301 	/orchid-pro-t-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/phones-tablets	https://www.worldsim.com/dual-sim-phones
+Redirect 301 	/ppe-gear/disposable-protective-type-i-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/disposable-protective-type-ii-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/eavez-type-iir-disposable-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/disposable-protective-type-i-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/disposable-protective-type-ii-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/eavez-type-iir-disposable-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/kn95-disposable-face-masks-10	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/kn95-disposable-face-masks-5	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/kn95-disposable-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/orchid-blue-check-cotton-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/orchid-pro-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/orchid-pro-t-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/orchid-urbane-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/face-masks/type-iir-disposable-tie-back-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/hand-sanitizer-smart-spray-3x300-243	https://www.worldsim.com/ppe-gear/sanitizers-cleaners
+Redirect 301 	/ppe-gear/health-technology/mp-bio-covid-19-rapid-ncov-antigen-test-kit	https://www.worldsim.com/ppe-gear/health-technology
+Redirect 301 	/ppe-gear/kn95-disposable-face-masks-10	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/kn95-disposable-face-masks-5	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/kn95-disposable-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/mp-bio-covid-19-rapid-ncov-antigen-test-kit	https://www.worldsim.com/ppe-gear/health-technology
+Redirect 301 	/ppe-gear/nitrisoft-nitrile-examination-gloves-200	https://www.worldsim.com/ppe-gear/safety-gloves
+Redirect 301 	/ppe-gear/orchid-blue-check-cotton-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/orchid-pro-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/orchid-pro-t-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/orchid-urbane-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/ppe-gear/type-iir-disposable-tie-back-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/prodigy-smart-watch	https://www.worldsim.com/smart-watches
+Redirect 301 	/register	https://accounts.worldsim.com/Customer/Login.aspx
+Redirect 301 	/support/roamingpartners.aspx	https://accounts.worldsim.com/Customer/Login.aspx
+Redirect 301 	/travel-adapter	https://www.worldsim.com/travel-essentials
+Redirect 301 	/travel-essentials/alcatel-3-dual-sim-phone-120	https://www.worldsim.com/dual-sim-phones?&product_features=62
+Redirect 301 	/travel-essentials/data-roaming-travel-gadgets/wifi-hotspot	https://www.worldsim.com/portable-wifi
+Redirect 301 	/travel-essentials/disposable-protective-type-i-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/disposable-protective-type-ii-en14683-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/eavez-type-iir-disposable-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/hand-sanitizer-smart-spray-3x300-243	https://www.worldsim.com/ppe-gear/sanitizers-cleaners
+Redirect 301 	/travel-essentials/kn95-disposable-face-masks-10	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/kn95-disposable-face-masks-5	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/kn95-disposable-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/mp-bio-covid-19-rapid-ncov-antigen-test-kit	https://www.worldsim.com/ppe-gear/health-technology
+Redirect 301 	/travel-essentials/nitrisoft-nitrile-examination-gloves-200	https://www.worldsim.com/ppe-gear/safety-gloves
+Redirect 301 	/travel-essentials/orchid-blue-check-cotton-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/orchid-pro-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/orchid-pro-t-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/orchid-urbane-face-mask-1	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/type-iir-disposable-tie-back-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301 	/travel-essentials/wireless-earbuds-176	https://www.worldsim.com/travel-essentials
+Redirect 301 	/wifi-pass	https://www.worldsim.com/data-sim-card
+Redirect 301    "/{{store url=&#39;&#39;}}top-up"   https://www.worldsim.com/top-up
+Redirect 301    /new   https://www.worldsim.com/new.html
+#Redirect 301    /data-bundles	https://www.worldsim.com/top-up
+
+Redirect 301    "//{{store url=&#39;&#39;}}top-up"  https://www.worldsim.com/top-up
+Redirect 301    /blog/post/2013/08/16/turn-off-data-roaming.aspx    https://www.worldsim.com/blog/turn-off-data-roaming
+Redirect 301    /blog/post/2014/01/22/The-Cost-of-Using-Your-Phone-in-India.aspx    https://www.worldsim.com/blog/international-roaming-costs-india
+Redirect 301    /data-roaming/wireless-router.aspx  https://www.worldsim.com/portable-wifi
+Redirect 301    "/data-sim-card/&#39;"    https://www.worldsim.com/data-sim-card
+Redirect 301    /global-wifi    https://www.worldsim.com/portable-wifi
+Redirect 301    /ppe-gear/face-masks/wondo-disposable-face-masks    https://www.worldsim.com/wondo-type-iir-surgical-disposable-face-masks
+Redirect 301    /ppe-gear/invex-hand-sanitizer-gel-1    https://www.worldsim.com/invex-hand-sanitizer-gel-5
+Redirect 301    /ppe-gear/wondo-disposable-face-masks   https://www.worldsim.com/wondo-type-iir-surgical-disposable-face-masks
+Redirect 301    /travel-essentials/data-roaming-travel-gadgets  https://www.worldsim.com/portable-wifi
+Redirect 301    /travel-essentials/invex-hand-sanitizer-gel-1   https://www.worldsim.com/invex-hand-sanitizer-gel-5
+Redirect 301    /travel-essentials/wondo-disposable-face-masks  https://www.worldsim.com/wondo-type-iir-surgical-disposable-face-masks
+Redirect 301    /wireless-roaming-usb   https://www.worldsim.com/wireless-usb
+Redirect 301    /storm-4g-dual-sim-android-phone    https://www.worldsim.com/dual-sim-phones
+Redirect 301    /huawei https://www.worldsim.com/portable-wifi/huawei
+
+Redirect 301    /blog/ancient-world-wonders-aus	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-usa	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-sa	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-india	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-eu	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-global	https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/what-is-portable-wifi-router-usa	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-sa	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-india	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-global	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-eu	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-aus	https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-old	https://www.worldsim.com/blog/what-is-portable-wifi-router
+
+#Redirect 301    /portable-wifi/zte  https://www.worldsim.com/portable-wifi
+Redirect 301    /portable-wifi/tp-link  https://www.worldsim.com/portable-wifi
+
+Redirect 301    /latest-products/wireless-earbuds-176	https://www.worldsim.com/travel-accessories
+Redirect 301    /ppe-gear/3m-1860-n95-particulate-respirator-surgical-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /ppe-gear/3m-9105-particulate-respirator-n95-face-masks-25	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /ppe-gear/covid-test-kits/mp-bio-covid-19-rapid-ncov-antigen-test-kit	https://www.worldsim.com/ppe-gear/covid-test-kits
+Redirect 301    /ppe-gear/covid-test-kits/spring-covid-19-rapid-test-kit	https://www.worldsim.com/ppe-gear/covid-test-kits
+Redirect 301    /ppe-gear/face-masks/3m-1860-n95-particulate-respirator-surgical-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /ppe-gear/face-masks/3m-9105-particulate-respirator-n95-face-masks-25	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /ppe-gear/health-technology/spring-covid-19-rapid-test-kit	https://www.worldsim.com/ppe-gear/covid-test-kits
+Redirect 301    /ppe-gear/spring-covid-19-rapid-test-kit	https://www.worldsim.com/ppe-gear/covid-test-kits
+Redirect 301    /sale/hand-sanitizer-smart-spray-3x300-243	https://www.worldsim.com/ppe-gear/sanitizers-cleaners
+Redirect 301    /sale/invex-hand-sanitizer-gel-1	https://www.worldsim.com/ppe-gear/sanitizers-cleaners
+Redirect 301    /travel-accessories/type-iir-disposable-tie-back-medical-face-masks-50	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /travel-accessories/wireless-earbuds-176	https://www.worldsim.com/travel-accessories
+Redirect 301    /travel-essentials/3m-1860-n95-particulate-respirator-surgical-face-masks	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /travel-essentials/3m-9105-particulate-respirator-n95-face-masks-25	https://www.worldsim.com/ppe-gear/face-masks
+Redirect 301    /travel-essentials/spring-covid-19-rapid-test-kit	https://www.worldsim.com/ppe-gear/covid-test-kits
+Redirect 301    /huawei-e5785-330-lte-advanced-mifi-router  https://www.worldsim.com/huawei-e5785-mobile-hotspot
+
+Redirect 301    /qatar-sim-card     https://www.worldsim.com/qatar-visitor-sim-card
+Redirect 301    /business/partnership-opportunities https://www.worldsim.com/partnership-opportunities
+#Redirect 301    /checkout/onepage/   https://www.worldsim.com/fastcheck
+
+Redirect 301    /home https://www.worldsim.com/
+Redirect 301    /index.php https://www.worldsim.com/
+Redirect 301    /airbnb     https://www.worldsim.com/international-esim-card
+Redirect 301    /data-bundle-with-new-esim  https://www.worldsim.com/data-bundles
+
+##//////////////Blog URLs/////////////////////////////
+Redirect 301    /blog/what-is-portable-wifi-router-usa  https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-aus  https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/what-is-portable-wifi-router-old  https://www.worldsim.com/blog/what-is-portable-wifi-router
+Redirect 301    /blog/ancient-world-wonders-usa-old     https://www.worldsim.com/blog/ancient-world-wonders
+Redirect 301    /blog/ancient-world-wonders-usa     https://www.worldsim.com/blog/ancient-world-wonders

@@ -1,0 +1,80 @@
+<?php
+
+
+use Mageplaza\Blog\Block\Sidebar\Search;
+
+/** @var Search $block */
+?>
+<style>
+    .sidebar.sidebar-main:before {
+        content: unset;
+    }
+</style>
+<div class="mpblog-search">
+<h2 class="category-listing-view-heading">Search Blog</h2>
+<div class="blogForm">
+    <div class="field search">
+        <label class="label" for="mpblog-search-box" data-role="minisearch-label">
+            <span><?= $block->escapeHtml(__('Search')) ?></span>
+        </label>
+        <div class="control form-group">
+            <input id="mpblog-search-box"
+                   type="text"
+                   name="query"
+                   value="<?= $block->escapeHtmlAttr($block->getRequest()->getParam('query')) ?>"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Search blogs here...')) ?>"
+                   class="input-text"
+                   role="combobox"
+                   aria-haspopup="false"
+                   aria-autocomplete="both"
+            />
+        </div>
+    </div>
+
+      
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary search">Search</button>
+        </div>
+   
+</div>
+<div style="margin-top: 25px;clear: both;">
+    <div class="twitter-timeline twitter-timeline-rendered"
+        style="display: flex; width: 520px; max-width: 100%; margin-top: 0px; margin-bottom: 0px;"><iframe
+            id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true"
+            class=""
+            style="position: static; visibility: visible; width: 270px; height: 600px; display: block; flex-grow: 1;"
+            title="Twitter Timeline"
+            src="https://syndication.twitter.com/srv/timeline-profile/screen-name/WorldSIMcard?dnt=false&amp;embedId=twitter-widget-0&amp;frame=false&amp;hideBorder=false&amp;hideFooter=false&amp;hideHeader=false&amp;hideScrollBar=false&amp;lang=en&amp;maxHeight=600px&amp;origin=https%3A%2F%2Fwww.worldsim.com%2Fblog%2Fhow-to-book-holiday-post-covid%3F___store%3Dgb&amp;sessionId=589261688c982461d20ed06f504e217d75d96378&amp;showHeader=true&amp;showReplies=false&amp;transparent=false&amp;widgetsVersion=1c23387b1f70c%3A1664388199485"></iframe>
+    </div>
+    <script type="text/javascript">!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+</div>
+</div>
+<script>
+    require(['jquery', 'mpDevbridgeAutocomplete'], function ($) {
+        var visibleImage = <?= /** @noEscape */ $block->getSidebarConfig('search/show_image') ?>;
+
+        $('#mpblog-search-box').autocomplete({
+            lookup: <?= /** @noEscape */ $block->getSearchBlogData() ?>,
+            lookupLimit: <?= $block->getSidebarConfig('search/search_limit') ?: 10; ?>,
+            maxHeight: 2000,
+            minChars: <?= $block->getSidebarConfig('search/min_chars') ?: 1; ?>,
+            autoSelectFirst: true,
+            showNoSuggestionNotice: true,
+            triggerSelectOnValidInput: false,
+            onSelect: function (suggestion) {
+                window.location.href = suggestion.url;
+            },
+            formatResult: function (suggestion, currentValue) {
+                var additionClass = '',
+                    html          = "<div class='mpblog-suggestion'>";
+
+                html += 
+                    "<div class='mpblog-product-line mpblog-product-name'>" + suggestion.value + "</div>" +
+                    "<div class='mpblog-product-des'><p class='mpblog-short-des'>" + suggestion.desc + "</p></div></div></div>";
+
+                return html;
+            }
+        });
+    });
+</script>
+

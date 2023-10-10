@@ -1,0 +1,79 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="agtech_cmsblocks_jsondata_listing_data_source" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Agtech\CmsBlocks\Model\ResourceModel\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">worldsim_uksim_rates_from_new</argument>
+            <argument name="resourceModel" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\JsonData</argument>
+        </arguments>
+    </virtualType>
+    <!-- Image Uploader -->
+    <type name="Agtech\CmsBlocks\Model\CsvUploder">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">json_csv</argument>
+            <argument name="basePath" xsi:type="string">json_csv</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="csv" xsi:type="string">csv</item>
+                <item name="xls" xsi:type="string">xls</item>
+                <item name="xlsx" xsi:type="string">xlsx</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="agtech_cmsblocks_virtualrate_listing_data_source" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">worldsim_virtual_number_rates</argument>
+            <argument name="resourceModel" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\VirtualRate</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="agtech_cmsblocks_smstonew_listing_data_source" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\UksimSmsToNew\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Agtech\CmsBlocks\Model\ResourceModel\UksimSmsToNew\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">worldsim_uksim_sms_to_new</argument>
+            <argument name="resourceModel" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\UksimSmsToNew\SmsToNew</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="agtech_cmsblocks_virtualrate_listing_data_source" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">worldsim_virtual_number_rates</argument>
+            <argument name="resourceModel" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\VirtualRates\VirtualRate</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="agtech_cmsblocks_googlereviews_listing_data_source" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\GoogleReviews\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Agtech\CmsBlocks\Model\ResourceModel\GoogleReviews\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">worldsim_google_reviews</argument>
+            <argument name="resourceModel" xsi:type="string">Agtech\CmsBlocks\Model\ResourceModel\GoogleReviews\GoogleReview</argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Agtech\Loginlog\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+	<type name="Agtech\Loginlog\Logger\Handlerlog">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+	<type name="Agtech\Loginlog\Logger\Handlerexp">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Agtech\Loginlog\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">LoginUsersLog</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Agtech\Loginlog\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+	<type name="Agtech\Loginlog\Logger\Topuplogger">
+        <arguments>
+            <argument name="name" xsi:type="string">TopUpErrorLog</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Agtech\Loginlog\Logger\Handlerlog</item>
+            </argument>
+        </arguments>
+    </type>	
+		<type name="Agtech\Loginlog\Logger\Expiredlogger">
+        <arguments>
+            <argument name="name" xsi:type="string">ExpiredNumbersAttemptErrorLog</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Agtech\Loginlog\Logger\Handlerexp</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

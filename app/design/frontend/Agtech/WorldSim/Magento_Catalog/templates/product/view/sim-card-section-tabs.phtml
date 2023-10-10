@@ -1,0 +1,22 @@
+<?php
+$_product = $this->getProduct();
+?>
+<div class="container">
+	<ul class="sim-card-section-tabs">
+	<?php if($_product->getData('overview_subheading')): ?>
+		
+			<li> <a href="#overview" class="scrollLink">overview</a></li>
+	<?php endif; ?>
+	<?php if($_product->getData('whats_included_txt_1')): ?>
+		
+		<li> <a href="#whats_included" class="scrollLink">whats included</a></li>
+	<?php endif; ?>
+	<?php if($_product->getData('features_heading_1')): ?>
+		<li> <a href="#features" class="scrollLink">features</a></li>
+	<?php endif; ?>
+	<?php if(!$_product->getData('technical_specs_left') == ''): ?>
+		<li> <a href="#technical_specs" class="scrollLink">technical specs</a></li>
+	<?php endif; ?>
+		<li> <a href="#testimonials" class="scrollLink">testimonials</a></li>
+	</ul>
+</div>

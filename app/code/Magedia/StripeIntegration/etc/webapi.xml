@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/webtopup/stripe/checkTopup" method="POST">
+        <service class="Magedia\StripeIntegration\Api\StripeTopupInterface" method="checkTopup" />
+        <resources>
+            <resource ref="Magedia_StripeIntegration::topup_managment" />
+        </resources>
+    </route>
+</routes>
